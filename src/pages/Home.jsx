@@ -2,39 +2,32 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import { Typography, Box, Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router';
 
-
-const darkTheme = createTheme({
+const theme = createTheme({
   palette: {
     primary: {
-      main: '#121212'
+      main: '#43a047'
     },
-    secondary: {
-      main: '#26a69a',
-      light: '#4db6ac',
-      dark: '#1a746b'
+    custom: {
+      main: '#43a047',
+      light: '#68b36b',
+      dark: '#2e7031',
+      contrastText: '#fff',
     },
-    background: {
-      default: '#121212'
+    black: {
+      main: '#121212',
+      contrastText: '#fff',
     }
   },
 });
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <Navbar />
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop={"20px"}>
-        {/* <Typography
-        variant="h2"
-        sx={{ flexGrow: 1, fontFamily: "Bungee, sans-serif", fontWeight: "400" }}>
-        WELCOME TO DEPORTURNOS
-      </Typography> */}
-        {/* <Button color='secondary' type='submit' variant="contained" size='large'>
-        reservar mi cancha ahora
-        </Button> */}
-
-
         <Box
           sx={{
             display: 'flex',
@@ -88,6 +81,7 @@ const Home = () => {
                   fontSize: { xs: '0.875rem', md: '1rem' },
                   fontWeight: 'bold',
                 }}
+                onClick={() => navigate('/login')}
               >
                 Reservar ahora
               </Button>
@@ -96,8 +90,6 @@ const Home = () => {
         </Box>
 
       </Box>
-
-      {/* Contenido de la página de inicio */}
     </ThemeProvider>
   );
 };

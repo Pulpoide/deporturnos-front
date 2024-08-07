@@ -87,7 +87,13 @@ const AdminUsuarios = () => {
     };
 
     const handleDelete = async (id) => {
-        await axios.delete(`http://localhost:8080/api/usuarios/${id}`, tokenConfig);
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/usuarios/${id}`, tokenConfig);
+            console.log(response)
+
+        } catch (err) {
+            console.error(err)
+        }
         fetchUsuarios();
     };
 
@@ -159,7 +165,7 @@ const AdminUsuarios = () => {
                                 <TableCell align='right'>{usuario.email}</TableCell>
                                 <TableCell align='right'>{usuario.telefono}</TableCell>
                                 <TableCell align='right'>{usuario.rol}</TableCell>
-                                <TableCell align='right'>{usuario.cuentaActivada ? 'Sí' : 'No'}</TableCell>
+                                <TableCell align='right'>{usuario.activada ? 'Sí' : 'No'}</TableCell>
                                 <TableCell align='right'>
                                     <IconButton color="custom" onClick={() => handleEdit(usuario)}>
                                         <Edit />
@@ -171,7 +177,7 @@ const AdminUsuarios = () => {
                                         {usuario.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon color='black' />}
                                     </IconButton>
                                     <IconButton onClick={() => handleAccountStatusChange(usuario.id, !usuario.enabled)}>
-                                        {usuario.cuentaActivada ? <LockOpen /> : <Lock color='black' />}
+                                        {usuario.activada ? <LockOpen /> : <Lock color='black' />}
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

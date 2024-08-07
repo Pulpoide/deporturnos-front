@@ -4,26 +4,30 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-import Link from '@mui/material/Link';
+import { useNavigate } from 'react-router';
 
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#121212'
+      main: '#43a047'
     },
-    secondary: {
-      main: '#26a69a',
-      light: '#4db6ac',
-      dark: '#1a746b'
+    custom: {
+      main: '#43a047',
+      light: '#68b36b',
+      dark: '#2e7031',
+      contrastText: '#fff',
     },
-    background: {
-      default: '#121212'
+    black: {
+      main: '#121212',
+      contrastText: '#fff',
     }
   },
 });
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="static" color='background'>
@@ -33,22 +37,28 @@ const Navbar = () => {
             sx={{
               flexGrow: 1,
               fontFamily: "Bungee Inline, sans-serif",
-              fontWeight: "400"
-            }}>
-
-            <Link underline="none" href="/">
+              fontWeight: "400",
+              maxWidth:"fit-content",
+              cursor: "pointer",
+              flexShrink: 0,
+              color: 'black', // Asegúrate de que el color sea el correcto
+              "&:hover": {
+                color: theme.palette.primary.main // Color al pasar el mouse
+              },
+              mr:'auto'
+            }}
+            onClick={() => navigate("/")}
+            >
               DEPORTURNOS
-            </Link>
-
           </Typography>
 
 
 
-          
-            <div className=''>
-              <Button color='primary' variant='text' href='/login' sx={{ mr: 2 }}>Ingresar</Button>
-              <Button color='primary' variant='contained' href='/register'>Registrarme</Button>
-            </div>
+
+          <div className=''>
+            <Button color='black' variant='text' href='/login' sx={{ mr: 2 }}>Ingresar</Button>
+            <Button color='black' variant='contained' href='/register'>Registrarme</Button>
+          </div>
 
         </Toolbar>
       </AppBar>

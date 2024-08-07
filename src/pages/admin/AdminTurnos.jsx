@@ -126,6 +126,8 @@ const AdminTurnos = () => {
     setOpen(false);
   };
 
+  const sortedCanchas = canchas.sort((a, b) => a.deporte.localeCompare(b.deporte));
+
   const buttonStyle = { width: '33%', marginTop: '19px', marginBottom: '19px' };
 
   return (
@@ -238,9 +240,9 @@ const AdminTurnos = () => {
                 value={canchaId}
                 onChange={(e) => setCanchaId(e.target.value)}
               >
-                {canchas.map((cancha) => (
+                {sortedCanchas.map((cancha) => (
                   <MenuItem key={cancha.id} value={cancha.id}>
-                    {cancha.nombre} - ({cancha.tipo})
+                    {cancha.deporte} - {cancha.nombre} - ({cancha.tipo})
                   </MenuItem>
                 ))}
               </Select>

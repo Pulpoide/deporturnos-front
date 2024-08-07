@@ -137,17 +137,10 @@ const Login = () => {
         navigate('/admin-home');
       }
 
-
-
-
-
     } catch (error) {
       console.error('Error during login:', error);
       setError("Credenciales Inválidas");
-
     }
-
-
   };
 
 

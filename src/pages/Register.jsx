@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-
-
-// MUI imports
-import { Avatar, Button, Grid, Paper, TextField } from '@mui/material';
-import FormHelperText from '@mui/material/FormHelperText';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
+import {
+  Avatar, Button, Grid, Paper, TextField,
+  CircularProgress, FormHelperText, OutlinedInput,
+  InputLabel, InputAdornment, IconButton, FormControl,
+  Stack, Alert
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
+import LoginIcon from '@mui/icons-material/Login';
 
 // Email Validation
 const isEmail = (email) =>
@@ -31,183 +25,141 @@ const isTelefono = (telefono) =>
   /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
 
 const Register = () => {
-
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  //Inputs
-  const [nombre, setNombre] = useState();
-  const [email, setEmail] = useState();
-  const [telefono, setTelefono] = useState();
-  const [password, setPassword] = useState();
-  const [secondPassword, setSecondPassword] = useState();
-
-  //Inputs Errors
+  const [showPassword, setShowPassword] = useState(false);
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [password, setPassword] = useState('');
+  const [secondPassword, setSecondPassword] = useState('');
   const [nombreError, setNombreError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [telefonoError, setTelefonoError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [secondPasswordError, setSecondPasswordError] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Aviso 
-  const [error, setError] = useState();
-  const [success, setSuccess] = useState();
-
-  // Handles Mostrar y Escoder Password
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  // Para que funcione el Enter.
   const handleKeyPress = (e) => {
-    // Verificar si la tecla presionada es "Enter"
     if (e.key === 'Enter') {
-      handleSubmit(); // Llamar a la función de inicio de sesión al presionar "Enter"
+      handleSubmit();
     }
   };
 
-  // Estilos
-  const paperStyle = { padding: 20, height: "auto", width: 280, margin: "20px auto" }
-  const avatarStyle = { backgroundColor: "#121212" }
+  const paperStyle = { padding: 20, height: "auto", width: 280, margin: "20px auto" };
+  const avatarStyle = { backgroundColor: "#121212" };
 
-  // Validaciones:
-  // Validation for onBlur Nombre
   const handleNombre = () => {
     if (!nombre) {
       setNombreError(true);
       return;
     }
-
     setNombreError(false);
   };
 
-  // Validation for onBlur Email
   const handleEmail = () => {
-    console.log(isEmail(email));
     if (!isEmail(email)) {
       setEmailError(true);
       return;
     }
-
     setEmailError(false);
   };
 
-  // Validation for onBlur Telefono
   const handleTelefono = () => {
-    console.log(isTelefono(telefono));
-    if (telefono) {
-      if (!isTelefono(telefono)) {
-        setTelefonoError(true);
-        return;
-      }
+    if (telefono && !isTelefono(telefono)) {
+      setTelefonoError(true);
+      return;
     }
-
-
     setTelefonoError(false);
   };
 
-  // Validation for onBlur Password
   const handlePassword = () => {
-    console.log(isPassword(password));
     if (!isPassword(password)) {
       setPasswordError(true);
       return;
     }
-
     setPasswordError(false);
   };
 
-  // Validation for onBlur Second Password
   const handleSecondPassword = () => {
-    if (!(password === secondPassword)) {
+    if (password !== secondPassword) {
       setSecondPasswordError(true);
       return;
     }
-
     setSecondPasswordError(false);
   };
 
-
-  // Handle Submit
   const handleSubmit = async () => {
     setSuccess(null);
 
-    // If Nombre error is true
     if (nombreError) {
-      setError("Ingrese un nombre")
+      setError("Ingrese un nombre");
+      return;
     }
 
-    // If Email error is true
     if (emailError || !email) {
       setError("Email inválido");
       return;
     }
 
-    // If Telefono error is true
-    if (telefonoError){
-      setError("Teléfono inválido")
+    if (telefonoError) {
+      setError("Teléfono inválido");
       return;
     }
 
-    // If Password error is true
     if (passwordError || !password) {
       setError("Contraseña inválida");
       return;
     }
 
-    // If Second Password error is true
     if (secondPasswordError || !secondPassword) {
       setError("Las contraseñas no coinciden");
       return;
     }
-    
-    setError(null);
 
-    // Conexión con el Backend
+    setError(null);
+    setLoading(true);
+
     const user = { nombre, email, password, telefono };
     try {
-      console.log(user);
-
-      const response = await axios.post('http://localhost:8080/api/auth/register', user);
+      const response = await axios.post('http://localhost:8080/api/auth/signup', user);
       const result = response.data;
 
-      // Guardar el usuario en el localStorage
       localStorage.setItem('currentUser', JSON.stringify(result));
       localStorage.setItem('token', response.data.token);
 
-      //Show Successfull Submittion
       setSuccess("Registro Exitoso!");
-
-      // Redireccionar a la página de inicio
       setTimeout(() => {
-        window.location.href = '/clientHome';
+        window.location.href = '/verify';
       }, 1500);
-
     } catch (error) {
-      console.error(error)
       if (error.response && error.response.status === 409) {
         setError(error.response.data.message);
       } else {
         setError('Error al registrar el usuario. Inténtalo de nuevo.');
       }
       setSuccess('');
-    
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
       <Navbar />
-      
       <Grid>
         <Paper elevation={10} style={paperStyle} >
           <Grid align="center">
             <Avatar style={avatarStyle}>
               <AppRegistrationIcon />
             </Avatar>
-            <h2 style={{fontFamily:"Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal'}}>Registro</h2>
+            <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Registro</h2>
           </Grid>
-
           <TextField
             onChange={(e) => setNombre(e.target.value)}
             error={nombreError}
@@ -218,8 +170,8 @@ const Register = () => {
             placeholder='Juan Morales'
             color='custom'
             onKeyDown={handleKeyPress}
-            fullWidth required />
-
+            fullWidth required
+          />
           <TextField
             onChange={(e) => setEmail(e.target.value)}
             error={emailError}
@@ -230,9 +182,9 @@ const Register = () => {
             placeholder='example@gmail.com'
             color='custom'
             onKeyDown={handleKeyPress}
-            fullWidth required />
-
-            <TextField
+            fullWidth required
+          />
+          <TextField
             onChange={(e) => setTelefono(e.target.value)}
             error={telefonoError}
             onBlur={handleTelefono}
@@ -242,9 +194,8 @@ const Register = () => {
             placeholder='3512767955'
             color='custom'
             onKeyDown={handleKeyPress}
-            fullWidth />
-
-
+            fullWidth
+          />
           <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
             <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
             <OutlinedInput
@@ -271,7 +222,6 @@ const Register = () => {
             />
             <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
           </FormControl>
-
           <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
             <InputLabel error={secondPasswordError} htmlFor="outlined-adornment-password">Confirmar</InputLabel>
             <OutlinedInput
@@ -298,31 +248,27 @@ const Register = () => {
             />
             <FormHelperText id="standard-weight-helper-text">Repita su contraseña</FormHelperText>
           </FormControl>
-
-
-          <Button type='submit' color='custom' variant='contained' fullWidth onClick={handleSubmit} startIcon={
-            <LoginIcon />
-          }> Registrarme </Button>
-
-
-
-          {
-            error &&
+          <Button
+            type='submit'
+            color='custom'
+            variant='contained'
+            fullWidth
+            onClick={handleSubmit}
+            startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
+            disabled={loading}
+          >
+            Registrarme
+          </Button>
+          {error && (
             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-              <Alert severity="error">
-                {error}
-              </Alert>
+              <Alert severity="error">{error}</Alert>
             </Stack>
-          }
-
-          {
-            success &&
+          )}
+          {success && (
             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-              <Alert severity="success">
-                {success}
-              </Alert>
+              <Alert severity="success">{success}</Alert>
             </Stack>
-          }
+          )}
         </Paper>
       </Grid>
     </div>
