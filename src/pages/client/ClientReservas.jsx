@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, IconButton, Dialog, DialogActions, DialogContent,
-  DialogTitle, Button, Typography
+  DialogTitle, Button, Typography, Box
 } from '@mui/material';
 import DialogContentText from '@mui/material/DialogContentText';
 import CancelIcon from '@mui/icons-material/Cancel'; import axios from 'axios';
@@ -74,6 +74,9 @@ const ClientReservas = () => {
   return (
     <>
       <NavbarClient />
+      <Box sx={{ textAlign: 'center' }}>
+        <h2 style={{ fontFamily: "Bungee Inline, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30 }}>Mis Reservas</h2>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -125,7 +128,7 @@ const ClientReservas = () => {
 
           <DialogTitle id="alert-dialog-title">
             ¿Estás seguro de cancelar esta reserva?
-          </DialogTitle>  
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               No podrás deshacer esta acción.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom'; // Asumiendo que utilizas react-router-dom para manejar las rutas
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -45,7 +45,8 @@ const NavbarAdmin = () => {
         <div>
             <ThemeProvider theme={darkTheme}>
                 <AppBar position="static" color='primary'>
-                    <Toolbar>
+                    <Container>
+                    <Toolbar disableGutters>
                         <Typography variant="h4" component="div" sx={{ flexGrow: 1, fontFamily: "Bungee Shade, sans-serif", fontWeight: "400" }}>
                             
                             <a onClick={() => navigate('/admin-home')}>
@@ -91,6 +92,7 @@ const NavbarAdmin = () => {
                         <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
                     </Toolbar>
+                    </Container>
                 </AppBar>
             </ThemeProvider>
 

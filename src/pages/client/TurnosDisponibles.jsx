@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import { Box, Container, Typography, Grid, Card, CardContent, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,7 +11,7 @@ import NavbarClient from '../../components/NavbarClient';
 
 
 const TurnosDisponibles = () => {
-    const { id } = useParams();
+    const { canchaId } = useParams();
     const [turnos, setTurnos] = useState([]);
     const [selectedDate, setSelectedDate] = useState(dayjs());
 
@@ -24,7 +24,7 @@ const TurnosDisponibles = () => {
     useEffect(() => {
         const fetchTurnos = (date) => {
             const formattedDate = date.format('YYYY-MM-DD');
-            axios.get(`http://localhost:8080/api/turnos/disponibles/${id}/cancha?fecha=${formattedDate}`, tokenConfig)
+            axios.get(`http://localhost:8080/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
                 .then(response => {
                     setTurnos(response.data);
                 })
@@ -34,7 +34,7 @@ const TurnosDisponibles = () => {
         };
 
         fetchTurnos(selectedDate);
-    }, [id, selectedDate]);
+    }, [canchaId, selectedDate]);
 
     const handleCreateReserva = (turnoId, turno) => {
         navigate(`/create-reserva/confirm`, { state: { turno } })
@@ -44,9 +44,9 @@ const TurnosDisponibles = () => {
         <>
             <NavbarClient />
             <Container>
-                <Typography variant="h4" gutterBottom>
-                    Turnos disponibles
-                </Typography>
+                <Box sx={{ textAlign: 'start' }}>
+                    <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30 }}>Turnos disponibles:</h2>
+                </Box>
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -78,6 +78,9 @@ const TurnosDisponibles = () => {
                         <Typography variant="body1">No se encontraron turnos disponibles para la fecha seleccionada.</Typography>
                     )}
                 </Grid>
+                <Button variant="contained" color="black" onClick={() => navigate(-1)}>
+                    Atras
+                </Button>
             </Container>
         </>
     );

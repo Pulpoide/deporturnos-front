@@ -5,12 +5,13 @@ import {
   Avatar, Button, Grid, Paper, TextField,
   CircularProgress, FormHelperText, OutlinedInput,
   InputLabel, InputAdornment, IconButton, FormControl,
-  Stack, Alert
+  Stack, Alert, Box
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import LoginIcon from '@mui/icons-material/Login';
+import bgimg from '../assets/images/thw.jpg'
 
 // Email Validation
 const isEmail = (email) =>
@@ -51,7 +52,7 @@ const Register = () => {
     }
   };
 
-  const paperStyle = { padding: 20, height: "auto", width: 280, margin: "20px auto" };
+  const paperStyle = { padding: 27, width: 450 }
   const avatarStyle = { backgroundColor: "#121212" };
 
   const handleNombre = () => {
@@ -98,27 +99,27 @@ const Register = () => {
     setSuccess(null);
 
     if (nombreError) {
-      setError("Ingrese un nombre");
+      setError("Ingrese un nombre porfavor.");
       return;
     }
 
     if (emailError || !email) {
-      setError("Email inválido");
+      setError("Email no válido.");
       return;
     }
 
     if (telefonoError) {
-      setError("Teléfono inválido");
+      setError("Teléfono no válido.");
       return;
     }
 
     if (passwordError || !password) {
-      setError("Contraseña inválida");
+      setError("Contraseña no válida.");
       return;
     }
 
     if (secondPasswordError || !secondPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Las contraseñas no coinciden.");
       return;
     }
 
@@ -139,7 +140,7 @@ const Register = () => {
       }, 1500);
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setError(error.response.data.message);
+        setError(error.response.data.message+".");
       } else {
         setError('Error al registrar el usuario. Inténtalo de nuevo.');
       }
@@ -150,10 +151,32 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <>
+    <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '75vh',
+            backgroundImage: `url(${bgimg})`,
+            backgroundSize: 'auto',
+            backgroundPosition: 'center',
+            opacity: 1,
+            zIndex: -1,
+          }}
+        />
       <Navbar />
+
+      <Box
+      display={'flex'}
+      justifyContent={'center'}
+      alignItems={'center'}
+      textAlign={'center'}
+      minHeight={'75vh'}
+    >
       <Grid>
-        <Paper elevation={10} style={paperStyle} >
+        <Paper elevation={24} style={paperStyle} >
           <Grid align="center">
             <Avatar style={avatarStyle}>
               <AppRegistrationIcon />
@@ -271,7 +294,8 @@ const Register = () => {
           )}
         </Paper>
       </Grid>
-    </div>
+      </Box>
+    </>
   );
 };
 

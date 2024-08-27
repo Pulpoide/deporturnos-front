@@ -182,8 +182,16 @@ const AdminCanchas = () => {
                   <TableCell align="right">{cancha.id}</TableCell>
                   <TableCell align="right">{cancha.nombre}</TableCell>
                   <TableCell align="right">{cancha.tipo}</TableCell>
-                  <TableCell align="right">{cancha.precioHora}</TableCell>
-                  <TableCell align="right">{cancha.disponibilidad ? 'Disponible' : 'No Disponible'}</TableCell>
+                  <TableCell align="right">${cancha.precioHora}.-</TableCell>
+                  <TableCell align="right">
+                    <Typography
+                      style={{
+                        color: cancha.disponibilidad ? 'green' : 'red'
+                      }}
+                    >
+                      {cancha.disponibilidad ? 'Disponible' : 'No Disponible'}
+                    </Typography>
+                  </TableCell>
                   <TableCell align="right">{cancha.descripcion}</TableCell>
                   <TableCell align="right">{cancha.deporte}</TableCell>
                   <TableCell align="right">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Grid, Paper, Stack, Alert, CircularProgress } from '@mui/material';
+import { TextField, Button, Grid, Paper, Stack, Alert, CircularProgress, Box } from '@mui/material';
 
 import { useNavigate } from "react-router";
 import { jwtDecode } from 'jwt-decode';
@@ -70,15 +70,26 @@ const VerifyAccout = () => {
         }
     };
 
+    const pStyle = { marginLeft: 'auto', marginRight: 'auto', maxWidth: '42rem', fontSize: '16px', fontFamily: 'Roboto, sans-serif' };
+
+
     return (
         <>
             <Navbar />
+
+            <Box
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                textAlign={'center'}
+                minHeight={'100vh'}
+            >
 
             <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
                 <Grid item xs={10} sm={8} md={6}>
                     <Paper elevation={3} style={{ padding: '20px' }}>
                         <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Verifica tu email</h2>
-                        <p>Un código de verificación fue enviado a: {email}</p>
+                        <p style={pStyle}>Un código de verificación fue enviado a: {email}</p>
                         <TextField
                             fullWidth
                             label="Código de Verificación"
@@ -111,6 +122,7 @@ const VerifyAccout = () => {
                     </Paper>
                 </Grid>
             </Grid>
+            </Box>
         </>
     )
 

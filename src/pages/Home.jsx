@@ -1,8 +1,18 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import { Typography, Box, Button } from '@mui/material';
+import { Container, Box, Button } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router';
+
+import futbol1 from '../assets/images/futbol1.jpg';
+import futbol2 from '../assets/images/futbol2.jpg';
+import cancha from '../assets/images/futbol3.jpg';
+import bgimg from '../assets/images/thw.jpg'
+const images = [
+  futbol1,
+  cancha,
+  futbol2
+]
+
 
 const theme = createTheme({
   palette: {
@@ -18,79 +28,98 @@ const theme = createTheme({
     black: {
       main: '#121212',
       contrastText: '#fff',
+    },
+    black2: {
+      main: 'rgb(23 23 23)'
     }
   },
 });
 
+
+
+
+const h1Style = { marginBottom: '1rem', fontFamily: 'Terminal Normal', fontWeight: 400, fontStyle: 'normal', fontSize: '62px', color:'#FFFFFF', textShadow:"2px 2px 4px rgba(0, 0, 0, 0.5)"}
+const pStyle = { marginLeft: 'auto', marginRight: 'auto', maxWidth: '42rem', fontSize: '20px', fontFamily: 'Roboto, sans-serif', color:'#FFFFFF' };
+const buttonStyle = { paddingTop: '1rem', paddingBottom: '1rem', alignSelf: 'center', marginTop: '3rem', marginBottom: '2rem' }
+const spanStyle = { fontSize: '18px', lineHeight: '1.6', letterSpacing: '.01em', fontFamily: 'Roboto, sans-serif', color:'#FFFFFF' }
+
 const Home = () => {
-  const navigate = useNavigate();
   return (
-    <ThemeProvider theme={theme}>
-      <Navbar />
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop={"20px"}>
+    // <ThemeProvider theme={theme}>
+    //   <Navbar />
+
+    //   <Container>
+    //     <Box
+    //       display={'flex'}
+    //       width={'100%'}
+    //       flexDirection={'column'}
+    //       justifyContent={'center'}
+    //       marginLeft={'auto'}
+    //       marginRight={'auto'}
+    //       maxWidth={'720px'}
+    //       textAlign={'center'}
+    //       paddingTop={'6rem'}
+    //     >
+    //       <h1 style={h1Style}>
+    //         Reservá tu canchita 
+    //         <br/>
+    //         al instante
+    //         {/* <br />
+    //         rápido, fácil y seguro */}
+    //       </h1>
+    //       <p style={pStyle}>Aliquam at massa eu purus tincidunt condimentum. Aliquam convallis non ligula nec tincidunt. Phasellus eu mattis velit, et congue augue.</p>
+
+    //       <Button style={buttonStyle} variant='contained' href='/register'>Regístrate de forma gratuita</Button>
+    //       <span style={spanStyle}><a href="http://localhost:5173/login" rel="noreferrer">¿Ya tienes una cuenta? Inicia sesión</a></span>
+    //     </Box>
+    //   </Container>
+    // </ThemeProvider>
+
+    <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            py: 5,
-            px: { xs: 2, md: 10 },
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '75vh',
+            backgroundImage: `url(${bgimg})`,
+            backgroundSize: 'auto',
+            backgroundPosition: 'center',
+            opacity: 1,
+            zIndex: -1,
           }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              maxWidth: 960,
-              width: '100%',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: 480,
-                gap: { xs: 3, md: 4 },
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/sdxl10/d309cc70-e959-4e53-ac0d-dfad7f36eb5f.png")`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                borderRadius: { xs: 0, md: '16px' },
-                alignItems: 'center',
-                justifyContent: 'center',
-                p: 4,
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  color: 'white',
-                  fontSize: { xs: '2rem', md: '3rem' },
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}
-              >
-                Reservá tu cancha en minutos
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  minWidth: 84,
-                  maxWidth: 480,
-                  height: { xs: '40px', md: '48px' },
-                  px: { xs: 2, md: 3 },
-                  fontSize: { xs: '0.875rem', md: '1rem' },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => navigate('/login')}
-              >
-                Reservar ahora
-              </Button>
-            </Box>
-          </Box>
-        </Box>
+        />
+      
+      <Navbar />
+      <Box
+        display={'flex'}
+        width={'100%'}
+        flexDirection={'column'}
+        justifyContent={'center'}
+        marginLeft={'auto'}
+        marginRight={'auto'}
+        maxWidth={'720px'}
+        textAlign={'center'}
+        paddingTop={'6rem'}
+      >
+        <h1 style={h1Style}>
+          Reservá tu cancha
+          <br />
+          al instante
+          {/* <br />
+            rápido, fácil y seguro */}
+        </h1>
+        <p style={pStyle}>Aliquam at massa eu purus tincidunt condimentum. Aliquam convallis non ligula nec tincidunt. Phasellus eu mattis velit, et congue augue.</p>
 
+        <Button style={buttonStyle} variant='contained' href='/register'>Regístrate de forma gratuita</Button>
+        {/* <span style={spanStyle}>¿Ya tienes una cuenta?</span>
+        <a href="http://localhost:5173/login" > Iniciar sesión</a> */}
       </Box>
-    </ThemeProvider>
+      {/* Aquí iría tu contenido, por ejemplo, la Navbar */}
+    </Box>
+
   );
 };
 

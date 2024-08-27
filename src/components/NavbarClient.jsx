@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom'; // Asumiendo que utilizas react-router-dom para manejar las rutas
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -49,13 +49,14 @@ const NavbarClient = () => {
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="static" color='background'>
-        <Toolbar>
+        <Container>
+        <Toolbar disableGutters>
           <Typography
             variant="h4"
             component="div"
             sx={{
               flexGrow: 1,
-              fontFamily: "Bungee Inline, sans-serif",
+              fontFamily: "Bungee Shade, sans-serif",
               fontWeight: "400",
               maxWidth:"fit-content",
               cursor: "pointer",
@@ -130,6 +131,7 @@ const NavbarClient = () => {
           </Dialog>
 
         </Toolbar>
+        </Container>
       </AppBar>
     </ThemeProvider>
   );

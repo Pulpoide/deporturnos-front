@@ -22,13 +22,15 @@ const ClientHome = () => {
     <NavbarClient/>
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" paddingTop={"15%"}>
 
-      <Typography variant="h4" gutterBottom>Bienvenid@ {currentUser.nombre}</Typography>
-      <Typography variant="h1" sx={{ flexGrow: 1, fontFamily: "Bungee Inline, sans-serif", fontWeight: "100" }}>LOS GIGANTES</Typography>
+      {/* <Typography variant="h4" gutterBottom>Bienvenid@ {currentUser.nombre}</Typography> */}
+      <Typography variant="h6" sx={{ flexGrow: 1, fontFamily: "Bungee, sans-serif", fontWeight: "100" }}>complejo deportivo:</Typography>
+      <Typography variant="h3" sx={{ flexGrow: 1, fontFamily: "Bungee Inline, sans-serif", fontWeight: "100" }}>LOS GIGANTES</Typography>
+     
+     
       <Button style={buttonStyle} color='custom' type='submit' variant="contained" onClick={handleReserveNow}>Reservar Ahora</Button>
       <Button style={buttonStyle} color='custom' type='submit' variant="contained" onClick={handleSeeReservations}>Mis Reservas</Button>
 
 
-      {/* Contenido adicional para el usuario logeado */}
     </Box>
     </div>
   );

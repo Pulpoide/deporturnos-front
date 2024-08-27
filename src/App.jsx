@@ -23,6 +23,7 @@ import TurnosDisponibles from './pages/client/TurnosDisponibles';
 import CreateReserva from './pages/client/CreateReserva';
 import ClientProfile from './pages/client/ClientProfile';
 import VerifyAccout from './pages/VerifyAccount';
+import ClientChangePassword from './pages/client/ClientChangePassword'
 
 const theme = createTheme({
   palette: {
@@ -68,6 +69,14 @@ function App() {
           element={
             <ProtectedRoute role={"CLIENTE"}>
               <ClientProfile />
+            </ProtectedRoute>
+          } />
+
+        <Route
+          path="/client-changepassword"
+          element={
+            <ProtectedRoute role={"CLIENTE"}>
+              <ClientChangePassword />
             </ProtectedRoute>
           } />
 

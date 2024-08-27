@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
 
@@ -21,6 +21,9 @@ const theme = createTheme({
     black: {
       main: '#121212',
       contrastText: '#fff',
+    },
+    background: {
+      main:'rgb(249 246 242)'
     }
   },
 });
@@ -30,18 +33,19 @@ const Navbar = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" color='background'>
-
-        <Toolbar>
+      
+      <AppBar position="static" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+      <Container>
+        <Toolbar disableGutters>
           <Typography variant="h4" component="div"
             sx={{
               flexGrow: 1,
-              fontFamily: "Bungee Inline, sans-serif",
+              fontFamily: "Bungee Shade, sans-serif",
               fontWeight: "400",
               maxWidth:"fit-content",
               cursor: "pointer",
               flexShrink: 0,
-              color: 'black', // Asegúrate de que el color sea el correcto
+              color: 'black',
               "&:hover": {
                 color: theme.palette.primary.main // Color al pasar el mouse
               },
@@ -56,11 +60,12 @@ const Navbar = () => {
 
 
           <div className=''>
-            <Button color='black' variant='text' href='/login' sx={{ mr: 2 }}>Ingresar</Button>
+            <Button color='primary' variant='contained' href='/login' sx={{ mr: 2 }}>Iniciar Sesión</Button>
             <Button color='black' variant='contained' href='/register'>Registrarme</Button>
           </div>
 
         </Toolbar>
+        </Container>
       </AppBar>
     </ThemeProvider>
 

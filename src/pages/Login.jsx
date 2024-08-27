@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 
 
 // MUI imports
-import { Avatar, Button, FormControlLabel, Grid, Paper, TextField, Switch } from '@mui/material';
+import { Avatar, Button, FormControlLabel, Grid, Paper, TextField, Switch, Box } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -21,6 +21,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
+import bgimg from '../assets/images/thw.jpg'
 
 
 // Switch "Recordarme" color
@@ -78,7 +79,7 @@ const Login = () => {
     event.preventDefault();
   };
 
-  const paperStyle = { padding: 20, height: "auto", width: 280, margin: "20px auto" }
+  const paperStyle = { padding: 27, width: 450 }
   const avatarStyle = { backgroundColor: "#121212" }
 
   //handle Submittion
@@ -88,13 +89,13 @@ const Login = () => {
 
     // If Email error is true
     if (!email) {
-      setError("Email inválido");
+      setError("Email inválido.");
       return;
     }
 
     // If Password error is true
     if (!password) {
-      setError("Ingrese su contraseña");
+      setError("Ingrese su contraseña.");
       return;
     }
 
@@ -104,8 +105,6 @@ const Login = () => {
     // Conexión con el Backend 
     const credentials = { email, password };
     try {
-      //console.log(credentials);
-
       const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
       const result = response.data;
 
@@ -139,107 +138,130 @@ const Login = () => {
 
     } catch (error) {
       console.error('Error during login:', error);
-      setError("Credenciales Inválidas");
+      setError("Credenciales Inválidas.");
     }
   };
 
 
   return (
-    <>
-      <Navbar />
-
-      <Grid>
-        <Paper elevation={10} style={paperStyle} >
-          <Grid align="center">
-            <Avatar style={avatarStyle}>
-              <AccountCircleIcon />
-            </Avatar>
-            <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Iniciar Sesión</h2>
-          </Grid>
-
-          <TextField
-            onChange={(e) => setEmail(e.target.value)}
-            error={emailError}
-            value={email}
-            helperText="Por favor ingrese su correo electrónico"
-            margin='normal'
-            label="Email"
-            placeholder='example@gmail.com'
-            fullWidth required
-            color='custom'
-            onKeyDown={handleKeyPress} />
-
-
-          <FormControl variant="outlined" fullWidth color='custom'>
-            <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              error={passwordError}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder='**************'
-              type={showPassword ? 'text' : 'password'}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-              onKeyDown={handleKeyPress}
-            />
-            <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
-          </FormControl>
-
-          <FormControlLabel control={<CustomSwitch color='#26a69a' checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />} label="Recordarme" />
-
-          <Button color='custom' size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
-            <LoginIcon />
-          }>Ingresar</Button>
+    <div>
+      <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '75vh',
+            backgroundImage: `url(${bgimg})`,
+            backgroundSize: 'auto',
+            backgroundPosition: 'center',
+            opacity: 1,
+            zIndex: -1,
+          }}
+        />
+      <Navbar /> 
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        textAlign={'center'}
+        minHeight={'75vh'}
+      >
 
 
+        <Grid>
+          <Paper elevation={24} style={paperStyle} >
+            <Grid align="center">
+              <Avatar style={avatarStyle}>
+                <AccountCircleIcon />
+              </Avatar>
+              <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Iniciar Sesión</h2>
+            </Grid>
 
-          {
-            error &&
-            <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-              <Alert severity="error">
-                {error}
-              </Alert>
-            </Stack>
-          }
+            <TextField
+              onChange={(e) => setEmail(e.target.value)}
+              error={emailError}
+              value={email}
+              helperText="Por favor ingrese su correo electrónico"
+              margin='normal'
+              label="Email"
+              placeholder='example@gmail.com'
+              fullWidth required
+              color='custom'
+              onKeyDown={handleKeyPress} />
 
-          {
-            success &&
-            <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-              <Alert severity="success">
-                {success}
-              </Alert>
-            </Stack>
-          }
 
-          <div style={{ marginTop: "10px", fontSize: "15px" }} margin="left">
-            <a href='/'>Olvidé mi contraseña</a>
-            <br />
-            No tienes una cuenta?{"  "}
-            <a href='/register'>
-              <small style={{ textDecoration: "underline", color: "blue" }}>
-                Registrarme
-              </small>
-            </a>
-          </div>
+            <FormControl variant="outlined" fullWidth color='custom'>
+              <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                error={passwordError}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder='**************'
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+                onKeyDown={handleKeyPress}
+              />
+              <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
+            </FormControl>
+
+            <FormControlLabel control={<CustomSwitch color='#26a69a' checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />} label="Recordarme" />
+
+            <Button color='custom' size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
+              <LoginIcon />
+            }>Ingresar</Button>
 
 
 
-        </Paper>
-      </Grid>
+            {
+              error &&
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="error">
+                  {error}
+                </Alert>
+              </Stack>
+            }
 
-    </>
+            {
+              success &&
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="success">
+                  {success}
+                </Alert>
+              </Stack>
+            }
+
+            <div style={{ marginTop: "10px", fontSize: "15px" }} margin="left">
+              <a href='/'>Olvidé mi contraseña</a>
+              <br />
+              No tienes una cuenta?{"  "}
+              <a href='/register'>
+                <small style={{ textDecoration: "underline", color: "blue" }}>
+                  Registrarme
+                </small>
+              </a>
+            </div>
+
+
+
+          </Paper>
+        </Grid>
+
+      </Box>
+    </div>
   );
 };
 

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
-  DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Box, Typography
+  DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Box,
+  Typography, Stack, Alert
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -32,7 +33,6 @@ const AdminTurnos = () => {
   const [canchaId, setCanchaId] = useState('');
   const [canchas, setCanchas] = useState([]);
   const [initialValues, setInitialValues] = useState({});
-
 
   const navigate = useNavigate();
 
@@ -114,12 +114,18 @@ const AdminTurnos = () => {
 
     if (Object.keys(turnoData).length > 0) {
       console.log(turnoData)
+
       if (selectedTurno) {
         const res = await axios.put(`http://localhost:8080/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
         console.log(res)
       } else {
-        const res = await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
-        console.log(res)
+        try {
+          const res = await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
+          console.log(res)
+
+        } catch (error) {
+          setError(error.response.data.message);
+        }
       }
     }
     fetchTurnos();
@@ -222,11 +228,10 @@ const AdminTurnos = () => {
               focused
             />
             <FormControl fullWidth margin="dense" color='custom'>
-              <InputLabel>Estado</InputLabel>
               <Select
                 value={estado}
                 onChange={(e) => setEstado(e.target.value)}
-                
+
               >
                 <MenuItem value="DISPONIBLE">DISPONIBLE</MenuItem>
                 <MenuItem value="RESERVADO">RESERVADO</MenuItem>
@@ -248,6 +253,13 @@ const AdminTurnos = () => {
               </Select>
             </FormControl>
           </DialogContent>
+
+          {/* {error && (
+            <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+              <Alert severity="error">{error}</Alert>
+            </Stack>
+          )} */}
+
           <DialogActions>
             <Button onClick={() => setOpen(false)} color="custom">
               Cancelar
