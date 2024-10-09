@@ -89,8 +89,11 @@ const Login = () => {
 
     // If Email error is true
     if (!email) {
+      setEmailError(true)
       setError("Email inválido.");
       return;
+    }else{
+      setEmailError(false)
     }
 
     // If Password error is true
@@ -146,20 +149,21 @@ const Login = () => {
   return (
     <div>
       <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '75vh',
-            backgroundImage: `url(${bgimg})`,
-            backgroundSize: 'auto',
-            backgroundPosition: 'center',
-            opacity: 1,
-            zIndex: -1,
-          }}
-        />
-      <Navbar /> 
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '75vh',
+          backgroundImage: `url(${bgimg})`,
+          backgroundSize: 'auto',
+          backgroundPosition: 'center',
+          opacity: 1,
+          zIndex: -1,
+        }}
+      />
+      <Navbar />
+
       <Box
         display={'flex'}
         justifyContent={'center'}
@@ -167,8 +171,6 @@ const Login = () => {
         textAlign={'center'}
         minHeight={'75vh'}
       >
-
-
         <Grid>
           <Paper elevation={24} style={paperStyle} >
             <Grid align="center">
@@ -187,8 +189,8 @@ const Login = () => {
               label="Email"
               placeholder='example@gmail.com'
               fullWidth required
-              color='custom'
-              onKeyDown={handleKeyPress} />
+              onKeyDown={handleKeyPress}
+            />
 
 
             <FormControl variant="outlined" fullWidth color='custom'>
@@ -244,22 +246,14 @@ const Login = () => {
               </Stack>
             }
 
-            <div style={{ marginTop: "10px", fontSize: "15px" }} margin="left">
-              <a href='/'>Olvidé mi contraseña</a>
-              <br />
-              No tienes una cuenta?{"  "}
-              <a href='/register'>
-                <small style={{ textDecoration: "underline", color: "blue" }}>
-                  Registrarme
-                </small>
-              </a>
+            <div style={{ marginTop: "23px", fontSize: "15px", fontFamily:"Roboto, sans-serif" }} margin="left">
+              <a href='/forgot-password'>¿Haz olvidado tu contraseña?</a>
             </div>
 
 
 
           </Paper>
         </Grid>
-
       </Box>
     </div>
   );

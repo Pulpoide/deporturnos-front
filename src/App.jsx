@@ -24,6 +24,9 @@ import CreateReserva from './pages/client/CreateReserva';
 import ClientProfile from './pages/client/ClientProfile';
 import VerifyAccout from './pages/VerifyAccount';
 import ClientChangePassword from './pages/client/ClientChangePassword'
+import ClientForgotPassword from './pages/client/ClientForgotPassword';
+import ClientResetPassword from './pages/client/ClientResetPassword';
+import NotFound from './pages/NotFound';
 
 const theme = createTheme({
   palette: {
@@ -54,6 +57,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/verify" element={<VerifyAccout />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ClientForgotPassword />} />
 
         {/* CLIENT ROUTES */}
         <Route
@@ -78,6 +82,12 @@ function App() {
             <ProtectedRoute role={"CLIENTE"}>
               <ClientChangePassword />
             </ProtectedRoute>
+          } />
+
+        <Route
+          path="/client-resetpassword"
+          element={
+            <ClientResetPassword />
           } />
 
         <Route
@@ -106,7 +116,7 @@ function App() {
           } />
 
         <Route
-          path="/turnos-disponibles/:id"
+          path="/turnos-disponibles/:canchaId"
           element={
             <ProtectedRoute role={"CLIENTE"}>
               <TurnosDisponibles />
@@ -162,6 +172,9 @@ function App() {
             </ProtectedRoute>
           } />
 
+        {/* Ruta 404 */}
+        <Route
+          path='*' element={<NotFound />} />
       </Routes>
     </ThemeProvider>
   )

@@ -108,7 +108,7 @@ const ClientReservas = () => {
                   </Typography>
                 </TableCell>
                 <TableCell align='right'>
-                  {reserva.estado !== 'CANCELADA' && (
+                  {reserva.estado == 'CONFIRMADA' && (
                     <IconButton color="secondary" onClick={() => handleCancelReservaClick(reserva.id)}>
                       <CancelIcon />
                     </IconButton>

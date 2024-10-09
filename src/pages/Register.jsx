@@ -27,18 +27,22 @@ const isTelefono = (telefono) =>
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [password, setPassword] = useState('');
   const [secondPassword, setSecondPassword] = useState('');
+
   const [nombreError, setNombreError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [telefonoError, setTelefonoError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [secondPasswordError, setSecondPasswordError] = useState(false);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
   const [loading, setLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -114,7 +118,7 @@ const Register = () => {
     }
 
     if (passwordError || !password) {
-      setError("Contraseña no válida.");
+      setError("La contraseña no cumple con los requisitos de seguridad: Minimo ocho caracteres, al menos un número y una letra.");
       return;
     }
 

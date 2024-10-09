@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, role }) => {
   const userRole = getUserRole();
 
   useEffect(() => {
-    if (userRole !== role) {
+    if (!userRole || userRole !== role) {
       navigate('/login');
     }
   }, [userRole, role, navigate]);

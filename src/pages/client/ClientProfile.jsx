@@ -65,7 +65,7 @@ const ClientProfile = () => {
 
     const handleSaveChanges = async () => {
 
-        if(!isTelefono(editedTelefono)){
+        if(editedTelefono && !isTelefono(editedTelefono)){
             setErrorMessage("Teléfono no válido.")
             return;
         }
@@ -151,7 +151,8 @@ const ClientProfile = () => {
                         <Stack direction="row" spacing={2} justifyContent="center" marginTop="20px">
                             <TextField
                                 label="Teléfono"
-                                value={editedTelefono === '' ? '- - - - - - - - - - -' : editedTelefono}
+                                placeholder="- - - - - - - - - - -"
+                                value={editedTelefono}
                                 margin="dense"
                                 variant="outlined"
                                 disabled={telDisabled}
@@ -177,16 +178,7 @@ const ClientProfile = () => {
                             </IconButton>
                         </Stack>
 
-                        {showSaveButton && (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleSaveChanges}
-                                sx={{ marginTop: 2 }}
-                            >
-                                Guardar Cambios
-                            </Button>
-                        )}
+                        
                         {errorMessage && (
                             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
                                 <Alert severity="error">
@@ -200,6 +192,16 @@ const ClientProfile = () => {
                                     {successMessage}
                                 </Alert>
                             </Stack>
+                        )}
+                        {showSaveButton && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSaveChanges}
+                                sx={{ marginTop: 2 }}
+                            >
+                                Guardar Cambios
+                            </Button>
                         )}
                     </Paper>
                 </Grid>

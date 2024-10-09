@@ -2,21 +2,25 @@ import React, { useState } from "react";
 import {
   Button,
   TextField,
-  Typography,
+  Avatar,
   Container,
   Box,
   Paper,
   Stack,
   Alert,
   IconButton,
-  InputAdornment
+  InputAdornment,
+  Grid
 } from "@mui/material";
+import LockResetIcon from '@mui/icons-material/LockReset';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import NavbarClient from "../../components/NavbarClient";
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -34,20 +38,22 @@ const ChangePassword = () => {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
   }
 
-  const navigate = useNavigate();
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!oldPassword) {
+      setErrorMessage("Ingrese su contraseña actual.")
+      return;
+    }
+
     if (newPassword !== confirmNewPassword) {
-      setErrorMessage("Las contraseñas nuevas no coinciden.");
+      setErrorMessage("Las contraseñas no coinciden.");
       return;
     }
 
     if (!isPassword(newPassword)) {
-      setErrorMessage("La nueva contraseña debe tener almenos un numero y un caracter.")
+      setErrorMessage("La nueva contraseña no cumple con los requisitos de seguridad: Minimo ocho caracteres, al menos un número y una letra.")
       return;
     }
 
@@ -84,6 +90,9 @@ const ChangePassword = () => {
   const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
   const handleClickShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
+  const paperStyle = { padding: 27, width: 450 };
+  const avatarStyle = { backgroundColor: "#121212" };
+
   return (
     <>
       <NavbarClient />
@@ -93,19 +102,25 @@ const ChangePassword = () => {
           justifyContent={'center'}
           alignItems={'center'}
           textAlign={'center'}
-          minHeight={'50vh'}
+          minHeight={'75vh'}
         >
 
-          <Paper elevation={3} sx={{ padding: 3 }}>
-            <Typography fontFamily={"Bungee, sans-serif"} component="h1" variant="h5" align="center" gutterBottom>
-              Cambiar Contraseña
-            </Typography>
+          <Paper elevation={24} style={paperStyle}>
+            <Grid align="center">
+              <Avatar style={avatarStyle}>
+                <LockResetIcon />
+              </Avatar>
+              <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>
+                Cambiar contraseña
+              </h2>
+            </Grid>
+
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                label="Contraseña Actual"
+                label="Contraseña actual"
                 type="password"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
@@ -115,7 +130,7 @@ const ChangePassword = () => {
                 margin="normal"
                 required
                 fullWidth
-                label="Nueva Contraseña"
+                label="Nueva contraseña"
                 type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -133,7 +148,7 @@ const ChangePassword = () => {
                 margin="normal"
                 required
                 fullWidth
-                label="Confirmar Nueva Contraseña"
+                label="Confirmar contraseña"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}

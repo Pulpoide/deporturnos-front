@@ -43,11 +43,33 @@ const CanchasDisponibles = () => {
     useEffect(() => {
         // Filtrar canchas según el tipo seleccionado
         if (tipoDeCancha === "cualquiera") {
-          setCanchasFiltradas(canchas); // Mostrar todas las canchas si se selecciona "Cualquiera"
+            setCanchasFiltradas(canchas); // Mostrar todas las canchas si se selecciona "Cualquiera"
         } else {
-          setCanchasFiltradas(canchas.filter((cancha) => cancha.tipo === tipoDeCancha));
+            setCanchasFiltradas(canchas.filter((cancha) => cancha.tipo === tipoDeCancha));
         }
-      }, [tipoDeCancha, canchas]);
+    }, [tipoDeCancha, canchas]);
+
+    // Configuración de las opciones de tipo de cancha
+    const obtenerOpcionesDeCancha = () => {
+        if (deporte === 'futbol') {
+            return [
+                { value: 'FÚTBOL 5', label: 'FÚTBOL 5' },
+                { value: 'FÚTBOL 7', label: 'FÚTBOL 7' },
+                { value: 'FÚTBOL 11', label: 'FÚTBOL 11' }
+            ];
+        } else if (deporte === 'padel') {
+            return [
+                { value: 'Pared de cemento', label: 'Pared de cemento' },
+                { value: 'Pared de acrílico', label: 'Pared de acrílico' }
+            ];
+        } else {
+            // Si el deporte no es válido, redirigir
+            navigate('/select-sport');
+            return []; // Retornar un array vacío como fallback
+        }
+    };
+
+    const opcionesDeCancha = obtenerOpcionesDeCancha();
 
 
     return (
@@ -67,17 +89,15 @@ const CanchasDisponibles = () => {
                     onChange={(e) => setTipoDeCancha(e.target.value)}
                 >
                     <MenuItem value="cualquiera">
-                            Cualquiera
+                        Cualquiera
                     </MenuItem>
-                    <MenuItem value="FÚTBOL 5">
-                            FÚTBOL 5
-                    </MenuItem>
-                    <MenuItem value="FÚTBOL 7">
-                            FÚTBOL 7
-                    </MenuItem>
-                    <MenuItem value="FÚTBOL 11">
-                            FÚTBOL 11
-                    </MenuItem>
+                    {
+                        opcionesDeCancha.map((opcion) => (
+                            <MenuItem key={opcion.value} value={opcion.value}>
+                                {opcion.label}
+                            </MenuItem>
+                        ))
+                    }
                 </TextField>
                 <Grid container spacing={2}>
                     {canchasFiltradas.length > 0 ? (
@@ -97,7 +117,7 @@ const CanchasDisponibles = () => {
                             </Grid>
                         ))
                     ) : (
-                        <Typography variant="body1">No se encontraron canchas disponibles.</Typography>
+                        <Typography variant="body1" sx={{marginTop:5}}>No se encontraron canchas disponibles.</Typography>
                     )}
                 </Grid>
                 <Grid container spacing={2} sx={{ marginTop: 2 }}>
