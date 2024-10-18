@@ -7,7 +7,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
-import bgimg from '../../assets/images/thw.jpg';
+import backgroundImage from '../../assets/images/imagen_background_adv.png'
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -119,7 +119,7 @@ const ClientResetPassword = () => {
                     left: 0,
                     width: '100%',
                     height: '75vh',
-                    backgroundImage: `url(${bgimg})`,
+                    backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'auto',
                     backgroundPosition: 'center',
                     opacity: 1,

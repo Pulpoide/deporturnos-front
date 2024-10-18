@@ -8,8 +8,7 @@ import Stack from '@mui/material/Stack';
 
 
 import Navbar from "../../components/Navbar";
-import bgimg from '../../assets/images/thw.jpg'
-
+import backgroundImage from '../../assets/images/imagen_background_adv.png'
 // Email Validation
 const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -63,7 +62,7 @@ const ClientForgotPassword = () => {
                     left: 0,
                     width: '100%',
                     height: '75vh',
-                    backgroundImage: `url(${bgimg})`,
+                    backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'auto',
                     backgroundPosition: 'center',
                     opacity: 1,

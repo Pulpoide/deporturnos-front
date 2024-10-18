@@ -59,29 +59,7 @@ const Carousel = () => {
 }, []);
 
   return (
-<<<<<<< Updated upstream
-    <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
-      
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '66vh',
-            backgroundImage: `url(${bgimg})`,
-            backgroundSize: 'auto',
-            backgroundPosition: 'center',
-            opacity: 1,
-            zIndex: -1,
-            borderRadius: 7,
-          }}
-        />
-      
-      <Navbar />
-=======
     <Box sx={{ position: 'relative', width: '100%', height: "75vh", overflow: 'hidden', p:'0', m:'0' }}>
->>>>>>> Stashed changes
       <Box
         component="img"
         src={images[currentIndex]}

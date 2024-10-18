@@ -149,29 +149,9 @@ const Login = () => {
 
 
   return (
-<<<<<<< Updated upstream
-    <div>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '75vh',
-          backgroundImage: `url(${bgimg})`,
-          backgroundSize: 'auto',
-          backgroundPosition: 'center',
-          opacity: 1,
-          zIndex: -1,
-        }}
-      />
-      <Navbar />
-
-=======
     <>
     <Navbar/>
     <Box sx={{ width: '100%', minHeight: '100vh', overflow:'hidden', p: 4, m:'0', backgroundImage:`url(${backgroundImage})`, backgroundSize:'cover', backgroundPosition:'center'}}>
->>>>>>> Stashed changes
       <Box
         display={'flex'}
         justifyContent={'center'}
@@ -180,10 +160,6 @@ const Login = () => {
         flexGrow={1}
         sx={{paddingBottom:'100px'}}
       >
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         <Grid>
           <Paper elevation={24} style={paperStyle} >
             <Grid align="center">

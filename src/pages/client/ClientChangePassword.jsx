@@ -97,16 +97,6 @@ const ChangePassword = () => {
   return (
     <>
       <NavbarClient />
-<<<<<<< Updated upstream
-      <Container maxWidth="xs">
-        <Box
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          textAlign={'center'}
-          minHeight={'75vh'}
-        >
-=======
       <Box
                 display={'flex'}
                 justifyContent={'center'}
@@ -119,7 +109,6 @@ const ChangePassword = () => {
                     backgroundPosition: 'center',
                 }}
             >
->>>>>>> Stashed changes
 
           <Paper elevation={24} style={paperStyle}>
             <Grid align="center">

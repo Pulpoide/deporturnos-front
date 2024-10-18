@@ -128,15 +128,11 @@ const CanchasDisponibles = () => {
                             </Grid>
                         ))
                     ) : (
-<<<<<<< Updated upstream
-                        <Typography variant="body1" sx={{marginTop:5}}>No se encontraron canchas disponibles.</Typography>
-=======
                         <Grid item xs={12}>
                         <Typography variant="body1" sx={{ textAlign: 'center', marginTop:5 }}>
                             No se encontraron canchas disponibles.
                         </Typography>
                     </Grid>
->>>>>>> Stashed changes
                     )}
                 </Grid>
                 <Grid container spacing={2} sx={{ marginTop: 2, justifyContent:'center' }}>
