@@ -244,7 +244,7 @@ const AdminReservas = () => {
                                 <StyledTableCell align='right'>Fecha de reserva</StyledTableCell>
                                 <StyledTableCell align='right'>Fecha de turno</StyledTableCell>
                                 <StyledTableCell align='right'>Hora inicio</StyledTableCell>
-                                <StyledTableCell align='right'>Hora inicio</StyledTableCell>
+                                <StyledTableCell align='right'>Hora fin</StyledTableCell>
                                 <StyledTableCell align='right'>Usuario</StyledTableCell>
                                 <StyledTableCell align='right'>Turno</StyledTableCell>
                                 <StyledTableCell align='right'>Cancha</StyledTableCell>

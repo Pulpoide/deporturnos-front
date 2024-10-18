@@ -12,7 +12,7 @@ import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
 
 const TurnosDisponibles = () => {
-    const { id } = useParams();
+    const { canchaId } = useParams();
     const [turnos, setTurnos] = useState([]);
     const [selectedDate, setSelectedDate] = useState(dayjs());
 
@@ -24,13 +24,9 @@ const TurnosDisponibles = () => {
 
     useEffect(() => {
         const fetchTurnos = (date) => {
-            if (!id) {
-                console.error("ID is undefined!");
-                return;
-            }
 
             const formattedDate = date.format('YYYY-MM-DD');
-            axios.get(`http://localhost:8080/api/turnos/disponibles/${id}/cancha?fecha=${formattedDate}`, tokenConfig)
+            axios.get(`http://localhost:8080/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
                 .then(response => {
                     setTurnos(response.data);
                 })
@@ -40,7 +36,7 @@ const TurnosDisponibles = () => {
         };
 
         fetchTurnos(selectedDate);
-    }, [id, selectedDate]); // Agregué id aquí
+    }, [canchaId, selectedDate]); 
 
     const handleCreateReserva = (turnoId, turno) => {
         navigate(`/create-reserva/confirm`, { state: { turno } });

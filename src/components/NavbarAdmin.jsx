@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Container } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom'; // Asumiendo que utilizas react-router-dom para manejar las rutas
+import { Link } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 

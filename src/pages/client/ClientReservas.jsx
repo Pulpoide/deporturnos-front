@@ -17,8 +17,6 @@ import dayjs from 'dayjs';
 
 const ClientReservas = () => {
   const [reservas, setReservas] = useState([]);
-  const [fechaDesde, setFechaDesde] = useState(null);
-  const [fechaHasta, setFechaHasta] = useState(null);
   const navigate = useNavigate();
 
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -35,18 +33,19 @@ const ClientReservas = () => {
     headers: { Authorization: `Bearer ${currentUser.token}` }
   };
 
-  const fetchReservas = async () => {
+  const fetchReservas = async (includeCompleted = false) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas`, tokenConfig);
-      if (response && response.data) {
+      const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
+      setReservas(response.data)
+      // if (response) {
 
-        const today = new Date();
-        const sortedReservas = response.data
-          .filter(reserva => new Date(reserva.turno.fecha) >= today) 
-          .sort((a, b) => new Date(a.turno.fecha) - new Date(b.turno.fecha)); 
+      //   const today = new Date();
+      //   const sortedReservas = response.data
+      //     .filter(reserva => new Date(reserva.turno.fecha) >= today) 
+      //     .sort((a, b) => new Date(a.turno.fecha) - new Date(b.turno.fecha)); 
   
-        setReservas(sortedReservas);
-      }
+      //   setReservas(sortedReservas);
+      // }
     } catch (error) {
       if (error.response && error.response.status === 403) {
         navigate("/login");

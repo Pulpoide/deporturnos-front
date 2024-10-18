@@ -256,7 +256,13 @@ const handleSearch = () => {
                     >
                         Buscar
                     </Button>
+                    
                 </Box>
+                {error && (
+                  <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                    <Alert severity="error">{error}</Alert>
+                  </Stack>
+                )}
             {turnos.length === 0 ? (
               <Box justifyContent={'center'} display={'flex'} padding={2}>
                 <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay turnos</Typography>
