@@ -1,50 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react'; 
 import Navbar from '../components/Navbar';
-import { Container, Box, Button } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Footer from '../components/Footer';
+import Faqs from '../components/Faqs';
+import Advertising from '../components/Advertising';
+import '../App.css'
 
-import futbol1 from '../assets/images/futbol1.jpg';
+import futbol from '../assets/images/futbol.jpg';
 import futbol2 from '../assets/images/futbol2.jpg';
-import cancha from '../assets/images/futbol3.jpg';
-import bgimg from '../assets/images/thw.jpg'
-const images = [
-  futbol1,
-  cancha,
-  futbol2
-]
+import padel1 from '../assets/images/padel1.jpg';
 
+
+const images = [padel1, futbol, futbol2];
 
 const theme = createTheme({
   palette: {
+    type: 'light',
     primary: {
-      main: '#43a047'
+      main: '#00b04b',
     },
-    custom: {
-      main: '#43a047',
-      light: '#68b36b',
-      dark: '#2e7031',
-      contrastText: '#fff',
-    },
-    black: {
-      main: '#121212',
-      contrastText: '#fff',
-    },
-    black2: {
-      main: 'rgb(23 23 23)'
-    }
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          margin: 0,
+          padding: 0,
+        },
+      }}}
 });
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  '&:hover': {
+    backgroundColor: '#45a048',
+  },
+}));
 
+const Carousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  const next = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
 
-const h1Style = { marginBottom: '1rem', fontFamily: 'Terminal Normal', fontWeight: 400, fontStyle: 'normal', fontSize: '62px', color:'#FFFFFF', textShadow:"2px 2px 4px rgba(0, 0, 0, 0.5)"}
-const pStyle = { marginLeft: 'auto', marginRight: 'auto', maxWidth: '42rem', fontSize: '20px', fontFamily: 'Roboto, sans-serif', color:'#FFFFFF' };
-const buttonStyle = { paddingTop: '1rem', paddingBottom: '1rem', alignSelf: 'center', marginTop: '3rem', marginBottom: '2rem' }
-const spanStyle = { fontSize: '18px', lineHeight: '1.6', letterSpacing: '.01em', fontFamily: 'Roboto, sans-serif', color:'#FFFFFF' }
+  const prev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
-const Home = () => {
+  useEffect(() => {
+    const intervalId = setInterval(next, 4000); 
+
+    return () => clearInterval(intervalId); 
+}, []);
+
   return (
+<<<<<<< Updated upstream
     <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
       
         <Box
@@ -64,34 +79,63 @@ const Home = () => {
         />
       
       <Navbar />
+=======
+    <Box sx={{ position: 'relative', width: '100%', height: "75vh", overflow: 'hidden', p:'0', m:'0' }}>
+>>>>>>> Stashed changes
       <Box
-        display={'flex'}
-        width={'100%'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-        marginLeft={'auto'}
-        marginRight={'auto'}
-        maxWidth={'720px'}
-        textAlign={'center'}
-        paddingTop={'6rem'}
-      >
-        <h1 style={h1Style}>
-          Reservá tu cancha
-          <br />
-          al instante
-          {/* <br />
-            rápido, fácil y seguro */}
-        </h1>
-        <p style={pStyle}>Aliquam at massa eu purus tincidunt condimentum. Aliquam convallis non ligula nec tincidunt. Phasellus eu mattis velit, et congue augue.</p>
-
-        <Button style={buttonStyle} variant='contained' href='/register'>Regístrate de forma gratuita</Button>
-        {/* <span style={spanStyle}>¿Ya tienes una cuenta?</span>
-        <a href="http://localhost:5173/login" > Iniciar sesión</a> */}
+        component="img"
+        src={images[currentIndex]}
+        alt={`Slide ${currentIndex}`}
+        sx={{ width: '100%', height: '100%', objectFit: "cover", objectPosition:'center', transition: 'transform 0.5s ease' }}
+      />
+      <Box sx={{
+        position: 'absolute',
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)', 
+        zIndex: 2,
+      }}>
+        <StyledButton variant="contained" component="a" href="/register">
+          Registrate de forma gratuita
+        </StyledButton>
       </Box>
-      {/* Aquí iría tu contenido, por ejemplo, la Navbar */}
     </Box>
-
   );
 };
+
+const Home = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Navbar />
+        <Box sx={{ position: 'relative' }}>
+          <Carousel />
+          <Box sx={{
+            position: 'absolute',
+            top: '20%',
+            right: '20px',
+            zIndex: 2,
+            color: 'white',
+            textAlign: 'right',
+          }}>
+            <Typography variant='h2' component="h2">
+              Reserva tu
+              <br />cancha al instante
+            </Typography>
+            <Typography variant='h5' component="h5" sx={{ color: "white" }}>
+              Explorá las canchas disponibles
+              <br />en tiempo real
+            </Typography>
+          </Box>
+        </Box>
+
+        <Advertising/>
+        <Faqs/>
+        <Footer />
+
+      </Box>
+    </ThemeProvider>
+  );
+};  
 
 export default Home;

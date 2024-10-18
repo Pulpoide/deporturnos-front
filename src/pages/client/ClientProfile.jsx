@@ -4,6 +4,7 @@ import { Button, Grid, Paper, TextField, Box, Typography, Stack, IconButton, Ale
 import { Edit } from '@mui/icons-material';
 import axios from "axios";
 import NavbarClient from "../../components/NavbarClient"
+import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
 // Telefono Validation
 const isTelefono = (telefono) =>
@@ -122,12 +123,16 @@ const ClientProfile = () => {
                 justifyContent={'center'}
                 alignItems={'center'}
                 textAlign={'center'}
-                minHeight={'50vh'}
+                minHeight={'100vh'}
+                sx={{
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
             >
 
-                <Grid align="center" height={100} >
-                    <Paper elevation={24} style={paperStyle}  >
-
+                <Grid item>
+                    <Paper elevation={24} style={{ ...paperStyle, marginTop: '10px' }} >
                         <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30}}>Datos
                             <br />
                             personales</h2>

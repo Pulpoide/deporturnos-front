@@ -17,6 +17,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import NavbarClient from "../../components/NavbarClient";
+import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ const ChangePassword = () => {
   return (
     <>
       <NavbarClient />
+<<<<<<< Updated upstream
       <Container maxWidth="xs">
         <Box
           display={'flex'}
@@ -104,6 +106,20 @@ const ChangePassword = () => {
           textAlign={'center'}
           minHeight={'75vh'}
         >
+=======
+      <Box
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                textAlign={'center'}
+                minHeight={'100vh'}
+                sx={{
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+>>>>>>> Stashed changes
 
           <Paper elevation={24} style={paperStyle}>
             <Grid align="center">
@@ -188,7 +204,6 @@ const ChangePassword = () => {
             </Box>
           </Paper>
         </Box>
-      </Container>
     </>
   );
 };

@@ -3,8 +3,9 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router';
+
 
 
 const theme = createTheme({
@@ -30,7 +31,6 @@ const theme = createTheme({
 
 const Navbar = () => {
   const navigate = useNavigate();
-
   return (
     <ThemeProvider theme={theme}>
       
@@ -59,10 +59,10 @@ const Navbar = () => {
 
 
 
-          <div className=''>
+          <Box sx={{display:'flex', flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center' }}>
             <Button color='primary' variant='contained' href='/login' sx={{ mr: 2 }}>Iniciar Sesión</Button>
             <Button color='black' variant='contained' href='/register'>Registrarme</Button>
-          </div>
+          </Box>
 
         </Toolbar>
         </Container>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Box, Container, Typography, Grid, Card, CardContent, MenuItem, Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NavbarClient from '../../components/NavbarClient';
+import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
 
 const CanchasDisponibles = () => {
@@ -75,12 +76,22 @@ const CanchasDisponibles = () => {
     return (
         <>
             <NavbarClient />
-            <Container>
-                <Box sx={{ textAlign: 'start' }}>
-                    <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30 }}>
-                        2. Selección de cancha:
-                    </h2>
-                </Box>
+                <Box sx={{
+                    width: '100%',
+                    minHeight: '100vh',
+                    overflow: 'hidden',
+                    p: 4,
+                    m: 0,
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                }}
+                >
+                <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
+                    1. Selecciona una cancha:
+                </Typography>
                 <TextField
                     select
                     helperText="Tipo de Cancha"
@@ -117,17 +128,25 @@ const CanchasDisponibles = () => {
                             </Grid>
                         ))
                     ) : (
+<<<<<<< Updated upstream
                         <Typography variant="body1" sx={{marginTop:5}}>No se encontraron canchas disponibles.</Typography>
+=======
+                        <Grid item xs={12}>
+                        <Typography variant="body1" sx={{ textAlign: 'center', marginTop:5 }}>
+                            No se encontraron canchas disponibles.
+                        </Typography>
+                    </Grid>
+>>>>>>> Stashed changes
                     )}
                 </Grid>
-                <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                <Grid container spacing={2} sx={{ marginTop: 2, justifyContent:'center' }}>
                     <Grid item>
                         <Button variant="contained" color="black" onClick={handleBack}>
                             Atras
                         </Button>
                     </Grid>
                 </Grid>
-            </Container>
+                </Box>
         </>
     );
 };
