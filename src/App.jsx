@@ -27,6 +27,7 @@ import ClientChangePassword from './pages/client/ClientChangePassword'
 import ClientForgotPassword from './pages/client/ClientForgotPassword';
 import ClientResetPassword from './pages/client/ClientResetPassword';
 import NotFound from './pages/NotFound';
+import AdminValidateReserva from './pages/admin/AdminValidateReserva';
 
 const theme = createTheme({
   palette: {
@@ -171,6 +172,15 @@ function App() {
               <AdminReservas />
             </ProtectedRoute>
           } />
+
+        {/* Validar Reserva */}
+        <Route
+          path='/validate-reserva/:reservaId'
+          element={
+            <ProtectedRoute role={"ADMIN"}>
+          <AdminValidateReserva/>
+          </ProtectedRoute>
+          }/>
 
         {/* Ruta 404 */}
         <Route

@@ -250,6 +250,7 @@ const AdminReservas = () => {
                                 <MenuItem value="MODIFICADA">MODIFICADA</MenuItem>
                                 <MenuItem value="CANCELADA">CANCELADA</MenuItem>
                                 <MenuItem value="COMPLETADA">COMPLETADA</MenuItem>
+                                <MenuItem value="EN_PROCESO">EN PROCESO</MenuItem>
                             </Select>
                         </FormControl>
                     </DialogContent>
