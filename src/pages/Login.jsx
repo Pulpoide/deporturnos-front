@@ -21,7 +21,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
-import bgimg from '../assets/images/thw.jpg'
+import backgroundImage from '../assets/images/imagen_background_adv.png'
+import Footer from '../components/Footer';
 
 
 // Switch "Recordarme" color
@@ -105,6 +106,7 @@ const Login = () => {
     setError(null);
 
 
+    
     // Conexión con el Backend 
     const credentials = { email, password };
     try {
@@ -147,6 +149,7 @@ const Login = () => {
 
 
   return (
+<<<<<<< Updated upstream
     <div>
       <Box
         sx={{
@@ -164,13 +167,23 @@ const Login = () => {
       />
       <Navbar />
 
+=======
+    <>
+    <Navbar/>
+    <Box sx={{ width: '100%', minHeight: '100vh', overflow:'hidden', p: 4, m:'0', backgroundImage:`url(${backgroundImage})`, backgroundSize:'cover', backgroundPosition:'center'}}>
+>>>>>>> Stashed changes
       <Box
         display={'flex'}
         justifyContent={'center'}
         alignItems={'center'}
         textAlign={'center'}
-        minHeight={'75vh'}
+        flexGrow={1}
+        sx={{paddingBottom:'100px'}}
       >
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         <Grid>
           <Paper elevation={24} style={paperStyle} >
             <Grid align="center">
@@ -250,12 +263,12 @@ const Login = () => {
               <a href='/forgot-password'>¿Haz olvidado tu contraseña?</a>
             </div>
 
-
-
           </Paper>
         </Grid>
       </Box>
-    </div>
+      <Footer/>
+    </Box>
+    </>
   );
 };
 

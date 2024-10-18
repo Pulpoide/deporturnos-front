@@ -6,8 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
 import Navbar from "../components/Navbar";
-
-
+import backgroundImage from '../assets/images/imagen_background_adv.png'
 
 
 const VerifyAccout = () => {
@@ -75,53 +74,51 @@ const VerifyAccout = () => {
 
     return (
         <>
-            <Navbar />
 
             <Box
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                textAlign={'center'}
-                minHeight={'100vh'}
-            >
+                sx={{
+                    width: '100%', minHeight: '100vh', overflow: 'hidden', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                }}>
+                <Navbar />
+                <Box >
+                    <Grid container justifyContent="center" alignItems="center" textAlign='center'  style={{ minHeight: '100vh' }}>
+                        <Grid item xs={10} sm={8} md={6}>
+                            <Paper elevation={3} style={{ padding: '20px' }}>
+                                <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Verifica tu email</h2>
+                                <p style={pStyle}>Un código de verificación fue enviado a: {email}</p>
+                                <TextField
+                                    fullWidth
+                                    label="Código de Verificación"
+                                    value={verificationCode}
+                                    onChange={(e) => setVerificationCode(e.target.value)}
+                                    margin="normal"
+                                    helperText="Introduce el código aquí"
+                                    placeholder='-  -  -  -  -  -'
+                                />
 
-            <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-                <Grid item xs={10} sm={8} md={6}>
-                    <Paper elevation={3} style={{ padding: '20px' }}>
-                        <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Verifica tu email</h2>
-                        <p style={pStyle}>Un código de verificación fue enviado a: {email}</p>
-                        <TextField
-                            fullWidth
-                            label="Código de Verificación"
-                            value={verificationCode}
-                            onChange={(e) => setVerificationCode(e.target.value)}
-                            margin="normal"
-                            helperText="Introduce el código aquí"
-                            placeholder='-  -  -  -  -  -'
-                        />
+                                {error && (
+                                    <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
+                                        <Alert severity="error">{error}</Alert>
+                                    </Stack>
+                                )}
+                                {success && (
+                                    <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
+                                        <Alert severity="success">{success}</Alert>
+                                    </Stack>
+                                )}
 
-                        {error && (
-                            <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
-                                <Alert severity="error">{error}</Alert>
-                            </Stack>
-                        )}
-                        {success && (
-                            <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
-                                <Alert severity="success">{success}</Alert>
-                            </Stack>
-                        )}
-
-                        <Stack direction="column" spacing={2} justifyContent="center" marginTop="20px">
-                            <Button variant="contained" color="primary" onClick={handleVerify}>
-                                Verificar cuenta
-                            </Button>
-                            <Button variant="outlined" color="black" onClick={handleResendCode} startIcon={loading ? <CircularProgress size={20} /> : null}>
-                                Volver a enviar código
-                            </Button>
-                        </Stack>
-                    </Paper>
-                </Grid>
-            </Grid>
+                                <Stack direction="column" spacing={2} justifyContent="center" marginTop="20px">
+                                    <Button variant="contained" color="primary" onClick={handleVerify}>
+                                        Verificar cuenta
+                                    </Button>
+                                    <Button variant="outlined" color="black" onClick={handleResendCode} startIcon={loading ? <CircularProgress size={20} /> : null}>
+                                        Volver a enviar código
+                                    </Button>
+                                </Stack>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </Box>
             </Box>
         </>
     )

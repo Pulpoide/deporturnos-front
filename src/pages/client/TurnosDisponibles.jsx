@@ -8,10 +8,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import NavbarClient from '../../components/NavbarClient';
+import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
 
 const TurnosDisponibles = () => {
-    const { canchaId } = useParams();
+    const { id } = useParams();
     const [turnos, setTurnos] = useState([]);
     const [selectedDate, setSelectedDate] = useState(dayjs());
 
@@ -23,36 +24,53 @@ const TurnosDisponibles = () => {
 
     useEffect(() => {
         const fetchTurnos = (date) => {
+            if (!id) {
+                console.error("ID is undefined!");
+                return;
+            }
+
             const formattedDate = date.format('YYYY-MM-DD');
-            axios.get(`http://localhost:8080/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
+            axios.get(`http://localhost:8080/api/turnos/disponibles/${id}/cancha?fecha=${formattedDate}`, tokenConfig)
                 .then(response => {
                     setTurnos(response.data);
                 })
                 .catch(error => {
-                    console.error("There was an error fetching the turnos!", error);
+                    console.error("There was an error fetching the turnos!", error.response ? error.response.data : error.message);
                 });
         };
 
         fetchTurnos(selectedDate);
-    }, [canchaId, selectedDate]);
+    }, [id, selectedDate]); // Agregué id aquí
 
     const handleCreateReserva = (turnoId, turno) => {
-        navigate(`/create-reserva/confirm`, { state: { turno } })
+        navigate(`/create-reserva/confirm`, { state: { turno } });
     };
+
 
     return (
         <>
             <NavbarClient />
-            <Container>
-                <Box sx={{ textAlign: 'start' }}>
-                    <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30 }}>Turnos disponibles:</h2>
-                </Box>
-
+            <Box sx={{
+                    width: '100%',
+                    minHeight: '100vh',
+                    overflow: 'hidden',
+                    p: 4,
+                    m: 0,
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                }}
+                >
+                <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
+                    1. Selecciona un turno:
+                </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                         minDate={dayjs()}
                         label="Seleccionar fecha"
-                        value={selectedDate.format('YYYY-MM-DD') ? dayjs(selectedDate) : null}
+                        value={selectedDate}
                         onChange={(date) => setSelectedDate(date)}
                         format='DD/MM/YYYY'
                     />
@@ -75,13 +93,17 @@ const TurnosDisponibles = () => {
                             </Grid>
                         ))
                     ) : (
-                        <Typography variant="body1">No se encontraron turnos disponibles para la fecha seleccionada.</Typography>
+                        <Grid item xs={12}>
+                        <Typography variant="body1" sx={{ textAlign: 'center', marginTop:5 }}>
+                            No se encontraron turnos disponibles.
+                        </Typography>
+                    </Grid>
                     )}
                 </Grid>
                 <Button variant="contained" color="black" onClick={() => navigate(-1)}>
                     Atras
                 </Button>
-            </Container>
+            </Box>
         </>
     );
 };

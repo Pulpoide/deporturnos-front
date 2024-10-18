@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
     Table, TableBody, TableContainer, TableHead, TableRow,
     Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
-    DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography
+    DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField
 } from '@mui/material'
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -10,6 +10,7 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import NavbarAdmin from '../../components/NavbarAdmin';
 import { useNavigate } from "react-router";
+import dayjs from "dayjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -32,6 +33,9 @@ const AdminReservas = () => {
     const [turnoId, setTurnoId] = useState('');
     const [estado, setEstado] = useState('');
     const [initialValues, setInitialValues] = useState({});
+    const [fechaDesdeInput, setFechaDesdeInput] = useState('');
+    const [fechaHastaInput, setFechaHastaInput] = useState('');
+
 
     const navigate = useNavigate();
 
@@ -74,15 +78,50 @@ const AdminReservas = () => {
     const fetchTurnos = async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/turnos', tokenConfig);
-            setTurnos(response.data);
+
+            if (response.data && response.data.length > 0) {
+                const sortedReservas = response.data
+                    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
+                    .filter(reserva => new Date(reserva.fecha) >= new Date());
+                setTurnos(sortedReservas);
+            } else {
+                console.log("No se encontraron turnos.");
+                setTurnos([]); 
+            }
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                console.log("no hay turnitos")
+                console.log("No hay turnos disponibles.");
+                setTurnos([]); 
             } else {
                 console.error('Error fetchTurnos:', error);
             }
         }
     };
+
+
+    const fetchReservasByFecha = async (fechaDesde, fechaHasta) => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/reservas/filtrar', {
+                params: { fechaDesde, fechaHasta },
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            setReservas(response.data);
+        } catch (error) {
+            console.error('Error fetching reservas by fecha:', error.response?.data || error.message);
+        }
+    };
+
+    const handleSearch = () => {
+        const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
+        const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
+
+        if (fechaDesde && fechaHasta) {
+            fetchReservasByFecha(fechaDesde, fechaHasta);
+        } else {
+            console.error('Por favor, asegúrate de que ambas fechas están seleccionadas.');
+        }
+    };
+
 
     // Handlers
     const handleAdd = () => {
@@ -172,6 +211,28 @@ const AdminReservas = () => {
                         Agregar Reserva
                     </Button>
                 </Box>
+                <Box justifyContent={'center'} display={'flex'} marginBottom={2}>
+                    <TextField
+                        label="Fecha Desde"
+                        type="date"
+                        onChange={(e) => setFechaDesdeInput(e.target.value)} 
+                        InputLabelProps={{ shrink: true }}
+                    />
+                    <TextField
+                        label="Fecha Hasta"
+                        type="date"
+                        onChange={(e) => setFechaHastaInput(e.target.value)} 
+                        InputLabelProps={{ shrink: true }}
+                    />
+                    <Button
+                        variant="contained"
+                        color="custom"
+                        onClick={handleSearch}
+                    >
+                        Buscar
+                    </Button>
+                </Box>
+
                 {reservas.length === 0 ? (
                     <Box justifyContent={'center'} display={'flex'} padding={2}>
                         <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay reservas</Typography>
@@ -180,10 +241,13 @@ const AdminReservas = () => {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align='right'>ID</StyledTableCell>
-                                <StyledTableCell align='right'>Fecha</StyledTableCell>
+                                <StyledTableCell align='right'>Fecha de reserva</StyledTableCell>
+                                <StyledTableCell align='right'>Fecha de turno</StyledTableCell>
+                                <StyledTableCell align='right'>Hora inicio</StyledTableCell>
+                                <StyledTableCell align='right'>Hora inicio</StyledTableCell>
                                 <StyledTableCell align='right'>Usuario</StyledTableCell>
                                 <StyledTableCell align='right'>Turno</StyledTableCell>
+                                <StyledTableCell align='right'>Cancha</StyledTableCell>
                                 <StyledTableCell align='right'>Estado</StyledTableCell>
                                 <StyledTableCell align='right'>Acciones</StyledTableCell>
                             </TableRow>
@@ -191,10 +255,13 @@ const AdminReservas = () => {
                         <TableBody>
                             {reservas.map((reserva) => (
                                 <TableRow key={reserva.id}>
-                                    <TableCell align='right'>{reserva.id}</TableCell>
-                                    <TableCell align='right'>{reserva.fecha}</TableCell>
+                                    <TableCell align='right'>{dayjs(reserva.fecha).format('DD/MM/YYYY')}</TableCell>
+                                    <TableCell align='right'>{dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</TableCell>
+                                    <TableCell align='right'>{reserva.turno.horaInicio}</TableCell>
+                                    <TableCell align='right'>{reserva.turno.horaFin}</TableCell>
                                     <TableCell align='right'>{reserva.usuario.nombre}</TableCell>
                                     <TableCell align='right'>{reserva.turno.id}</TableCell>
+                                    <TableCell align='right'>{reserva.turno.cancha.nombre}</TableCell>
                                     <TableCell align='right'>{reserva.estado}</TableCell>
                                     <TableCell align='right'>
                                         <IconButton color="custom" onClick={() => handleEdit(reserva)}>

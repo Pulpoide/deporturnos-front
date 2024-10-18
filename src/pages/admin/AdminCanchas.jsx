@@ -11,6 +11,7 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from "react-router";
 import NavbarAdmin from '../../components/NavbarAdmin';
+import backgroundImage from '../../assets/images/imagen_background_club.png';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,6 +40,10 @@ const AdminCanchas = () => {
   const [open, setOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [canchaToDelete, setCanchaToDelete] = useState(null);
+  const [turnos, setTrunos] = useState([
+    {dia: 'lunes', horario: ' '},
+    {dia: 'martes', horario: ' '},
+  ]);
 
   const navigate = useNavigate();
 
@@ -141,169 +146,180 @@ const AdminCanchas = () => {
     setCanchaToDelete(null);
   };
 
-  const buttonStyle = { width: '33%', marginTop: '19px', marginBottom: '19px' };
+  const buttonStyle = { width: '33%', marginTop: '19px', marginBottom: '10px' };
 
   return (
     <>
       <NavbarAdmin />
-      <TableContainer component={Paper}>
-        <Box justifyContent={'center'} display={'flex'}>
-          <Button
-            variant="contained"
-            color="custom"
-            startIcon={<Add />}
-            onClick={handleAdd}
-            style={buttonStyle}
-          >
-            Agregar Cancha
-          </Button>
-        </Box>
-        {canchas.length === 0 ? (
-          <Box justifyContent={'center'} display={'flex'} padding={2}>
-            <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay canchas</Typography>
-          </Box>
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="right">ID</StyledTableCell>
-                <StyledTableCell align="right">Nombre</StyledTableCell>
-                <StyledTableCell align="right">Tipo</StyledTableCell>
-                <StyledTableCell align="right">Precio por Hora</StyledTableCell>
-                <StyledTableCell align="right">Disponibilidad</StyledTableCell>
-                <StyledTableCell align="right">Descripción</StyledTableCell>
-                <StyledTableCell align="right">Deporte</StyledTableCell>
-                <StyledTableCell align="right">Acciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {canchas.map((cancha) => (
-                <TableRow key={cancha.id}>
-                  <TableCell align="right">{cancha.id}</TableCell>
-                  <TableCell align="right">{cancha.nombre}</TableCell>
-                  <TableCell align="right">{cancha.tipo}</TableCell>
-                  <TableCell align="right">${cancha.precioHora}.-</TableCell>
-                  <TableCell align="right">
-                    <Typography
-                      style={{
-                        color: cancha.disponibilidad ? 'green' : 'red'
-                      }}
-                    >
-                      {cancha.disponibilidad ? 'Disponible' : 'No Disponible'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">{cancha.descripcion}</TableCell>
-                  <TableCell align="right">{cancha.deporte}</TableCell>
-                  <TableCell align="right">
-                    <IconButton color="custom" onClick={() => handleEdit(cancha)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton color="error" onClick={() => handleDeleteClick(cancha.id)}>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>{selectedCancha ? 'Editar Cancha' : 'Agregar Cancha'}</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Nombre"
-              fullWidth
-              value={nombre || ''}
-              onChange={(e) => setNombre(e.target.value)}
+      <Box
+        sx={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          textAlign: 'center'
+        }}>
+        <TableContainer component={Paper}>
+          <Box justifyContent={'center'} display={'flex'} marginBottom={'20px'}>
+            <Button
+              variant="contained"
               color="custom"
-            />
-            <TextField
-              color="custom"
-              margin="dense"
-              label="Tipo"
-              fullWidth
-              value={tipo || ''}
-              onChange={(e) => setTipo(e.target.value)}
-            />
-            <TextField
-              color="custom"
-              margin="dense"
-              label="Precio por Hora"
-              fullWidth
-              type="number"
-              value={precioHora || ''}
-              onChange={(e) => setPrecioHora(e.target.value)}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={disponibilidad}
-                  onChange={(e) => setDisponibilidad(e.target.checked)}
-                  color="primary"
-                />
-              }
-              label="Disponibilidad"
-            />
-            <TextField
-              color="custom"
-              margin="dense"
-              label="Descripción"
-              fullWidth
-              multiline
-              rows={4}
-              value={descripcion || ''}
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
-
-
-            <InputLabel id="label">
-              Deporte
-            </InputLabel>
-            <Select
-              labelId="label"
-              id="demo-simple-select-helper"
-              value={deporte || ''}
-              defaultValue="FUTBOL"
-              label="Deporte"
-              onChange={(e) => setDeporte(e.target.value)}
-              fullWidth
-              color="custom"
+              startIcon={<Add />}
+              onClick={handleAdd}
+              style={buttonStyle}
             >
-              <MenuItem value={"FUTBOL"}>FUTBOL</MenuItem>
-              <MenuItem value={"PADEL"}>PADEL</MenuItem>
-            </Select>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)} color="custom">
-              Cancelar
+              Agregar Cancha
             </Button>
-            <Button onClick={handleSave} color="custom">
-              Guardar
-            </Button>
-          </DialogActions>
-        </Dialog>
+          </Box>
+          {canchas.length === 0 ? (
+            <Box justifyContent={'center'} display={'flex'} padding={2}>
+              <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay canchas</Typography>
+            </Box>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="right">Nombre</StyledTableCell>
+                  <StyledTableCell align="right">Tipo</StyledTableCell>
+                  <StyledTableCell align="right">Precio por Hora</StyledTableCell>
+                  <StyledTableCell align="right">Disponibilidad</StyledTableCell>
+                  <StyledTableCell align="right">Descripción</StyledTableCell>
+                  <StyledTableCell align="right">Deporte</StyledTableCell>
+                  <StyledTableCell align="right">Acciones</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {canchas.map((cancha) => (
+                  <TableRow key={cancha.id}>
+                    <TableCell align="right">{cancha.nombre}</TableCell>
+                    <TableCell align="right">{cancha.tipo}</TableCell>
+                    <TableCell align="right">${cancha.precioHora}.-</TableCell>
+                    <TableCell align="right">
+                      <Typography
+                        style={{
+                          color: cancha.disponibilidad ? 'green' : 'red'
+                        }}
+                      >
+                        {cancha.disponibilidad ? 'Disponible' : 'No Disponible'}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">{cancha.descripcion}</TableCell>
+                    <TableCell align="right">{cancha.deporte}</TableCell>
+                    <TableCell align="right">
+                      <IconButton color="custom" onClick={() => handleEdit(cancha)}>
+                        <Edit />
+                      </IconButton>
+                      <IconButton color="error" onClick={() => handleDeleteClick(cancha.id)}>
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
 
-        <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
-          <DialogTitle>Confirmar Eliminación</DialogTitle>
-          <DialogContent>
-            <p>¿Estás seguro de que deseas eliminar esta cancha?</p>
-            <p>Puede que haya turnos registrados en esta cancha..</p>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCancelDelete} color="primary">
-              Cancelar
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error">
-              Eliminar
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <DialogTitle>{selectedCancha ? 'Editar Cancha' : 'Agregar Cancha'}</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Nombre"
+                fullWidth
+                value={nombre || ''}
+                onChange={(e) => setNombre(e.target.value)}
+                color="custom"
+              />
+              <TextField
+                color="custom"
+                margin="dense"
+                label="Tipo"
+                fullWidth
+                value={tipo || ''}
+                onChange={(e) => setTipo(e.target.value)}
+              />    
+              <TextField
+                color="custom"
+                margin="dense"
+                label="Precio por Hora"
+                fullWidth
+                type="number"
+                value={precioHora || ''}
+                onChange={(e) => setPrecioHora(e.target.value)}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={disponibilidad}
+                    onChange={(e) => setDisponibilidad(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Disponibilidad"
+              />
+              <TextField
+                color="custom"
+                margin="dense"
+                label="Descripción"
+                fullWidth
+                multiline
+                rows={4}
+                value={descripcion || ''}
+                onChange={(e) => setDescripcion(e.target.value)}
+              />
 
 
-      </TableContainer>
+              <InputLabel id="label">
+                Deporte
+              </InputLabel>
+              <Select
+                labelId="label"
+                id="demo-simple-select-helper"
+                value={deporte || ''}
+                defaultValue="FUTBOL"
+                label="Deporte"
+                onChange={(e) => setDeporte(e.target.value)}
+                fullWidth
+                color="custom"
+              >
+                <MenuItem value={"FUTBOL"}>FUTBOL</MenuItem>
+                <MenuItem value={"PADEL"}>PADEL</MenuItem>
+              </Select>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)} color="custom">
+                Cancelar
+              </Button>
+              <Button onClick={handleSave} color="custom">
+                Guardar
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogContent>
+              <p>¿Estás seguro de que deseas eliminar esta cancha?</p>
+              <p>Puede que haya turnos registrados en esta cancha..</p>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete} color="primary">
+                Cancelar
+              </Button>
+              <Button onClick={handleConfirmDelete} color="error">
+                Eliminar
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+
+        </TableContainer>
+      </Box>
     </>
   );
 };

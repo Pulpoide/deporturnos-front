@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { Button, Typography, Box } from '@mui/material'
 import NavbarAdmin from '../../components/NavbarAdmin';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import backgroundImage from '../../assets/images/imagen_background_adv.png'
 
 
 
@@ -19,7 +20,7 @@ const theme = createTheme({
       contrastText: '#fff',
     },
     background: {
-      default: '#121212'
+      default: 'white',
     }
   },
 });
@@ -27,28 +28,46 @@ const theme = createTheme({
 const AdminHome = () => {
   const navigate = useNavigate();
 
-  const buttonStyle = { width: '15%', marginTop: '9px' };
+  const buttonStyle = { width: '100%', marginTop: '9px' };
 
   return (<div>
     <ThemeProvider theme={theme}>
 
       <NavbarAdmin />
-      <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'} marginTop={'15%'}>
-        <Typography variant="h4" sx={{ flexGrow: 1, fontFamily: "Bungee, sans-serif", fontWeight: "1" }}>Bienvenido, Admin</Typography>
 
-        <Button style={buttonStyle} size='large' variant="contained" color='secondary' onClick={() => navigate('/admin-turnos')}>
-          Turnos
-        </Button>
-        <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-reservas')}>
-          Reservas
-        </Button>
-        <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-canchas')}>
-          Canchas
-        </Button>
-        <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-usuarios')}>
-          Usuarios
-        </Button>
-      </Box>
+      <Box
+          sx={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="h4" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: "1", marginBottom: '90px' }}>
+            Bienvenido, Admin
+          </Typography>
+
+          {/* Agrupando botones en un Box */}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Button style={buttonStyle} size='large' variant="contained" color='secondary' onClick={() => navigate('/admin-turnos')}>
+              Turnos
+            </Button>
+            <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-reservas')}>
+              Reservas
+            </Button>
+            <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-canchas')}>
+              Canchas
+            </Button>
+            <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-usuarios')}>
+              Usuarios
+            </Button>
+          </Box>
+        </Box>
+
 
     </ThemeProvider>
   </div>)

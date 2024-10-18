@@ -11,6 +11,7 @@ const getUserRole = () => {
   return null;
 };
 
+
 const ProtectedRoute = ({ children, role }) => {
   const navigate = useNavigate();
   const userRole = getUserRole();
