@@ -45,7 +45,7 @@ const Navbar = () => {
               maxWidth:"fit-content",
               cursor: "pointer",
               flexShrink: 0,
-              color: 'black',
+              color: theme.palette.black,
               "&:hover": {
                 color: theme.palette.primary.main // Color al pasar el mouse
               },

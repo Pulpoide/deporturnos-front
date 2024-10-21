@@ -2,17 +2,12 @@
 
 body{
   min-width: 700px;
-<<<<<<< Updated upstream
-  background-color: rgb(249 246 242); 
-  /* background-color: black; */
-=======
   /* background-color: rgb(249 246 242); */
-  background-color: black;
+  /*background-color: black;*/
   scroll-behavior: smooth;
   margin: 0; 
   padding: 0; 
   overflow-x: hidden;
->>>>>>> Stashed changes
 }
 
 

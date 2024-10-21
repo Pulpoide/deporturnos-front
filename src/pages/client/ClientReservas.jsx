@@ -33,7 +33,7 @@ const ClientReservas = () => {
     headers: { Authorization: `Bearer ${currentUser.token}` }
   };
 
-  const fetchReservas = async (includeCompleted = false) => {
+  const fetchReservas = async (includeCompleted = true) => {
     try {
       const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
       setReservas(response.data)

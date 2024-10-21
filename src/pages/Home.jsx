@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -28,7 +28,9 @@ const theme = createTheme({
           margin: 0,
           padding: 0,
         },
-      }}}
+      }
+    }
+  }
 });
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -53,30 +55,19 @@ const Carousel = () => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(next, 4000); 
+    const intervalId = setInterval(next, 4000);
 
-    return () => clearInterval(intervalId); 
-}, []);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: "75vh", overflow: 'hidden', p:'0', m:'0' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: "75vh", overflow: 'hidden', p: '0', m: '0' }}>
       <Box
         component="img"
         src={images[currentIndex]}
         alt={`Slide ${currentIndex}`}
-        sx={{ width: '100%', height: '100%', objectFit: "cover", objectPosition:'center', transition: 'transform 0.5s ease' }}
+        sx={{ width: '100%', height: '100%', objectFit: "cover", objectPosition: 'center', transition: 'transform 0.5s ease' }}
       />
-      <Box sx={{
-        position: 'absolute',
-        bottom: '20px',
-        left: '50%',
-        transform: 'translateX(-50%)', 
-        zIndex: 2,
-      }}>
-        <StyledButton variant="contained" component="a" href="/register">
-          Registrate de forma gratuita
-        </StyledButton>
-      </Box>
     </Box>
   );
 };
@@ -90,30 +81,36 @@ const Home = () => {
           <Carousel />
           <Box sx={{
             position: 'absolute',
-            top: '20%',
-            right: '20px',
+            top: '30%',
+            right: '75%',
             zIndex: 2,
             color: 'white',
-            textAlign: 'right',
+            textAlign: 'left',
           }}>
             <Typography variant='h2' component="h2">
               Reserva tu
               <br />cancha al instante
             </Typography>
+            <br/>
             <Typography variant='h5' component="h5" sx={{ color: "white" }}>
-              Explorá las canchas disponibles
-              <br />en tiempo real
+              Explorá las canchas disponibles en tiempo real
             </Typography>
+            <br/>
+            <br/>
+            <StyledButton variant="contained" component="a" href="/register">
+              Registrate de forma gratuita
+            </StyledButton>
           </Box>
+
         </Box>
 
-        <Advertising/>
-        <Faqs/>
+        <Advertising />
+        <Faqs />
         <Footer />
 
       </Box>
     </ThemeProvider>
   );
-};  
+};
 
 export default Home;
