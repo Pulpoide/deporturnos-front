@@ -83,7 +83,7 @@ const AdminUsuarios = () => {
         setEmail(usuario.email || '');
         setPassword('');
         setTelefono(usuario.telefono || '');
-        setNotificaciones(usuario.notificaciones === 'true');
+        setNotificaciones(usuario.notificaciones || false);
         setRol(usuario.rol || '');
         setOpen(true);
         setInitialValues(usuario);
