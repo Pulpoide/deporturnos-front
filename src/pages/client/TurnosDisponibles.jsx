@@ -31,7 +31,7 @@ const TurnosDisponibles = () => {
                     setTurnos(response.data);
                 })
                 .catch(error => {
-                    console.error("There was an error fetching the turnos!", error.response ? error.response.data : error.message);
+                    console.error("Hay un error fetching los turnos!", error.response ? error.response.data : error.message);
                 });
         };
 

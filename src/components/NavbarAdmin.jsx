@@ -86,6 +86,7 @@ const NavbarAdmin = () => {
                         {/* Opciones del menú */}
                         <MenuItem onClick={handleMenuClose} component={Link} to="/admin-turnos">Turnos</MenuItem>
                         <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reservas">Reservas</MenuItem>
+                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reportes">Reportes</MenuItem>
                         <MenuItem onClick={handleMenuClose} component={Link} to="/admin-canchas">Canchas</MenuItem>
                         <MenuItem onClick={handleMenuClose} component={Link} to="/admin-usuarios">Usuarios</MenuItem>
 

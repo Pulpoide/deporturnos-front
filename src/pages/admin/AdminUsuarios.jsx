@@ -34,6 +34,7 @@ const AdminUsuarios = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [telefono, setTelefono] = useState('');
+    const [notificaciones, setNotificaciones] = useState('');
     const [rol, setRol] = useState('');
     const [initialValues, setInitialValues] = useState({});
 
@@ -70,6 +71,7 @@ const AdminUsuarios = () => {
         setEmail('');
         setPassword('');
         setTelefono('');
+        setNotificaciones('');
         setRol('');
         setOpen(true);
         setInitialValues({});
@@ -81,6 +83,7 @@ const AdminUsuarios = () => {
         setEmail(usuario.email || '');
         setPassword('');
         setTelefono(usuario.telefono || '');
+        setNotificaciones(usuario.notificaciones === 'true');
         setRol(usuario.rol || '');
         setOpen(true);
         setInitialValues(usuario);
@@ -104,6 +107,7 @@ const AdminUsuarios = () => {
         if (email !== initialValues.email) updatedFields.email = email;
         if (password !== '') updatedFields.password = password;
         if (telefono !== initialValues.telefono) updatedFields.telefono = telefono;
+        if (notificaciones !== initialValues.notificaciones) updatedFields.notificaciones = notificaciones;
         if (rol !== initialValues.rol) updatedFields.rol = rol;
 
         if (Object.keys(updatedFields).length > 0) {
@@ -148,24 +152,26 @@ const AdminUsuarios = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align='right'>ID</StyledTableCell>
-                            <StyledTableCell align='right'>Nombre</StyledTableCell>
-                            <StyledTableCell align='right'>Email</StyledTableCell>
-                            <StyledTableCell align='right'>Teléfono</StyledTableCell>
-                            <StyledTableCell align='right'>Rol</StyledTableCell>
-                            <StyledTableCell align='right'>Cuenta Activada</StyledTableCell>
-                            <StyledTableCell align='right'>Acciones</StyledTableCell>
+                            <StyledTableCell align='center'>ID</StyledTableCell>
+                            <StyledTableCell align='center'>Nombre</StyledTableCell>
+                            <StyledTableCell align='center'>Email</StyledTableCell>
+                            <StyledTableCell align='center'>Teléfono</StyledTableCell>
+                            <StyledTableCell align='center'>Recibe notificaciones</StyledTableCell>
+                            <StyledTableCell align='center'>Rol</StyledTableCell>
+                            <StyledTableCell align='center'>Cuenta Activada</StyledTableCell>
+                            <StyledTableCell align='center'>Acciones</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {usuarios.map((usuario) => (
                             <TableRow key={usuario.id}>
-                                <TableCell align='right'>{usuario.id}</TableCell>
-                                <TableCell align='right'>{usuario.nombre}</TableCell>
-                                <TableCell align='right'>{usuario.email}</TableCell>
-                                <TableCell align='right'>{usuario.telefono}</TableCell>
-                                <TableCell align='right'>{usuario.rol}</TableCell>
-                                <TableCell align='right'>{usuario.activada ? 'Sí' : 'No'}</TableCell>
+                                <TableCell align='center'>{usuario.id}</TableCell>
+                                <TableCell align='center'>{usuario.nombre}</TableCell>
+                                <TableCell align='center'>{usuario.email}</TableCell>
+                                <TableCell align='center'>{usuario.telefono}</TableCell>
+                                <TableCell align='center'>{usuario.notificaciones ? 'Sí' : 'No'}</TableCell>
+                                <TableCell align='center'>{usuario.rol}</TableCell>
+                                <TableCell align='center'>{usuario.activada ? 'Sí' : 'No'}</TableCell>
                                 <TableCell align='right'>
                                     <IconButton color="custom" onClick={() => handleEdit(usuario)}>
                                         <Edit />
@@ -222,6 +228,7 @@ const AdminUsuarios = () => {
                             value={telefono || ''}
                             onChange={(e) => setTelefono(e.target.value)}
                         />
+
                         <FormControl fullWidth margin="dense" color='custom'>
                             <InputLabel>Rol</InputLabel>
                             <Select
@@ -232,6 +239,16 @@ const AdminUsuarios = () => {
                                 <MenuItem value="CLIENTE">Cliente</MenuItem>
                             </Select>
                         </FormControl>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={notificaciones}
+                                    onChange={(e) => setNotificaciones(e.target.checked)}
+                                    color="primary"
+                                />
+                            }
+                            label="Recibe notificaciones"
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpen(false)} color="custom">

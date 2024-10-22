@@ -59,6 +59,9 @@ const AdminHome = () => {
             <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-reservas')}>
               Reservas
             </Button>
+            <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-reportes')}>
+              Reportes
+            </Button>
             <Button style={buttonStyle} size='large' variant="contained" color="secondary" onClick={() => navigate('/admin-canchas')}>
               Canchas
             </Button>

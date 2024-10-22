@@ -11,6 +11,7 @@ import AdminCanchas from './pages/admin/AdminCanchas'
 import AdminTurnos from './pages/admin/AdminTurnos';
 import AdminUsuarios from './pages/admin/AdminUsuarios';
 import AdminReservas from './pages/admin/AdminReservas';
+import AdminProfits from './pages/admin/AdminProfits'; 
 
 
 // Estilo
@@ -166,6 +167,14 @@ function App() {
           } />
 
         <Route
+          path="/admin-reportes"
+          element={
+            <ProtectedRoute role={"ADMIN"}>
+              <AdminProfits />
+            </ProtectedRoute>
+          } />
+
+        <Route
           path="/admin-reservas"
           element={
             <ProtectedRoute role={"ADMIN"}>
@@ -178,9 +187,9 @@ function App() {
           path='/validate-reserva/:reservaId'
           element={
             <ProtectedRoute role={"ADMIN"}>
-          <AdminValidateReserva/>
-          </ProtectedRoute>
-          }/>
+              <AdminValidateReserva />
+            </ProtectedRoute>
+          } />
 
         {/* Ruta 404 */}
         <Route

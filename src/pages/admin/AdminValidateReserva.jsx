@@ -3,6 +3,8 @@ import { Box, Button, Typography, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import dayjs from 'dayjs';
 
 const AdminValidateReserva = () => {
     const {reservaId} = useParams();
@@ -57,8 +59,17 @@ const AdminValidateReserva = () => {
     }
 
     return (
-        <Box sx={{ padding: 2, textAlign: 'center' }}>
-            <Typography variant="h4">Validación de Reserva</Typography>
+        <Box sx={{ backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: 5}}>
+            <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{m:3}}>Validación de Reserva</Typography>
             <Typography variant="h5">
                 {reserva.usuario.nombre}
             </Typography>
@@ -67,7 +78,7 @@ const AdminValidateReserva = () => {
             </Typography>
             <br/>
             <Typography variant="body1">
-                Fecha: {reserva.turno.fecha}
+                Fecha: {dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}
             </Typography>
             <Typography variant="body1">
                 Hora: {reserva.turno.horaInicio} - {reserva.turno.horaFin}
