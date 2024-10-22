@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 
 const ClientReservas = () => {
   const [reservas, setReservas] = useState([]);
+  const [showCompleted, setShowCompleted]=useState(false);
   const navigate = useNavigate();
 
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -26,14 +27,14 @@ const ClientReservas = () => {
   const [reservaToCancelId, setReservaToCancelId] = useState(null);
 
   useEffect(() => {
-    fetchReservas();
-  }, []);
+    fetchReservas(showCompleted);
+  }, [showCompleted]);
 
   const tokenConfig = {
     headers: { Authorization: `Bearer ${currentUser.token}` }
   };
 
-  const fetchReservas = async (includeCompleted = true) => {
+  const fetchReservas = async (includeCompleted) => {
     try {
       const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
       setReservas(response.data)
@@ -55,6 +56,9 @@ const ClientReservas = () => {
     }
   };
 
+  const handleShowCompletedToggle=()=>{
+    setShowCompleted(prev=>!prev); 
+  }
 
   const handleCancelReservaClick = (id) => {
     setDialogOpen(true);
@@ -91,6 +95,13 @@ const ClientReservas = () => {
           <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{m:3}}>
             Mis Reservas
           </Typography>
+          <Button 
+            variant="contained" 
+            color={showCompleted ? "secondary" : "primary"} 
+            onClick={handleShowCompletedToggle}
+          >
+            {showCompleted ? "Ocultar Completadas" : "Mostrar Completadas"}
+          </Button>
         </Box>
         <TableContainer component={Paper}>
         <Table>
@@ -105,33 +116,43 @@ const ClientReservas = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {reservas.map((reserva) => (
-              <TableRow key={reserva.id}>
-                <TableCell align='right'>{dayjs(reserva.fecha).format('DD/MM/YYYY')}</TableCell>
-                <TableCell align='right'>{dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</TableCell>
-                <TableCell align='right'>{reserva.turno.horaInicio}</TableCell>
-                <TableCell align='right'>{reserva.turno.horaFin}</TableCell>
-                <TableCell align='right'>
-                  <Typography
-                    style={{
-                      color: reserva.estado === 'CONFIRMADA' ? 'green' :
-                        reserva.estado === 'CANCELADA' ? 'red' :
-                          'default'
-                    }}
-                  >
-                    {reserva.estado}
-                  </Typography>
-                </TableCell>
-                <TableCell align='right'>
-                  {reserva.estado == 'CONFIRMADA' && (
-                    <IconButton color="secondary" onClick={() => handleCancelReservaClick(reserva.id)}>
-                      <CancelIcon />
-                    </IconButton>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+              {reservas.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    <Typography variant="h6" color="textSecondary">
+                      No hay reservas aún.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                reservas.map((reserva) => (
+                  <TableRow key={reserva.id}>
+                    <TableCell align='right'>{dayjs(reserva.fecha).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align='right'>{dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align='right'>{reserva.turno.horaInicio}</TableCell>
+                    <TableCell align='right'>{reserva.turno.horaFin}</TableCell>
+                    <TableCell align='right'>
+                      <Typography
+                        style={{
+                          color: reserva.estado === 'CONFIRMADA' ? 'green' :
+                            reserva.estado === 'CANCELADA' ? 'red' :
+                            'default'
+                        }}
+                      >
+                        {reserva.estado}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align='right'>
+                      {reserva.estado === 'CONFIRMADA' && (
+                        <IconButton color="secondary" onClick={() => handleCancelReservaClick(reserva.id)}>
+                          <CancelIcon />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
         </Table>
 
 
