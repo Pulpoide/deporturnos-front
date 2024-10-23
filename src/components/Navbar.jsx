@@ -21,10 +21,7 @@ const theme = createTheme({
     },
     black: {
       main: '#121212',
-      contrastText: '#fff',
-    },
-    background: {
-      main:'rgb(249 246 242)'
+      contrastText: '#fff'
     }
   },
 });
@@ -34,7 +31,7 @@ const Navbar = () => {
   return (
     <ThemeProvider theme={theme}>
       
-      <AppBar position="static" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+      <AppBar position="static" color='background'>
       <Container>
         <Toolbar disableGutters>
           <Typography variant="h4" component="div"
