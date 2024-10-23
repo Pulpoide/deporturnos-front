@@ -72,8 +72,8 @@ const ClientReservas = () => {
 
   const handleCancelReserva = async () => {
     await axios.put(`http://localhost:8080/api/reservas/${reservaToCancelId}/cancelar`, {}, tokenConfig);
-    fetchReservas();
     setDialogOpen(false);
+    fetchReservas(showCompleted);
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
