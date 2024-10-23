@@ -40,6 +40,10 @@ const AdminTurnos = () => {
   const [duracionEnMinutos, setDuracionEnMinutos] = useState('');
   const [fechaDesdeInput, setFechaDesdeInput] = useState('');
   const [fechaHastaInput, setFechaHastaInput] = useState('');
+  const [selectedTurno, setSelectedTurno] = useState(null);
+  const [fecha, setFecha] = useState('');
+  const [initialValues, setInitialValues] = useState({});
+  const [openMassiveChargeDialog, setOpenMassiveChargeDialog] = useState(false);
 
 
   const [error, setError] = useState('');
@@ -86,44 +90,45 @@ const AdminTurnos = () => {
       }
     }
   };
-  
+
+
   const fetchTurnosByFecha = async (fechaDesde, fechaHasta) => {
     try {
-        const response = await axios.get('http://localhost:8080/api/turnos/filtrar', {
-            params: { fechaDesde, fechaHasta },
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        });
-        setTurnos(response.data);
+      const response = await axios.get('http://localhost:8080/api/turnos/filtrar', {
+        params: { fechaDesde, fechaHasta },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setTurnos(response.data);
 
-        if (response.data.length === 0) {
-            setError('No se encontraron turnos en el rango de fechas especificado.');
-        } else {
-            setError(''); // Limpiar error si la búsqueda es exitosa
-        }
+      if (response.data.length === 0) {
+        setError('No se encontraron turnos en el rango de fechas especificado.');
+      } else {
+        setError(''); // Limpiar error si la búsqueda es exitosa
+      }
     } catch (error) {
-        setError('Error al buscar turnos: ' + (error.response?.data?.message || error.message));
+      setError('Error al buscar turnos: ' + (error.response?.data?.message || error.message));
     }
-};
+  };
 
 
-const handleSearch = () => {
-  const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
-  const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
+  const handleSearch = () => {
+    const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
+    const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
 
-  // Verificación si las fechas están seleccionadas y son válidas
-  if (!fechaDesde || !fechaHasta) {
+    // Verificación si las fechas están seleccionadas y son válidas
+    if (!fechaDesde || !fechaHasta) {
       setError('Por favor, asegúrate de que ambas fechas están seleccionadas.');
       return;
-  }
+    }
 
-  // Verificación adicional de que "fechaDesde" no sea mayor que "fechaHasta"
-  if (dayjs(fechaDesde).isAfter(fechaHasta)) {
+    // Verificación adicional de que "fechaDesde" no sea mayor que "fechaHasta"
+    if (dayjs(fechaDesde).isAfter(fechaHasta)) {
       setError('La fecha "Desde" no puede ser mayor que la fecha "Hasta".');
       return;
-  }
+    }
 
-  fetchTurnosByFecha(fechaDesde, fechaHasta);
-};
+    fetchTurnosByFecha(fechaDesde, fechaHasta);
+  };
 
 
 
@@ -141,16 +146,6 @@ const handleSearch = () => {
     }
   };
 
-
-  const handleAdd = () => {
-    setSelectedTurno('');
-    setFecha('');
-    setHoraInicio('');
-    setHoraFin('');
-    setEstado('DISPONIBLE');
-    setCanchaId('');
-    setOpen(true);
-  };
 
   const handleEdit = (turno) => {
     setSelectedTurno(turno);
@@ -198,10 +193,31 @@ const handleSearch = () => {
 
       console.log(response.data);
       fetchTurnos();
-      setOpen(false);
+      setOpenMassiveChargeDialog(false);
     } catch (error) {
       setError(error.response ? error.response.data.message : "Error al guardar los turnos.");
     }
+  };
+
+  const handleSaveEdit = async () => {
+    const turnoData = {};
+    if (canchaId !== initialValues.canchaId) turnoData.canchaId = canchaId;
+    if (fecha !== initialValues.fecha) turnoData.fecha = fecha;
+    if (horaInicio !== initialValues.horaInicio) turnoData.horaInicio = horaInicio;
+    if (horaFin !== initialValues.horaFin) turnoData.horaFin = horaFin;
+    if (estado !== initialValues.estado) turnoData.estado = estado;
+    if (Object.keys(turnoData).length > 0) {
+      console.log(turnoData)
+      if (selectedTurno) {
+        const res = await axios.put(`http://localhost:8080/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
+        console.log(res)
+      } else {
+        const res = await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
+        console.log(res)
+      }
+    }
+    fetchTurnos();
+    setOpen(false);
   };
 
   const sortedCanchas = canchas.sort((a, b) => a.deporte.localeCompare(b.deporte));
@@ -230,39 +246,39 @@ const handleSearch = () => {
                 variant="contained"
                 color="custom"
                 startIcon={<Add />}
-                onClick={() => setOpen(true)} // Abre el diálogo para cargar masivamente
+                onClick={() => setOpenMassiveChargeDialog(true)} // Abre el diálogo para cargar masivamente
                 style={buttonStyle}
               >
                 Cargar Turnos Masivamente
               </Button>
             </Box>
             <Box justifyContent={'center'} display={'flex'} marginBottom={2}>
-                    <TextField
-                        label="Fecha Desde"
-                        type="date"
-                        onChange={(e) => setFechaDesdeInput(e.target.value)} 
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <TextField
-                        label="Fecha Hasta"
-                        type="date"
-                        onChange={(e) => setFechaHastaInput(e.target.value)} 
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <Button
-                        variant="contained"
-                        color="custom"
-                        onClick={handleSearch}
-                    >
-                        Buscar
-                    </Button>
-                    
-                </Box>
-                {error && (
-                  <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                    <Alert severity="error">{error}</Alert>
-                  </Stack>
-                )}
+              <TextField
+                label="Fecha Desde"
+                type="date"
+                onChange={(e) => setFechaDesdeInput(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label="Fecha Hasta"
+                type="date"
+                onChange={(e) => setFechaHastaInput(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
+              <Button
+                variant="contained"
+                color="custom"
+                onClick={handleSearch}
+              >
+                Buscar
+              </Button>
+
+            </Box>
+            {error && (
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="error">{error}</Alert>
+              </Stack>
+            )}
             {turnos.length === 0 ? (
               <Box justifyContent={'center'} display={'flex'} padding={2}>
                 <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay turnos</Typography>
@@ -301,7 +317,7 @@ const handleSearch = () => {
                 </TableBody>
               </Table>
             )}
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog open={openMassiveChargeDialog} onClose={() => setOpenMassiveChargeDialog(false)}>
               <DialogTitle>Cargar Turnos Masivamente</DialogTitle>
               <DialogContent>
                 <DateRangePicker
@@ -352,7 +368,7 @@ const handleSearch = () => {
                   <Select
                     value={canchaId}
                     onChange={(e) => setCanchaId(e.target.value)}
-                    required // Asegúrate de que el usuario seleccione una cancha
+                    required 
                   >
                     {sortedCanchas.map((cancha) => (
                       <MenuItem key={cancha.id} value={cancha.id}>
@@ -388,6 +404,79 @@ const handleSearch = () => {
                   Cancelar
                 </Button>
                 <Button onClick={handleSave} color="custom">
+                  Guardar
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+              <DialogTitle>{selectedTurno ? 'Editar Turno' : 'Agregar Turno'}</DialogTitle>
+              <DialogContent>
+                <TextField
+                  color='custom'
+                  autoFocus
+                  margin="dense"
+                  fullWidth
+                  type="date"
+                  value={fecha}
+                  onChange={(e) => setFecha(e.target.value)}
+                  required
+                  focused
+                />
+                <TextField
+                  color='custom'
+                  margin="dense"
+                  label="Hora de Inicio"
+                  focused
+                  fullWidth
+                  type="time"
+                  value={horaInicio}
+                  onChange={(e) => setHoraInicio(e.target.value)}
+                  required
+                />
+                <TextField
+                  color='custom'
+                  margin="dense"
+                  label="Hora de Fin"
+                  fullWidth
+                  type="time"
+                  value={horaFin}
+                  onChange={(e) => setHoraFin(e.target.value)}
+                  required
+                  focused
+                />
+                <FormControl fullWidth margin="dense" color='custom'>
+                  <InputLabel>Estado</InputLabel>
+                  <Select
+                    value={estado}
+                    onChange={(e) => setEstado(e.target.value)}
+
+                  >
+                    <MenuItem value="DISPONIBLE">DISPONIBLE</MenuItem>
+                    <MenuItem value="RESERVADO">RESERVADO</MenuItem>
+                    <MenuItem value="BORRADO">BORRADO</MenuItem>
+                    {/* Agrega más estados si es necesario */}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth margin="dense" color='custom'>
+                  <InputLabel>Cancha</InputLabel>
+                  <Select
+                    value={canchaId}
+                    onChange={(e) => setCanchaId(e.target.value)}
+                  >
+                    {canchas.map((cancha) => (
+                      <MenuItem key={cancha.id} value={cancha.id}>
+                        {cancha.nombre} - ({cancha.tipo})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpen(false)} color="custom">
+                  Cancelar
+                </Button>
+                <Button onClick={handleSaveEdit} color="custom">
                   Guardar
                 </Button>
               </DialogActions>

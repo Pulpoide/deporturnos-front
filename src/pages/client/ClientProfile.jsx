@@ -200,7 +200,7 @@ const ClientProfile = () => {
                                         onChange={handleSwitchChange}
                                     />
                                 }
-                                label ="Recibir notificaciones sobre turnos en promoción."
+                                label ="Recibir notificaciones sobre torneos."
                             />
                         </Stack>
 
