@@ -60,7 +60,7 @@ const TurnosDisponibles = () => {
                 }}
                 >
                 <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
-                    1. Selecciona un turno:
+                    3. Selecciona un turno:
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
