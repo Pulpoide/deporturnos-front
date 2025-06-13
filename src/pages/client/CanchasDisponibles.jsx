@@ -90,7 +90,7 @@ const CanchasDisponibles = () => {
                 }}
                 >
                 <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
-                    1. Selecciona una cancha:
+                    2. Selecciona una cancha:
                 </Typography>
                 <TextField
                     select
