@@ -40,16 +40,21 @@ const AdminCanchas = () => {
   const [open, setOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [canchaToDelete, setCanchaToDelete] = useState(null);
-  const [turnos, setTrunos] = useState([
-    {dia: 'lunes', horario: ' '},
-    {dia: 'martes', horario: ' '},
-  ]);
+  const [tipoOptions, setTipoOptions] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchCanchas();
   }, []);
+
+  useEffect(() => {
+    const options = {
+      FUTBOL: ["FÚTBOL 5", "FÚTBOL 7", "FÚTBOL 11"],
+      PADEL: ["DE CEMENTO", "DE ACRILICO"],
+    };
+    setTipoOptions(options[deporte] || []);
+  }, [deporte]);
 
 
   const tokenConfig = {
@@ -235,14 +240,25 @@ const AdminCanchas = () => {
                 onChange={(e) => setNombre(e.target.value)}
                 color="custom"
               />
-              <TextField
-                color="custom"
-                margin="dense"
-                label="Tipo"
-                fullWidth
+
+              <InputLabel id="tipo-label">
+                Tipo
+              </InputLabel>
+              <Select
+                labelId="tipo-label"
+                id="tipo-select"
                 value={tipo || ''}
                 onChange={(e) => setTipo(e.target.value)}
-              />    
+                fullWidth
+                color="custom"
+              >
+                {tipoOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+
               <TextField
                 color="custom"
                 margin="dense"
@@ -287,7 +303,7 @@ const AdminCanchas = () => {
                 fullWidth
                 color="custom"
               >
-                <MenuItem value={"FUTBOL"}>FUTBOL</MenuItem>
+                <MenuItem value={"FUTBOL"}>FÚTBOL</MenuItem>
                 <MenuItem value={"PADEL"}>PADEL</MenuItem>
               </Select>
             </DialogContent>
