@@ -42,16 +42,25 @@ const SelectSport = () => {
                     textAlign: 'center',
                 }}
             >
-                <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
-                    1. Selecciona un deporte:
+                <Typography
+                    variant='h4'
+                    component="h4"
+                    sx={{
+                        fontFamily: "Bungee, sans-serif",
+                        fontWeight: 400,
+                        mb: '30px',
+                        mt: '30px'
+                    }}
+                >
+                    1. Selecciona un deporte
                 </Typography>
-                <FormControl component="fieldset" sx={{ mb: '4', p:'4'}}>
+                <FormControl component="fieldset" sx={{ mb: '4', p: '4' }}>
                     <RadioGroup value={selectedSport} onChange={handleSportChange}>
                         <FormControlLabel value="futbol" control={<Radio />} label={<Typography sx={{ fontSize: '1.5rem' }}>Fútbol</Typography>} />
-                        <FormControlLabel value="padel" control={<Radio />} label={<Typography sx={{ fontSize: '1.5rem' }}>Padel</Typography>}  />
+                        <FormControlLabel value="padel" control={<Radio />} label={<Typography sx={{ fontSize: '1.5rem' }}>Padel</Typography>} />
                     </RadioGroup>
                 </FormControl>
-                <Grid container spacing={3} sx={{ justifyContent:'center',marginTop: 4}}>
+                <Grid container spacing={3} sx={{ justifyContent: 'center', marginTop: 4 }}>
                     <Grid item>
                         <Button variant="contained" color="primary" onClick={handleNext} >
                             Siguiente
