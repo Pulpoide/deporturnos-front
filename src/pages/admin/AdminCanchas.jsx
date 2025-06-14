@@ -51,7 +51,7 @@ const AdminCanchas = () => {
   useEffect(() => {
     const options = {
       FUTBOL: ["FÚTBOL 5", "FÚTBOL 7", "FÚTBOL 11"],
-      PADEL: ["DE CEMENTO", "DE ACRILICO"],
+      PADEL: ["DE CEMENTO", "DE ACRÍLICO"],
     };
     setTipoOptions(options[deporte] || []);
   }, [deporte]);
