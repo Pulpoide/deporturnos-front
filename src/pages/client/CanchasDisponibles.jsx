@@ -11,7 +11,7 @@ const CanchasDisponibles = () => {
     const { deporte } = useParams();
     const [canchas, setCanchas] = useState([]);
     const [canchasFiltradas, setCanchasFiltradas] = useState([]);
-    const [tipoDeCancha, setTipoDeCancha] = useState("cualquiera");
+    const [tipoDeCancha, setTipoDeCancha] = useState("Todos");
     const navigate = useNavigate();
 
     const tokenConfig = {
@@ -43,14 +43,13 @@ const CanchasDisponibles = () => {
 
     useEffect(() => {
         // Filtrar canchas según el tipo seleccionado
-        if (tipoDeCancha === "cualquiera") {
-            setCanchasFiltradas(canchas); // Mostrar todas las canchas si se selecciona "Cualquiera"
+        if (tipoDeCancha === "Todos") {
+            setCanchasFiltradas(canchas); 
         } else {
             setCanchasFiltradas(canchas.filter((cancha) => cancha.tipo === tipoDeCancha));
         }
     }, [tipoDeCancha, canchas]);
 
-    // Configuración de las opciones de tipo de cancha
     const obtenerOpcionesDeCancha = () => {
         if (deporte === 'futbol') {
             return [
@@ -60,13 +59,12 @@ const CanchasDisponibles = () => {
             ];
         } else if (deporte === 'padel') {
             return [
-                { value: 'Pared de cemento', label: 'Pared de cemento' },
-                { value: 'Pared de acrílico', label: 'Pared de acrílico' }
+                { value: 'DE CEMENTO', label: 'DE CEMENTO' },
+                { value: 'DE ACRÍLICO', label: 'DE ACRÍLICO' }
             ];
         } else {
-            // Si el deporte no es válido, redirigir
             navigate('/select-sport');
-            return []; // Retornar un array vacío como fallback
+            return []; 
         }
     };
 
@@ -80,7 +78,7 @@ const CanchasDisponibles = () => {
                     width: '100%',
                     minHeight: '100vh',
                     overflow: 'hidden',
-                    p: 4,
+                    p: 0, 
                     m: 0,
                     backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'cover',
@@ -89,18 +87,35 @@ const CanchasDisponibles = () => {
                     textAlign: 'center',
                 }}
                 >
-                <Typography variant='h5' component="h5" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, mb:'50px' }}>
-                    2. Selecciona una cancha:
+                <Typography
+                    variant='h4'
+                    component="h4"
+                    sx={{
+                        fontFamily: "Bungee, sans-serif",
+                        fontWeight: 400,
+                        mb: '30px',
+                        mt: '30px' 
+                    }}
+                >
+                    2. Selecciona una cancha
                 </Typography>
                 <TextField
                     select
-                    helperText="Tipo de Cancha"
-                    label="Cancha"
+                    label="Tipo de cancha"
                     value={tipoDeCancha}
                     onChange={(e) => setTipoDeCancha(e.target.value)}
+                    sx={{
+                        width: {
+                            xs: '150px', 
+                            sm: '200px',
+                            md: '250px',
+                        },
+                        marginBottom: 3, 
+                        marginTop: -2 
+                    }}
                 >
-                    <MenuItem value="cualquiera">
-                        Cualquiera
+                    <MenuItem value="Todos">
+                        Todos
                     </MenuItem>
                     {
                         opcionesDeCancha.map((opcion) => (
@@ -110,20 +125,35 @@ const CanchasDisponibles = () => {
                         ))
                     }
                 </TextField>
+                
                 <Grid container spacing={2}>
                     {canchasFiltradas.length > 0 ? (
                         canchasFiltradas.map((cancha) => (
-                            <Grid item key={cancha.id} xs={12} sm={6} md={4}>
-                                <Card>
-                                    <CardContent>
-                                        <Typography variant="h4">{cancha.tipo}</Typography>
-                                        <Typography variant="h5">{cancha.nombre}</Typography>
-                                        <Typography variant="body2">Precio por hora: ${cancha.precioHora}</Typography>
-                                        <Typography variant="body1">{cancha.descripcion}</Typography>
-                                        <Button variant="contained" color="primary" onClick={() => handleViewTurnos(cancha.id)}>
-                                            Ver Turnos
-                                        </Button>
+                            <Grid item key={cancha.id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}>
+                                <Card sx={{ width: '100%', maxWidth: '300px', minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 2, height: 'auto' }}>
+                                    <CardContent sx={{ flexGrow: 1 }}>
+                                        <Typography variant="h4">{cancha.nombre}</Typography>
+                                        <Typography variant="h5">{cancha.tipo}</Typography>
+                                        <hr style={{ margin: '10px 0' }} />
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Precio por hora:</Typography>
+                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>${cancha.precioHora}</Typography>
+                                        <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                                            {cancha.descripcion}
+                                        </Typography>
                                     </CardContent>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => handleViewTurnos(cancha.id)}
+                                        sx={{
+                                            alignSelf: 'center',
+                                            paddingY: 1.5,
+                                            width: 'fit-content',
+                                            marginBottom: 2.7 
+                                        }}
+                                    >
+                                        Ver Turnos
+                                    </Button>
                                 </Card>
                             </Grid>
                         ))
@@ -135,12 +165,10 @@ const CanchasDisponibles = () => {
                     </Grid>
                     )}
                 </Grid>
-                <Grid container spacing={2} sx={{ marginTop: 2, justifyContent:'center' }}>
-                    <Grid item>
-                        <Button variant="contained" color="black" onClick={handleBack}>
-                            Atras
-                        </Button>
-                    </Grid>
+                <Grid container justifyContent="center" sx={{ marginTop: 2, marginBottom: 4 }}>
+                    <Button variant="contained" color="black" onClick={handleBack}>
+                        Atras
+                    </Button>
                 </Grid>
                 </Box>
         </>
