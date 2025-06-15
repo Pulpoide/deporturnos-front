@@ -4,7 +4,7 @@ import { ExpandMore } from '@mui/icons-material';
 
 const Faqs = () => {
     return (
-        <Box sx={{ width: '100%', backgroundColor: 'white', padding: '20px', color: '#089342' }}>
+        <Box sx={{ width: '100%', backgroundColor: 'white', color: '#089342', overflowX: 'hidden', p: 0 }}>
             <Typography variant='h4' component='h2' sx={{ mb: 4, textAlign: 'center' }}>
                 Preguntas frecuentes
             </Typography>

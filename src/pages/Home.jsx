@@ -5,7 +5,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Footer from '../components/Footer';
 import Faqs from '../components/Faqs';
 import Advertising from '../components/Advertising';
-import '../App.css'
+import './../styles/App.css'
 
 import futbol from '../assets/images/futbol.jpg';
 import futbol2 from '../assets/images/futbol2.jpg';
@@ -66,7 +66,15 @@ const Carousel = () => {
         component="img"
         src={images[currentIndex]}
         alt={`Slide ${currentIndex}`}
-        sx={{ width: '100%', height: '100%', objectFit: "cover", objectPosition: 'center', transition: 'transform 0.5s ease' }}
+        sx={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          transition: 'transform 0.5s ease',
+          maxWidth: '100%',
+          overflow: 'hidden'
+        }}
       />
     </Box>
   );
@@ -79,29 +87,73 @@ const Home = () => {
         <Navbar />
         <Box sx={{ position: 'relative' }}>
           <Carousel />
-          <Box sx={{
-            position: 'absolute',
-            top: '30%',
-            right: '75%',
-            zIndex: 2,
-            color: 'white',
-            textAlign: 'left',
-          }}>
-            <Typography variant='h2' component="h2">
-              Reserva tu
-              <br />cancha al instante
+          <Box
+            sx={{
+              position: 'absolute',
+              top: { xs: '20%', sm: '23%', md: '30%' },
+              left: {
+                xs: '50%',    // móviles: centrado
+                sm: '10%',    // tabletas: margen izquierdo
+                md: '5%',     // escritorio: margen fijo
+              },
+              transform: {
+                xs: 'translateX(-50%)',
+                sm: 'none',
+                md: 'none',
+              },
+              zIndex: 2,
+              color: 'white',
+              textAlign: {
+                xs: 'center', // móviles
+                sm: 'left',   // tabletas
+                md: 'left',   // desktop
+              },
+              width: {
+                xs: '80%',    // móviles: ancho limitado
+                sm: '70%',    // tabletas
+                md: 'auto',   // desktop
+              },
+            }}
+          >
+            <Typography
+              variant="h2"
+              component="h2"
+              sx={{
+                fontSize: { xs: '1.8rem', sm: '2.3rem', md: '2.5rem' },
+                lineHeight: { xs: '2.2rem', sm: '2.7rem', md: '3rem' },
+              }}
+            >
+              Reserva tu<br />cancha al instante
             </Typography>
-            <br/>
-            <Typography variant='h5' component="h5" sx={{ color: "white" }}>
+
+            <Typography
+              variant="h5"
+              component="h5"
+              sx={{
+                fontSize: { xs: '1.1rem', sm: '1.35rem', md: '1.5rem' },
+                mt: 1,
+              }}
+            >
               Explorá las canchas disponibles en tiempo real
             </Typography>
-            <br/>
-            <br/>
-            <StyledButton variant="contained" component="a" href="/register">
+
+            <StyledButton
+              variant="contained"
+              component="a"
+              href="/register"
+              sx={{
+                mt: 2,
+                fontSize: { xs: '0.9rem', sm: '1rem', md: '1rem' },
+                padding: {
+                  xs: '0.6rem 1.2rem',
+                  sm: '0.7rem 1.3rem',
+                  md: '0.8rem 1.5rem',
+                },
+              }}
+            >
               Registrate de forma gratuita
             </StyledButton>
           </Box>
-
         </Box>
 
         <Advertising />

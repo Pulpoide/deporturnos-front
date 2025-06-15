@@ -34,7 +34,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const Advertising = () => {
   return (
-    <Box sx={{ width: '100%', height: '50vh', bgcolor: "#FAFAFA", color: "#089342", p: 4, backgroundImage:`url(${backgroundImage})`, backgroundSize:'cover', backgroundPosition:'center' }}>
+    <Box sx={{
+      width: '100%',
+      height: '50vh',
+      bgcolor: "#FAFAFA",
+      color: "#089342",
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      overflowX: 'hidden', 
+      p: 0
+    }}>
       <Container>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={7}>
@@ -49,7 +59,7 @@ const Advertising = () => {
                 flexShrink: 0,
                 color: 'black',
                 "&:hover": {
-                  color: theme.palette.primary.main // Color al pasar el mouse
+                  color: theme.palette.primary.main 
                 },
                 mr: 'auto'
               }}
