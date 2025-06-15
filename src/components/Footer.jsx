@@ -6,10 +6,10 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const Footer = () => {
   return (
-    <Box sx={{ width: '100%', bgcolor: "#089342", color: "white", p: 4, m:'0'}}>
-      <Container maxWidth="lg"> {/* Ajusta el ancho máximo aquí */}
+    <Box sx={{ width: '100%', bgcolor: "#089342", color: "white", m: '0', overflowX: 'hidden', p: 0 }}>
+      <Container maxWidth="lg">
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={4}> {/* Cambia el tamaño a 4 para 3 columnas en pantallas pequeñas */}
+          <Grid item xs={12} sm={4}>
             <Typography variant="h6">Descubre DEPORTURNOS</Typography>
             <Link href="#" color="inherit" underline="hover">Políticas de privacidad</Link>
           </Grid>

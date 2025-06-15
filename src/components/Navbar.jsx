@@ -1,71 +1,68 @@
-import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router';
-
-
+import '../styles/App.css';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#43a047'
-    },
-    custom: {
-      main: '#43a047',
-      light: '#68b36b',
-      dark: '#2e7031',
-      contrastText: '#fff',
-    },
-    black: {
-      main: '#121212',
-      contrastText: '#fff'
-    }
+    primary: { main: '#43a047' },
+    black: { main: '#121212', contrastText: '#fff' },
   },
 });
 
 const Navbar = () => {
   const navigate = useNavigate();
+
   return (
     <ThemeProvider theme={theme}>
-      
-      <AppBar position="static" color='background'>
-      <Container>
-        <Toolbar disableGutters>
-          <Typography variant="h4" component="div"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "Bungee Shade, sans-serif",
-              fontWeight: "400",
-              maxWidth:"fit-content",
-              cursor: "pointer",
-              flexShrink: 0,
-              color: theme.palette.black,
-              "&:hover": {
-                color: theme.palette.primary.main // Color al pasar el mouse
-              },
-              mr:'auto'
-            }}
+      <AppBar position="static" color="background" sx={{ boxShadow: 'none' }}>
+        <Container maxWidth={false} sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          py: 1,
+        }}>
+          {/* Logo */}
+          <Typography
+            variant="h4"
+            component="div"
             onClick={() => navigate("/")}
-            >
-              DEPORTURNOS
+            sx={{
+              fontFamily: "Bungee Shade, sans-serif",
+              fontWeight: 400,
+              cursor: "pointer",
+              color: theme.palette.black.main,
+              "&:hover": { color: theme.palette.primary.main },
+              textAlign: { xs: 'center', md: 'left' },
+              mb: { xs: 1, md: 0 },
+            }}
+          >
+            DEPORTURNOS
           </Typography>
 
-
-
-
-          <Box sx={{display:'flex', flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center' }}>
-            <Button color='primary' variant='contained' href='/login' sx={{ mr: 2 }}>Iniciar Sesión</Button>
-            <Button color='black' variant='contained' href='/register'>Registrarme</Button>
+          {/* Botones */}
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'row',  // siempre en fila
+            gap: 1,
+            justifyContent: { xs: 'center', md: 'flex-end' },
+            width: '100%',
+            maxWidth: { md: 'auto' },
+          }}>
+            <Button color="primary" variant="contained" href="/login">
+              Iniciar Sesión
+            </Button>
+            <Button color="black" variant="contained" href="/register">
+              Registrarme
+            </Button>
           </Box>
-
-        </Toolbar>
         </Container>
       </AppBar>
     </ThemeProvider>
-
   );
 };
 
