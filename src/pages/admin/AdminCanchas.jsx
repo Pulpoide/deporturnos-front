@@ -231,15 +231,22 @@ const AdminCanchas = () => {
           <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>{selectedCancha ? 'Editar Cancha' : 'Agregar Cancha'}</DialogTitle>
             <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Nombre"
+              <InputLabel id="label">
+                Deporte
+              </InputLabel>
+              <Select
+                labelId="label"
+                id="demo-simple-select-helper"
+                value={deporte || ''}
+                defaultValue="FUTBOL"
+                label="Deporte"
+                onChange={(e) => setDeporte(e.target.value)}
                 fullWidth
-                value={nombre || ''}
-                onChange={(e) => setNombre(e.target.value)}
                 color="custom"
-              />
+              >
+                <MenuItem value={"FUTBOL"}>FÚTBOL</MenuItem>
+                <MenuItem value={"PADEL"}>PADEL</MenuItem>
+              </Select>
 
               <InputLabel id="tipo-label">
                 Tipo
@@ -258,6 +265,16 @@ const AdminCanchas = () => {
                   </MenuItem>
                 ))}
               </Select>
+
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Nombre de la Cancha"
+                fullWidth
+                value={nombre || ''}
+                onChange={(e) => setNombre(e.target.value)}
+                color="custom"
+              />
 
               <TextField
                 color="custom"
@@ -290,22 +307,6 @@ const AdminCanchas = () => {
               />
 
 
-              <InputLabel id="label">
-                Deporte
-              </InputLabel>
-              <Select
-                labelId="label"
-                id="demo-simple-select-helper"
-                value={deporte || ''}
-                defaultValue="FUTBOL"
-                label="Deporte"
-                onChange={(e) => setDeporte(e.target.value)}
-                fullWidth
-                color="custom"
-              >
-                <MenuItem value={"FUTBOL"}>FÚTBOL</MenuItem>
-                <MenuItem value={"PADEL"}>PADEL</MenuItem>
-              </Select>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpen(false)} color="custom">
