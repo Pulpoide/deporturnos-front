@@ -24,7 +24,7 @@ const Navbar = () => {
           flexDirection: { xs: 'column', md: 'row' },
           alignItems: 'center',
           justifyContent: 'space-between',
-          py: 1,
+          py: 1.5,
         }}>
           {/* Logo */}
           <Typography
@@ -53,10 +53,10 @@ const Navbar = () => {
             width: '100%',
             maxWidth: { md: 'auto' },
           }}>
-            <Button color="primary" variant="contained" href="/login">
+            <Button color="primary" variant="contained" href="/login" sx={{fontFamily: "Bungee, sans-serif",}}>
               Iniciar Sesión
             </Button>
-            <Button color="black" variant="contained" href="/register">
+            <Button color="black" variant="contained" href="/register" sx={{fontFamily: "Bungee, sans-serif",}}>
               Registrarme
             </Button>
           </Box>
