@@ -10,23 +10,23 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6">Descubre DEPORTURNOS</Typography>
-            <Link href="#" color="inherit" underline="hover">Políticas de privacidad</Link>
+            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold" }}>Descubre </Typography>
+            <Link href="#" color="inherit" underline="hover" sx={{ textAlign: 'center' }}>Políticas de privacidad</Link>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6">Contacto directo</Typography>
-            <Link href="mailto:contacto@deporturnos.com" color="inherit" underline="hover">contacto@deporturnos.com</Link>
+            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold" }}>Contacto directo</Typography>
+            <Link href="mailto:contacto@deporturnos.com" color="inherit" underline="hover" sx={{ textAlign: 'center' }}>contacto@deporturnos.com</Link>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography variant="h6">Seguinos en</Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton href="https://instagram.com" target="_blank" rel="noopener noreferrer" color='inherit'>
+          <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="h6" sx={{ fontFamily: "Bungee hairline, sans-serif", fontWeight: "bold", mb: 1 }}>Seguinos</Typography>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1 }}>
+              <IconButton href="https://instagram.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
                 <InstagramIcon />
               </IconButton>
-              <IconButton href="https://facebook.com" target="_blank" rel="noopener noreferrer" color='inherit'>
+              <IconButton href="https://facebook.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
                 <FacebookIcon />
               </IconButton>
-              <IconButton href="https://youtube.com" target="_blank" rel="noopener noreferrer" color='inherit'>
+              <IconButton href="https://youtube.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
                 <YouTubeIcon />
               </IconButton>
             </Box>

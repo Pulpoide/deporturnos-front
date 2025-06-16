@@ -61,7 +61,7 @@ const Carousel = () => {
   }, []);
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: "75vh", overflow: 'hidden', p: '0', m: '0' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: "100dvh", overflow: 'hidden', p: '0', m: '0' }}>
       <Box
         component="img"
         src={images[currentIndex]}
@@ -71,9 +71,10 @@ const Carousel = () => {
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
-          transition: 'transform 0.5s ease',
+          transition: 'opacity 0.5s ease',
+          opacity: 1,
           maxWidth: '100%',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       />
     </Box>
@@ -85,7 +86,7 @@ const Home = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
           <Carousel />
           <Box
             sx={{
@@ -116,11 +117,12 @@ const Home = () => {
             }}
           >
             <Typography
-              variant="h2"
-              component="h2"
+              variant="h4"
+              component="h4"
               sx={{
-                fontSize: { xs: '1.8rem', sm: '2.3rem', md: '2.5rem' },
+                fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
                 lineHeight: { xs: '2.2rem', sm: '2.7rem', md: '3rem' },
+                fontFamily: "Bungee inline, sans-serif",
               }}
             >
               Reserva tu<br />cancha al instante
@@ -132,6 +134,8 @@ const Home = () => {
               sx={{
                 fontSize: { xs: '1.1rem', sm: '1.35rem', md: '1.5rem' },
                 mt: 1,
+                fontFamily: "Bungee hairline, sans-serif",
+                fontWeight: '700',
               }}
             >
               Explorá las canchas disponibles en tiempo real
@@ -149,6 +153,7 @@ const Home = () => {
                   sm: '0.7rem 1.3rem',
                   md: '0.8rem 1.5rem',
                 },
+                fontFamily: "Bungee, sans-serif",
               }}
             >
               Registrate de forma gratuita
