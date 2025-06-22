@@ -10,27 +10,27 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4} sx={{justifyContent:'center', textAlign: 'center', p: 1, flexDirection: { xs: 'column', sm: 'row' }}}>
 
-          <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold" }}>Descubre </Typography>
-            <Link href="#" color="inherit" underline="hover" sx={{ textAlign: 'center' }}>Políticas de privacidad</Link>
+          <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop:2}}>
+            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold", paddingBottom:1 }}>Descubre </Typography>
+            <Link href="#" color="inherit" underline="hover" sx={{ textAlign: 'center', fontFamily: "Fjalla One, sans-serif", paddingBottom:1.2 }}>Políticas de privacidad</Link>
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold" }}>Contacto directo</Typography>
-            <Link href="mailto:contacto@deporturnos.com" color="inherit" underline="hover" sx={{ textAlign: 'center'}}>contacto@deporturnos.com</Link>
+            <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold", paddingBottom:1 }}>Contacto directo</Typography>
+            <Link href="mailto:contacto@deporturnos.com" color="inherit" underline="hover" sx={{ textAlign: 'center', fontFamily: "Fjalla One, sans-serif", paddingBottom:1.2}}>contacto@deporturnos.com</Link>
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: {  md: 4.5 } }}>
-            <Typography variant="h6" sx={{ fontFamily: "Bungee hairline, sans-serif", fontWeight: "bold" }}>Seguinos</Typography>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb:2}}>
+          <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="h6" sx={{ fontFamily: "Bungee hairline, sans-serif", fontWeight: "bold"}}>Seguinos</Typography>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center'}}>
               <IconButton href="https://instagram.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
-                <InstagramIcon />
+                <InstagramIcon fontSize='medium'/>
               </IconButton>
               <IconButton href="https://facebook.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
-                <FacebookIcon />
+                <FacebookIcon fontSize='medium'/>
               </IconButton>
               <IconButton href="https://youtube.com" target="_blank" rel="noopener noreferrer" color='inherit' sx={{ display: 'flex', alignItems: 'center' }}>
-                <YouTubeIcon />
+                <YouTubeIcon fontSize='medium'/>
               </IconButton>
             </Box>
           </Grid>
