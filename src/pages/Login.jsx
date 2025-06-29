@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-
 import { useNavigate } from 'react-router';
 import { jwtDecode } from 'jwt-decode';
-
-
-// MUI imports
 import { Avatar, Button, FormControlLabel, Grid, Paper, TextField, Switch, Box } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -23,9 +19,8 @@ import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 import Footer from '../components/Footer';
+import { width } from '@mui/system';
 
-
-// Switch "Recordarme" color
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
     color: '#43a047',
@@ -38,21 +33,13 @@ const CustomSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-
 const Login = () => {
-  // Navigate
   const navigate = useNavigate();
-
-  //Inputs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-
-  //Inputs Errors
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-
-  // Overall Form Validity
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
 
@@ -64,15 +51,11 @@ const Login = () => {
     }
   }, []);
 
-
-  // Para que funcione el Enter.
   const handleKeyPress = (e) => {
-    // Verificar si la tecla presionada es "Enter"
     if (e.key === 'Enter') {
-      handleSubmit(); // Llamar a la función de inicio de sesión al presionar "Enter"
+      handleSubmit();
     }
   };
-
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -80,58 +63,44 @@ const Login = () => {
     event.preventDefault();
   };
 
-  const paperStyle = { padding: 27, width: 450 }
-  const avatarStyle = { backgroundColor: "#121212" }
+  // Responsive Paper style
+  const paperStyle = {
+    maxWidth: 450,
+    width: '100%',
+    boxSizing: 'border-box',
+    padding: { xs: '32px 28px', sm: '32px 32px' }, // aún más padding en móvil
+    mx: 'auto',
+  };
 
-  //handle Submittion
+  const avatarStyle = { backgroundColor: "#121212" };
+
+
   const handleSubmit = async () => {
     setSuccess(null);
-
-
-    // If Email error is true
     if (!email) {
       setEmailError(true)
       setError("Email inválido.");
       return;
-    }else{
+    } else {
       setEmailError(false)
     }
-
-    // If Password error is true
     if (!password) {
       setError("Ingrese su contraseña.");
       return;
     }
-
     setError(null);
-
-
-    
-    // Conexión con el Backend 
     const credentials = { email, password };
     try {
       const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
       const result = response.data;
-
-
-      // Guardar el usuario en el localStorage
       localStorage.setItem('currentUser', JSON.stringify(result));
       localStorage.setItem('token', response.data.token);
-
       if (rememberMe) {
-        // Guardar el nombre de usuario para recordarlo
         localStorage.setItem('rememberedEmail', email);
       } else {
-        // Limpiar el nombre de usuario recordado si no se seleccionó recordar
         localStorage.removeItem('rememberedEmail');
       }
-
-
-      //Show Successfull Submittion
       setSuccess("Ingreso Exitoso!");
-
-
-      // Redireccionamos al usuario dependiendo su rol
       const token = localStorage.getItem('token');
       const decodedToken = jwtDecode(token);
       const role = decodedToken.roles[0];
@@ -140,28 +109,40 @@ const Login = () => {
       } else if (role === 'ADMIN') {
         navigate('/admin-home');
       }
-
     } catch (error) {
       console.error('Error during login:', error);
       setError("Credenciales Inválidas.");
     }
   };
 
-
   return (
     <>
     <Navbar/>
-    <Box sx={{ width: '100%', minHeight: '100vh', overflow:'hidden', p: 4, m:'0', backgroundImage:`url(${backgroundImage})`, backgroundSize:'cover', backgroundPosition:'center'}}>
+    <Box sx={{
+      width: '100%',
+      height: '100dvh', // altura exacta del viewport
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundImage:`url(${backgroundImage})`,
+      backgroundSize:'cover',
+      backgroundPosition:'center',
+      overflow:'hidden',
+    }}>
       <Box
         display={'flex'}
         justifyContent={'center'}
         alignItems={'center'}
         textAlign={'center'}
         flexGrow={1}
-        sx={{paddingBottom:'100px'}}
+        sx={{
+          paddingTop: { xs: '12px', sm: '60px' }, // un poco más de padding arriba en móvil
+          py: { xs: 2, sm: 0 }, // padding vertical arriba y abajo en móvil
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          px: { xs: 0.5, sm: 0 },
+        }}
       >
         <Grid>
-          <Paper elevation={24} style={paperStyle} >
+          <Paper elevation={24} sx={paperStyle} >
             <Grid align="center">
               <Avatar style={avatarStyle}>
                 <AccountCircleIcon />
