@@ -5,6 +5,7 @@ import { Button, Typography, Box } from '@mui/material'
 import NavbarAdmin from '../../components/NavbarAdmin';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import backgroundImage from '../../assets/images/imagen_background_adv.png'
+import { fontFamily, fontSize, fontStyle } from '@mui/system';
 
 
 
@@ -28,7 +29,7 @@ const theme = createTheme({
 const AdminHome = () => {
   const navigate = useNavigate();
 
-  const buttonStyle = { width: '100%', marginTop: '9px' };
+  const buttonStyle = { width: '100%', marginTop: '9px', fontFamily:'Bungee inline, sans-seriff', color:'white' };
 
   return (<div>
     <ThemeProvider theme={theme}>
@@ -47,8 +48,11 @@ const AdminHome = () => {
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h4" sx={{ fontFamily: "Bungee, sans-serif", fontWeight: "1", marginBottom: '90px' }}>
-            Bienvenido, Admin
+          <Typography variant="h4" sx={{ fontFamily: "Bungee inline, sans-serif", fontSize: { xs: '2rem', sm: '2rem', md: '2.125rem' }, color: 'black' }}>
+            ¡Bienvenido,
+            <Typography variant="h4" sx={{ fontFamily: "Bungee inline, sans-serif", fontSize: { xs: '3rem', sm: '3rem', md: '3rem' }, color: 'black' }}>
+             {JSON.parse(localStorage.getItem('currentUser')).nombre}!
+             </Typography>
           </Typography>
 
           {/* Agrupando botones en un Box */}
