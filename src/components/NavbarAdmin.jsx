@@ -72,9 +72,10 @@ const NavbarAdmin = () => {
                         id="menu-appbar"
                         anchorEl={anchorEl}
                         anchorOrigin={{
-                            vertical: 'top',
+                            vertical: 'bottom',
                             horizontal: 'right',
                         }}
+                        disableScrollLock={true}
                         keepMounted
                         transformOrigin={{
                             vertical: 'top',
