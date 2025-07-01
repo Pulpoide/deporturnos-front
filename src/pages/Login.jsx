@@ -19,7 +19,6 @@ import Stack from '@mui/material/Stack';
 import { alpha, styled } from '@mui/material/styles';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 import Footer from '../components/Footer';
-import { width } from '@mui/system';
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {
@@ -63,13 +62,13 @@ const Login = () => {
     event.preventDefault();
   };
 
-  // Responsive Paper style
   const paperStyle = {
-    maxWidth: 450,
+    maxWidth: 500,
     width: '100%',
     boxSizing: 'border-box',
-    padding: { xs: '32px 28px', sm: '32px 32px' }, // aún más padding en móvil
+    padding: { xs: '27px 32px', sm: '32px 32px' },
     mx: 'auto',
+    borderRadius:'25%'
   };
 
   const avatarStyle = { backgroundColor: "#121212" };
@@ -120,7 +119,7 @@ const Login = () => {
     <Navbar/>
     <Box sx={{
       width: '100%',
-      height: '100dvh', // altura exacta del viewport
+      height: '100dvh', 
       display: 'flex',
       flexDirection: 'column',
       backgroundImage:`url(${backgroundImage})`,
@@ -135,8 +134,8 @@ const Login = () => {
         textAlign={'center'}
         flexGrow={1}
         sx={{
-          paddingTop: { xs: '12px', sm: '60px' }, // un poco más de padding arriba en móvil
-          py: { xs: 2, sm: 0 }, // padding vertical arriba y abajo en móvil
+          paddingTop: { xs: '12px', sm: '60px' }, 
+          py: { xs: 2, sm: 0 }, 
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           px: { xs: 0.5, sm: 0 },
         }}
@@ -192,7 +191,7 @@ const Login = () => {
 
             <FormControlLabel control={<CustomSwitch color='#26a69a' checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />} label="Recordarme" />
 
-            <Button color='custom' size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
+            <Button color='custom' sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop:'12px' }} size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
               <LoginIcon />
             }>Ingresar</Button>
 
@@ -217,7 +216,7 @@ const Login = () => {
             }
 
             <div style={{ marginTop: "23px", fontSize: "15px", fontFamily:"Roboto, sans-serif" }} margin="left">
-              <a href='/forgot-password'>¿Haz olvidado tu contraseña?</a>
+              <a href='/forgot-password'>¿Olvidaste tu contraseña?</a>
             </div>
 
           </Paper>

@@ -13,6 +13,7 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import LoginIcon from '@mui/icons-material/Login';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 import Footer from '../components/Footer';
+import { borderRadius } from '@mui/system';
 
 const isEmail = (email) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -55,11 +56,12 @@ const Register = () => {
   };
 
   const paperStyle = {
-    maxWidth: 450,
+    maxWidth: 433,
     width: '100%',
     boxSizing: 'border-box',
-    padding: { xs: '20px 28px', sm: '32px 32px' },
+    padding: { xs: '17px 32px', sm: '32px 32px' },
     mx: 'auto',
+    borderRadius: '5%',
   };
   const avatarStyle = { backgroundColor: "#121212" };
 
@@ -285,6 +287,7 @@ const Register = () => {
               <Button
                 type='submit'
                 color='custom'
+                sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop:'12px' }}
                 variant='contained'
                 fullWidth
                 onClick={handleSubmit}
