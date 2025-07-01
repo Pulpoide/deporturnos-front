@@ -93,9 +93,9 @@ const Home = () => {
               position: 'absolute',
               top: { xs: '20%', sm: '23%', md: '30%' },
               left: {
-                xs: '50%',    // móviles: centrado
-                sm: '10%',    // tabletas: margen izquierdo
-                md: '5%',     // escritorio: margen fijo
+                xs: '50%',  
+                sm: '10%',   
+                md: '5%',     
               },
               transform: {
                 xs: 'translateX(-50%)',
@@ -105,14 +105,14 @@ const Home = () => {
               zIndex: 2,
               color: 'white',
               textAlign: {
-                xs: 'center', // móviles
-                sm: 'left',   // tabletas
-                md: 'left',   // desktop
+                xs: 'center', 
+                sm: 'left',  
+                md: 'left',   
               },
               width: {
-                xs: '80%',    // móviles: ancho limitado
-                sm: '70%',    // tabletas
-                md: 'auto',   // desktop
+                xs: '80%',    
+                sm: '70%',    
+                md: 'auto',   
               },
             }}
           >
