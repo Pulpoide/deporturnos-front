@@ -1,11 +1,9 @@
-import React from 'react';
 import { useNavigate } from 'react-router';
 
 import { Button, Typography, Box } from '@mui/material'
 import NavbarAdmin from '../../components/NavbarAdmin';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import backgroundImage from '../../assets/images/imagen_background_adv.png'
-import { fontFamily, fontSize, fontStyle } from '@mui/system';
 
 
 
