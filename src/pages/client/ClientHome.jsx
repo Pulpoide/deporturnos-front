@@ -1,14 +1,21 @@
-import React from 'react';
 import { Typography, Box, Button } from '@mui/material';
-import NavbarClient from "../../components/NavbarClient"
+import NavbarClient from '../../components/NavbarClient';
 import { useNavigate } from 'react-router';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
-import { margin } from '@mui/system';
 
+const buttonStyle = {
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  margin: '20px',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  '&:hover': {
+    backgroundColor: '#45a048',
+  },
+  fontFamily: 'Bungee, sans-serif',
+};
 
 const ClientHome = () => {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
   const navigate = useNavigate();
 
   const handleReserveNow = () => {
@@ -19,17 +26,6 @@ const ClientHome = () => {
     navigate('/client-reservas');
   };
 
-  const buttonStyle = {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    margin: '20px',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    '&:hover': {
-      backgroundColor: '#45a048',
-    },
-  }
-
   return (
     <div>
       <NavbarClient />
@@ -38,24 +34,61 @@ const ClientHome = () => {
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '100vh',
+          height: '100dvh',
+          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          textAlign: 'center'
-        }}>
-
+          textAlign: 'center',
+          px: { xs: 1, sm: 0 },
+          overflow: 'hidden',
+        }}
+      >
         <Box>
-          {/* <Typography variant="h4" gutterBottom>Bienvenid@ {currentUser.nombre}</Typography> */}
-          <Typography variant="h4" sx={{ flexGrow: 1, fontFamily: "Bungee, sans-serif", fontWeight: "100", color: 'white' }}>complejo deportivo:</Typography>
-          <Typography variant="h1" sx={{ flexGrow: 1, fontFamily: "Bungee Inline, sans-serif", fontWeight: "100", color: 'white' }}>LOS GIGANTES</Typography>
-
-
-          <Button style={buttonStyle} color='custom' type='submit' variant="contained" onClick={handleReserveNow}>Reservar Ahora</Button>
-          <Button style={buttonStyle} color='custom' type='submit' variant="contained" onClick={handleSeeReservations}>Mis Reservas</Button>
+          <Typography
+            variant="h4"
+            sx={{
+              flexGrow: 1,
+              fontFamily: 'Bungee, sans-serif',
+              fontWeight: 100,
+              color: 'white',
+              fontSize: { xs: '1.2rem', sm: '2rem', md: '2.125rem' },
+            }}
+          >
+            complejo deportivo:
+          </Typography>
+          <Typography
+            variant="h1"
+            sx={{
+              flexGrow: 1,
+              fontFamily: 'Bungee Inline, sans-serif',
+              fontWeight: 100,
+              color: 'white',
+              fontSize: { xs: '2.2rem', sm: '3.5rem', md: '6rem' },
+            }}
+          >
+            LOS GIGANTES
+          </Typography>
+          <Button
+            sx={buttonStyle}
+            color="custom"
+            type="submit"
+            variant="contained"
+            onClick={handleReserveNow}
+          >
+            Reservar Ahora
+          </Button>
+          <Button
+            sx={buttonStyle}
+            color="custom"
+            type="submit"
+            variant="contained"
+            onClick={handleSeeReservations}
+          >
+            Mis Reservas
+          </Button>
         </Box>
-
       </Box>
     </div>
   );

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
-
 const darkTheme = createTheme({
     palette: {
         primary: {
@@ -25,74 +24,68 @@ const darkTheme = createTheme({
 const NavbarAdmin = () => {
 
     const navigate = useNavigate();
-
-    // Función para manejar el menú desplegable
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
 
     const handleLogout = () => {
-        console.log('Cerrar sesión');
-
         localStorage.removeItem('currentUser');
         localStorage.removeItem('token');
-        window.location.href = '/'; // Redirige al usuario a la página de inicio
+        window.location.href = '/';
     };
 
-    const logoStyle = {color:'inherit'};
+    const menuStyle = { fontFamily: 'Fjalla One, sans serif' };
 
     return (
         <div>
             <ThemeProvider theme={darkTheme}>
                 <AppBar position="static" color='primary'>
                     <Container>
-                    <Toolbar disableGutters>
-                        <Typography variant="h4" component="div" sx={{ flexGrow: 1, fontFamily: "Bungee Shade, sans-serif", fontWeight: "400" }}>
-                            
-                            <a onClick={() => navigate('/admin-home')}>
-                            DEPORTURNOS
-                            </a>
-                            
-                        </Typography>
+                        <Toolbar disableGutters>
+                            <Typography variant="h4" component="div" sx={{ flexGrow: 1, fontFamily: "Bungee Shade, sans-serif", fontWeight: "400" }}>
 
-                        <IconButton
-                        size="large"
-                        edge="end"
-                        color="inherit"
-                        aria-label="menu"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleMenuOpen}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                                <a onClick={() => navigate('/admin-home')}>
+                                    DEPORTURNOS
+                                </a>
 
-                    {/* Menú desplegable */}
-                    <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorEl}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(anchorEl)}
-                        onClose={handleMenuClose}
-                    >
-                        {/* Opciones del menú */}
-                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-turnos">Turnos</MenuItem>
-                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reservas">Reservas</MenuItem>
-                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reportes">Reportes</MenuItem>
-                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-canchas">Canchas</MenuItem>
-                        <MenuItem onClick={handleMenuClose} component={Link} to="/admin-usuarios">Usuarios</MenuItem>
+                            </Typography>
 
-                        <MenuItem onClick={handleLogout}>Cerrar Sesión</MenuItem>
-                    </Menu>
-                    </Toolbar>
+                            <IconButton
+                                size="large"
+                                edge="end"
+                                color="inherit"
+                                aria-label="menu"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenuOpen}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                disableScrollLock={true}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                            >
+                                <MenuItem onClick={handleMenuClose} component={Link} to="/admin-turnos" style={menuStyle}>Turnos</MenuItem>
+                                <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reservas" style={menuStyle}>Reservas</MenuItem>
+                                <MenuItem onClick={handleMenuClose} component={Link} to="/admin-reportes" style={menuStyle}>Reportes</MenuItem>
+                                <MenuItem onClick={handleMenuClose} component={Link} to="/admin-canchas" style={menuStyle}>Canchas</MenuItem>
+                                <MenuItem onClick={handleMenuClose} component={Link} to="/admin-usuarios" style={menuStyle}>Usuarios</MenuItem>
+                                <MenuItem onClick={handleLogout} style={menuStyle}>Cerrar Sesión</MenuItem>
+                            </Menu>
+                        </Toolbar>
                     </Container>
                 </AppBar>
             </ThemeProvider>

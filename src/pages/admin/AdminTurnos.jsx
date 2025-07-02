@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Box,
-  Typography, Stack, Alert, Grid
+  Typography, Stack, Alert
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -17,7 +17,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -27,6 +26,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+
+const buttonStyle = {
+  marginTop: '1.2rem',
+  marginBottom: '1.2rem',
+  fontFamily: 'Bungee, sans-serif',
+  minWidth: 120,
+  width: '100%',
+  maxWidth: 220,
+};
 
 const AdminTurnos = () => {
   const [turnos, setTurnos] = useState([]);
@@ -44,11 +52,7 @@ const AdminTurnos = () => {
   const [fecha, setFecha] = useState('');
   const [initialValues, setInitialValues] = useState({});
   const [openMassiveChargeDialog, setOpenMassiveChargeDialog] = useState(false);
-
-
   const [error, setError] = useState('');
-
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,27 +61,23 @@ const AdminTurnos = () => {
   }, []);
 
   const tokenConfig = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
   const fetchTurnos = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/turnos', tokenConfig);
-      
       if (response.data && response.data.length > 0) {
         const sortedReservas = response.data
-            .sort((a, b) => {
-              const dateA = new Date(a.fecha);
-              const dateB = new Date(b.fecha);
-  
-              if (dateA.getTime() !== dateB.getTime()) {
-                return dateA - dateB;
-              }
-  
-              return new Date(a.hora) - new Date(b.hora);
-            })
-            .filter(reserva => new Date(reserva.fecha) >= new Date());
-  
+          .sort((a, b) => {
+            const dateA = new Date(a.fecha);
+            const dateB = new Date(b.fecha);
+            if (dateA.getTime() !== dateB.getTime()) {
+              return dateA - dateB;
+            }
+            return new Date(a.hora) - new Date(b.hora);
+          })
+          .filter(reserva => new Date(reserva.fecha) >= new Date());
         setTurnos(sortedReservas);
       }
     } catch (error) {
@@ -91,46 +91,36 @@ const AdminTurnos = () => {
     }
   };
 
-
   const fetchTurnosByFecha = async (fechaDesde, fechaHasta) => {
     try {
       const response = await axios.get('http://localhost:8080/api/turnos/filtrar', {
         params: { fechaDesde, fechaHasta },
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       setTurnos(response.data);
-
       if (response.data.length === 0) {
         setError('No se encontraron turnos en el rango de fechas especificado.');
       } else {
-        setError(''); // Limpiar error si la búsqueda es exitosa
+        setError('');
       }
     } catch (error) {
       setError('Error al buscar turnos: ' + (error.response?.data?.message || error.message));
     }
   };
 
-
   const handleSearch = () => {
     const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
     const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
-
-    // Verificación si las fechas están seleccionadas y son válidas
     if (!fechaDesde || !fechaHasta) {
       setError('Por favor, asegúrate de que ambas fechas están seleccionadas.');
       return;
     }
-
-    // Verificación adicional de que "fechaDesde" no sea mayor que "fechaHasta"
     if (dayjs(fechaDesde).isAfter(fechaHasta)) {
       setError('La fecha "Desde" no puede ser mayor que la fecha "Hasta".');
       return;
     }
-
     fetchTurnosByFecha(fechaDesde, fechaHasta);
   };
-
-
 
   const fetchCanchas = async () => {
     try {
@@ -139,13 +129,12 @@ const AdminTurnos = () => {
         setCanchas(response.data);
       }
     } catch (error) {
-      if (error.response && error.response.status == 403) {
+      if (error.response && error.response.status === 403) {
         navigate('/login');
       }
       console.error('Error fetching canchas:', error);
     }
   };
-
 
   const handleEdit = (turno) => {
     setSelectedTurno(turno);
@@ -154,7 +143,6 @@ const AdminTurnos = () => {
     setHoraFin(turno.horaFin);
     setEstado(turno.estado);
     setCanchaId(turno.cancha.id);
-
     setInitialValues(turno);
     setOpen(true);
   };
@@ -169,12 +157,10 @@ const AdminTurnos = () => {
       setError("Por favor, selecciona un rango de fechas.");
       return;
     }
-
     if (!horaInicio || !horaFin) {
       setError("Por favor, selecciona las horas de inicio y fin.");
       return;
     }
-
     const turnoData = {
       fechaDesde: dayjs(selectedDates[0]).format('YYYY-MM-DD'),
       fechaHasta: dayjs(selectedDates[1]).format('YYYY-MM-DD'),
@@ -183,15 +169,12 @@ const AdminTurnos = () => {
       duracionEnMinutos: parseInt(duracionEnMinutos, 10),
       canchaId: canchaId,
     };
-
     try {
-      const response = await axios.post(
+      await axios.post(
         'http://localhost:8080/api/turnos/massive-charge',
-        turnoData, // Aquí pasamos un solo objeto
+        turnoData,
         tokenConfig
       );
-
-      console.log(response.data);
       fetchTurnos();
       setOpenMassiveChargeDialog(false);
     } catch (error) {
@@ -207,13 +190,10 @@ const AdminTurnos = () => {
     if (horaFin !== initialValues.horaFin) turnoData.horaFin = horaFin;
     if (estado !== initialValues.estado) turnoData.estado = estado;
     if (Object.keys(turnoData).length > 0) {
-      console.log(turnoData)
       if (selectedTurno) {
-        const res = await axios.put(`http://localhost:8080/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
-        console.log(res)
+        await axios.put(`http://localhost:8080/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
       } else {
-        const res = await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
-        console.log(res)
+        await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
       }
     }
     fetchTurnos();
@@ -221,8 +201,6 @@ const AdminTurnos = () => {
   };
 
   const sortedCanchas = canchas.sort((a, b) => a.deporte.localeCompare(b.deporte));
-
-  const buttonStyle = { width: '33%', marginTop: '19px', marginBottom: '19px' };
 
   return (
     <>
@@ -238,21 +216,22 @@ const AdminTurnos = () => {
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            textAlign: 'center'
-          }}>
+            textAlign: 'center',
+          }}
+        >
           <TableContainer component={Paper}>
             <Box justifyContent={'center'} display={'flex'}>
               <Button
                 variant="contained"
                 color="custom"
                 startIcon={<Add />}
-                onClick={() => setOpenMassiveChargeDialog(true)} // Abre el diálogo para cargar masivamente
+                onClick={() => setOpenMassiveChargeDialog(true)}
                 style={buttonStyle}
               >
                 Cargar Turnos Masivamente
               </Button>
             </Box>
-            <Box justifyContent={'center'} display={'flex'} marginBottom={2}>
+            <Box justifyContent={'center'} display={'flex'}>
               <TextField
                 label="Fecha Desde"
                 type="date"
@@ -265,26 +244,27 @@ const AdminTurnos = () => {
                 onChange={(e) => setFechaHastaInput(e.target.value)}
                 InputLabelProps={{ shrink: true }}
               />
-              <Button
-                variant="contained"
-                color="custom"
-                onClick={handleSearch}
-              >
-                Buscar
-              </Button>
-
             </Box>
+            <Button
+              variant="contained"
+              color="custom"
+              onClick={handleSearch}
+              style={buttonStyle}
+            >
+              Buscar
+            </Button>
             {error && (
-              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+              <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
                 <Alert severity="error">{error}</Alert>
               </Stack>
             )}
             {turnos.length === 0 ? (
               <Box justifyContent={'center'} display={'flex'} padding={2}>
-                <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay turnos</Typography>
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+                  Aún no hay turnos
+                </Typography>
               </Box>
             ) : (
-
               <Table>
                 <TableHead>
                   <TableRow>
@@ -299,12 +279,12 @@ const AdminTurnos = () => {
                 <TableBody>
                   {turnos.map((turno) => (
                     <TableRow key={turno.id}>
-                      <TableCell align='right'>{dayjs(turno.fecha).format('DD/MM/YYYY')}</TableCell>
-                      <TableCell align='right'>{turno.horaInicio}</TableCell>
-                      <TableCell align='right'>{turno.horaFin}</TableCell>
-                      <TableCell align='right'>{turno.estado}</TableCell>
-                      <TableCell align='right'>{turno.cancha.nombre}</TableCell>
-                      <TableCell align='right'>
+                      <TableCell align="right">{dayjs(turno.fecha).format('DD/MM/YYYY')}</TableCell>
+                      <TableCell align="right">{turno.horaInicio}</TableCell>
+                      <TableCell align="right">{turno.horaFin}</TableCell>
+                      <TableCell align="right">{turno.estado}</TableCell>
+                      <TableCell align="right">{turno.cancha.nombre}</TableCell>
+                      <TableCell align="right">
                         <IconButton color="custom" onClick={() => handleEdit(turno)}>
                           <Edit />
                         </IconButton>
@@ -324,17 +304,11 @@ const AdminTurnos = () => {
                   startText="Inicio"
                   endText="Fin"
                   value={selectedDates}
-                  onChange={(newValue) => setSelectedDates(newValue)}
-                  renderInput={(startProps, endProps) => (
-                    <>
-                      <TextField {...startProps} />
-                      <TextField {...endProps} />
-                    </>
-                  )}
+                  onChange={setSelectedDates}
                   minDate={dayjs()}
                 />
                 <TextField
-                  color='custom'
+                  color="custom"
                   margin="dense"
                   label="Hora de Inicio"
                   fullWidth
@@ -344,7 +318,7 @@ const AdminTurnos = () => {
                   required
                 />
                 <TextField
-                  color='custom'
+                  color="custom"
                   margin="dense"
                   label="Hora de Fin"
                   fullWidth
@@ -354,7 +328,7 @@ const AdminTurnos = () => {
                   required
                 />
                 <TextField
-                  color='custom'
+                  color="custom"
                   margin="dense"
                   label="Duración en Minutos"
                   fullWidth
@@ -363,12 +337,12 @@ const AdminTurnos = () => {
                   onChange={(e) => setDuracionEnMinutos(e.target.value)}
                   required
                 />
-                <FormControl fullWidth margin="dense" color='custom'>
+                <FormControl fullWidth margin="dense" color="custom">
                   <InputLabel>Cancha</InputLabel>
                   <Select
                     value={canchaId}
                     onChange={(e) => setCanchaId(e.target.value)}
-                    required 
+                    required
                   >
                     {sortedCanchas.map((cancha) => (
                       <MenuItem key={cancha.id} value={cancha.id}>
@@ -377,28 +351,24 @@ const AdminTurnos = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl fullWidth margin="dense" color='custom'>
+                <FormControl fullWidth margin="dense" color="custom">
                   <InputLabel>Estado</InputLabel>
                   <Select
                     value={estado}
                     onChange={(e) => setEstado(e.target.value)}
-                    required // Asegúrate de que el usuario seleccione un estado
+                    required
                   >
                     <MenuItem value="DISPONIBLE">DISPONIBLE</MenuItem>
                     <MenuItem value="RESERVADO">RESERVADO</MenuItem>
                     <MenuItem value="BORRADO">BORRADO</MenuItem>
-                    {/* Agrega más estados si es necesario */}
                   </Select>
                 </FormControl>
-
-                {/* Manejo de errores */}
                 {error && (
-                  <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                  <Stack sx={{ width: '100%', paddingTop: '10px' }} spacing={2}>
                     <Alert severity="error">{error}</Alert>
                   </Stack>
                 )}
               </DialogContent>
-
               <DialogActions>
                 <Button onClick={() => setOpen(false)} color="custom">
                   Cancelar
@@ -408,12 +378,11 @@ const AdminTurnos = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-
             <Dialog open={open} onClose={() => setOpen(false)}>
               <DialogTitle>{selectedTurno ? 'Editar Turno' : 'Agregar Turno'}</DialogTitle>
               <DialogContent>
                 <TextField
-                  color='custom'
+                  color="custom"
                   autoFocus
                   margin="dense"
                   fullWidth
@@ -424,7 +393,7 @@ const AdminTurnos = () => {
                   focused
                 />
                 <TextField
-                  color='custom'
+                  color="custom"
                   margin="dense"
                   label="Hora de Inicio"
                   focused
@@ -435,7 +404,7 @@ const AdminTurnos = () => {
                   required
                 />
                 <TextField
-                  color='custom'
+                  color="custom"
                   margin="dense"
                   label="Hora de Fin"
                   fullWidth
@@ -445,20 +414,18 @@ const AdminTurnos = () => {
                   required
                   focused
                 />
-                <FormControl fullWidth margin="dense" color='custom'>
+                <FormControl fullWidth margin="dense" color="custom">
                   <InputLabel>Estado</InputLabel>
                   <Select
                     value={estado}
                     onChange={(e) => setEstado(e.target.value)}
-
                   >
                     <MenuItem value="DISPONIBLE">DISPONIBLE</MenuItem>
                     <MenuItem value="RESERVADO">RESERVADO</MenuItem>
                     <MenuItem value="BORRADO">BORRADO</MenuItem>
-                    {/* Agrega más estados si es necesario */}
                   </Select>
                 </FormControl>
-                <FormControl fullWidth margin="dense" color='custom'>
+                <FormControl fullWidth margin="dense" color="custom">
                   <InputLabel>Cancha</InputLabel>
                   <Select
                     value={canchaId}
@@ -481,7 +448,6 @@ const AdminTurnos = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-
           </TableContainer>
         </Box>
       </LocalizationProvider>

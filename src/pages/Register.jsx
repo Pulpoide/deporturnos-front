@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
 import {
@@ -55,11 +55,12 @@ const Register = () => {
   };
 
   const paperStyle = {
-    maxWidth: 450,
+    maxWidth: 433,
     width: '100%',
     boxSizing: 'border-box',
-    padding: { xs: '20px 28px', sm: '32px 32px' },
+    padding: { xs: '17px 32px', sm: '32px 32px' },
     mx: 'auto',
+    borderRadius: '7%',
   };
   const avatarStyle = { backgroundColor: "#121212" };
 
@@ -285,6 +286,7 @@ const Register = () => {
               <Button
                 type='submit'
                 color='custom'
+                sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop:'12px' }}
                 variant='contained'
                 fullWidth
                 onClick={handleSubmit}

@@ -1,5 +1,4 @@
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container, Typography, Box } from '@mui/material';
@@ -47,7 +46,7 @@ const Navbar = () => {
           {/* Botones */}
           <Box sx={{
             display: 'flex',
-            flexDirection: 'row',  // siempre en fila
+            flexDirection: 'row', 
             gap: 1,
             justifyContent: { xs: 'center', md: 'flex-end' },
             width: '100%',
