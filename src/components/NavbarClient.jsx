@@ -1,48 +1,44 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container } from '@mui/material';
+import {
+  AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#43a047'
-    },
+    primary: { main: '#43a047' },
     custom: {
       main: '#43a047',
       light: '#68b36b',
       dark: '#2e7031',
       contrastText: '#fff',
     },
-    black: {
-      main: '#121212'
-    }
+    black: { main: '#121212' },
   },
 });
 
+const menuStyle = { fontFamily: 'Fjalla One, sans serif' };
+
 const NavbarClient = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-  const handleLogoutClick = () => {
-    setOpenDialog(true);
-  };
+  const handleLogoutClick = () => setOpenDialog(true);
   const handleLogoutConfirm = () => {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     navigate("/");
   };
-  const handleLogoutCancel = () => {
-    setOpenDialog(false);
-  };
-  const menuStyle = { fontFamily: 'Fjalla One, sans serif'};
+  const handleLogoutCancel = () => setOpenDialog(false);
+
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" color='background'>
+      <AppBar position="static" color="background">
         <Container>
           <Toolbar disableGutters>
             <Typography
@@ -50,23 +46,21 @@ const NavbarClient = () => {
               component="div"
               sx={{
                 flexGrow: 1,
-                fontFamily: "Bungee Shade, sans-serif",
-                fontWeight: "400",
-                maxWidth: "fit-content",
-                cursor: "pointer",
+                fontFamily: 'Bungee Shade, sans-serif',
+                fontWeight: 400,
+                maxWidth: 'fit-content',
+                cursor: 'pointer',
                 flexShrink: 0,
                 color: 'black',
-                "&:hover": {
-                  color: theme.palette.primary.main
-                },
-                mr: 'auto'
+                '&:hover': { color: theme.palette.primary.main },
+                mr: 'auto',
               }}
-              onClick={() => navigate("/client-home")}
+              onClick={() => navigate('/client-home')}
             >
               DEPORTURNOS
             </Typography>
             <IconButton
-              color='inherit'
+              color="inherit"
               size="large"
               edge="end"
               aria-label="menu"
@@ -79,16 +73,10 @@ const NavbarClient = () => {
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              disableScrollLock={true}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              disableScrollLock
               keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
@@ -102,7 +90,7 @@ const NavbarClient = () => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">{"Cerrar Sesión"}</DialogTitle>
+              <DialogTitle id="alert-dialog-title">Cerrar Sesión</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   ¿Estás seguro de que deseas cerrar sesión?
