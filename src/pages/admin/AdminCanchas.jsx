@@ -4,7 +4,7 @@ import {
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Switch, FormControlLabel, MenuItem, Select,
   Box, InputLabel, Typography
-} from '@mui/material'
+} from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { Add, Edit, Delete } from '@mui/icons-material';
@@ -23,25 +23,29 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+const initialCanchaState = {
+  nombre: '',
+  tipo: '',
+  precioHora: '',
+  disponibilidad: true,
+  descripcion: '',
+  deporte: 'FUTBOL',
+};
+
+const deporteOptions = {
+  FUTBOL: ["FÚTBOL 5", "FÚTBOL 7", "FÚTBOL 11"],
+  PADEL: ["DE CEMENTO", "DE ACRÍLICO"],
+};
 
 const AdminCanchas = () => {
   const [canchas, setCanchas] = useState([]);
-
   const [selectedCancha, setSelectedCancha] = useState(null);
-  // Cancha
-  const [nombre, setNombre] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [precioHora, setPrecioHora] = useState('');
-  const [disponibilidad, setDisponibilidad] = useState(true);
-  const [descripcion, setDescripcion] = useState('');
-  const [deporte, setDeporte] = useState('');
-  const [originalValues, setOriginalValues] = useState({ nombre, tipo, precioHora, disponibilidad, descripcion, deporte });
-  // Dialogos
+  const [canchaForm, setCanchaForm] = useState(initialCanchaState);
+  const [originalValues, setOriginalValues] = useState(initialCanchaState);
   const [open, setOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [canchaToDelete, setCanchaToDelete] = useState(null);
-  const [tipoOptions, setTipoOptions] = useState([]);
-
+  const [tipoOptions, setTipoOptions] = useState(deporteOptions[initialCanchaState.deporte]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,82 +53,66 @@ const AdminCanchas = () => {
   }, []);
 
   useEffect(() => {
-    const options = {
-      FUTBOL: ["FÚTBOL 5", "FÚTBOL 7", "FÚTBOL 11"],
-      PADEL: ["DE CEMENTO", "DE ACRÍLICO"],
-    };
-    setTipoOptions(options[deporte] || []);
-  }, [deporte]);
-
+    setTipoOptions(deporteOptions[canchaForm.deporte] || []);
+    setCanchaForm((prev) => ({ ...prev, tipo: '' }));
+  }, [canchaForm.deporte]);
 
   const tokenConfig = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
   const fetchCanchas = async () => {
-
     try {
       const response = await axios.get('http://localhost:8080/api/canchas', tokenConfig);
-      console.log(response.data);
-
       if (response && response.data) {
         setCanchas(response.data);
       }
-
     } catch (error) {
-      if (error.response && error.response.status == 403) {
+      if (error.response && error.response.status === 403) {
         navigate('/login');
       } else if (error.response && error.response.status === 404) {
         setCanchas([]);
-      } else {
-        console.log('Error fetchCanchas:', error);
-
       }
     }
   };
 
   const handleAdd = () => {
     setSelectedCancha(null);
-    setNombre('');
-    setTipo('');
-    setPrecioHora('');
-    setDisponibilidad(true);
-    setDescripcion('');
-    setDeporte('FUTBOL');
+    setCanchaForm(initialCanchaState);
+    setOriginalValues(initialCanchaState);
     setOpen(true);
   };
 
   const handleEdit = (cancha) => {
-    setOriginalValues(cancha.nombre, cancha.tipo, cancha.precioHora, cancha.disponibilidad, cancha.descripcion, cancha.deporte);
-    setNombre(cancha.nombre);
-    setTipo(cancha.tipo);
-    setPrecioHora(cancha.precioHora);
-    setDisponibilidad(cancha.disponibilidad);
-    setDescripcion(cancha.descripcion);
-    setDeporte(cancha.deporte);
+    setOriginalValues(cancha);
+    setCanchaForm({ ...cancha });
     setSelectedCancha(cancha);
-
     setOpen(true);
   };
 
-  const handleSave = async () => {
-    const canchaData = { nombre, tipo, precioHora, disponibilidad, descripcion, deporte };
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setCanchaForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
-    if (JSON.stringify(originalValues) === JSON.stringify(canchaData)) {
+  const handleSave = async () => {
+    if (JSON.stringify(originalValues) === JSON.stringify(canchaForm)) {
+      setOpen(false);
       return;
     }
-
-    if (selectedCancha) {
-      const response = await axios.put(`http://localhost:8080/api/canchas/${selectedCancha.id}`, canchaData, tokenConfig);
-      console.log(response)
-    } else {
-      const response = await axios.post('http://localhost:8080/api/canchas', canchaData, tokenConfig);
-      console.log(response)
-
+    try {
+      if (selectedCancha) {
+        await axios.put(`http://localhost:8080/api/canchas/${selectedCancha.id}`, canchaForm, tokenConfig);
+      } else {
+        await axios.post('http://localhost:8080/api/canchas', canchaForm, tokenConfig);
+      }
+      fetchCanchas();
+    } finally {
+      setOpen(false);
     }
-
-    fetchCanchas();
-    setOpen(false);
   };
 
   const handleDeleteClick = (id) => {
@@ -137,7 +125,6 @@ const AdminCanchas = () => {
       await axios.delete(`http://localhost:8080/api/canchas/${canchaToDelete}`, tokenConfig);
     } catch (error) {
       if (error.response && error.response.status === 502) {
-        console.log("NO PUEDES BORRAR UNA CANCHA CON TURNOS BROU")
         console.error(error.response.data);
       }
     }
@@ -151,7 +138,7 @@ const AdminCanchas = () => {
     setCanchaToDelete(null);
   };
 
-  const buttonStyle = { width: '33%', marginTop: '19px', marginBottom: '10px' };
+  const buttonStyle = { fontFamily: 'Bungee inline, sans-serif' };
 
   return (
     <>
@@ -166,10 +153,11 @@ const AdminCanchas = () => {
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignItems: 'center',
-          textAlign: 'center'
-        }}>
+          textAlign: 'center',
+        }}
+      >
         <TableContainer component={Paper}>
-          <Box justifyContent={'center'} display={'flex'} marginBottom={'20px'}>
+          <Box justifyContent={'center'} display={'flex'}>
             <Button
               variant="contained"
               color="custom"
@@ -177,12 +165,14 @@ const AdminCanchas = () => {
               onClick={handleAdd}
               style={buttonStyle}
             >
-              Agregar Cancha
+              <Typography sx={{ fontFamily: 'Bungee, sans-serif' }}>Agregar Cancha</Typography>
             </Button>
           </Box>
           {canchas.length === 0 ? (
             <Box justifyContent={'center'} display={'flex'} padding={2}>
-              <Typography variant="h5" sx={{ fontFamily: "Bungee, sans-serif" }}>Aún no hay canchas</Typography>
+              <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+                Aún no hay canchas
+              </Typography>
             </Box>
           ) : (
             <Table>
@@ -204,11 +194,7 @@ const AdminCanchas = () => {
                     <TableCell align="right">{cancha.tipo}</TableCell>
                     <TableCell align="right">${cancha.precioHora}.-</TableCell>
                     <TableCell align="right">
-                      <Typography
-                        style={{
-                          color: cancha.disponibilidad ? 'green' : 'red'
-                        }}
-                      >
+                      <Typography style={{ color: cancha.disponibilidad ? 'green' : 'red' }}>
                         {cancha.disponibilidad ? 'Disponible' : 'No Disponible'}
                       </Typography>
                     </TableCell>
@@ -227,35 +213,30 @@ const AdminCanchas = () => {
               </TableBody>
             </Table>
           )}
-
           <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>{selectedCancha ? 'Editar Cancha' : 'Agregar Cancha'}</DialogTitle>
             <DialogContent>
-              <InputLabel id="label">
-                Deporte
-              </InputLabel>
+              <InputLabel id="label">Deporte</InputLabel>
               <Select
                 labelId="label"
-                id="demo-simple-select-helper"
-                value={deporte || ''}
-                defaultValue="FUTBOL"
+                id="deporte-select"
+                name="deporte"
+                value={canchaForm.deporte}
                 label="Deporte"
-                onChange={(e) => setDeporte(e.target.value)}
+                onChange={handleChange}
                 fullWidth
                 color="custom"
               >
                 <MenuItem value={"FUTBOL"}>FÚTBOL</MenuItem>
                 <MenuItem value={"PADEL"}>PADEL</MenuItem>
               </Select>
-
-              <InputLabel id="tipo-label">
-                Tipo
-              </InputLabel>
+              <InputLabel id="tipo-label">Tipo</InputLabel>
               <Select
                 labelId="tipo-label"
                 id="tipo-select"
-                value={tipo || ''}
-                onChange={(e) => setTipo(e.target.value)}
+                name="tipo"
+                value={canchaForm.tipo}
+                onChange={handleChange}
                 fullWidth
                 color="custom"
               >
@@ -265,31 +246,32 @@ const AdminCanchas = () => {
                   </MenuItem>
                 ))}
               </Select>
-
               <TextField
                 autoFocus
                 margin="dense"
                 label="Nombre de la Cancha"
+                name="nombre"
                 fullWidth
-                value={nombre || ''}
-                onChange={(e) => setNombre(e.target.value)}
+                value={canchaForm.nombre}
+                onChange={handleChange}
                 color="custom"
               />
-
               <TextField
                 color="custom"
                 margin="dense"
                 label="Precio por Hora"
+                name="precioHora"
                 fullWidth
                 type="number"
-                value={precioHora || ''}
-                onChange={(e) => setPrecioHora(e.target.value)}
+                value={canchaForm.precioHora}
+                onChange={handleChange}
               />
               <FormControlLabel
                 control={
                   <Switch
-                    checked={disponibilidad}
-                    onChange={(e) => setDisponibilidad(e.target.checked)}
+                    checked={canchaForm.disponibilidad}
+                    onChange={handleChange}
+                    name="disponibilidad"
                     color="primary"
                   />
                 }
@@ -299,14 +281,13 @@ const AdminCanchas = () => {
                 color="custom"
                 margin="dense"
                 label="Descripción"
+                name="descripcion"
                 fullWidth
                 multiline
                 rows={4}
-                value={descripcion || ''}
-                onChange={(e) => setDescripcion(e.target.value)}
+                value={canchaForm.descripcion}
+                onChange={handleChange}
               />
-
-
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpen(false)} color="custom">
@@ -317,12 +298,11 @@ const AdminCanchas = () => {
               </Button>
             </DialogActions>
           </Dialog>
-
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
             <DialogTitle>Confirmar Eliminación</DialogTitle>
             <DialogContent>
-              <p>¿Estás seguro de que deseas eliminar esta cancha?</p>
-              <p>Puede que haya turnos registrados en esta cancha..</p>
+              <Typography>¿Estás seguro de que deseas eliminar esta cancha?</Typography>
+              <Typography>Puede que haya turnos registrados en esta cancha.</Typography>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancelDelete} color="primary">
@@ -333,8 +313,6 @@ const AdminCanchas = () => {
               </Button>
             </DialogActions>
           </Dialog>
-
-
         </TableContainer>
       </Box>
     </>
