@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Container, Typography, Grid, Card, CardContent, MenuItem, Button, TextField } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, MenuItem, Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NavbarClient from '../../components/NavbarClient';
 import backgroundImage from '../../assets/images/imagen_background_adv.png';
@@ -16,10 +16,6 @@ const CanchasDisponibles = () => {
 
     const tokenConfig = {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    };
-
-    const handleBack = () => {
-        navigate('/select-sport');
     };
 
     const handleViewTurnos = (canchaId) => {
@@ -42,9 +38,8 @@ const CanchasDisponibles = () => {
 
 
     useEffect(() => {
-        // Filtrar canchas según el tipo seleccionado
         if (tipoDeCancha === "Todos") {
-            setCanchasFiltradas(canchas); 
+            setCanchasFiltradas(canchas);
         } else {
             setCanchasFiltradas(canchas.filter((cancha) => cancha.tipo === tipoDeCancha));
         }
@@ -64,7 +59,7 @@ const CanchasDisponibles = () => {
             ];
         } else {
             navigate('/select-sport');
-            return []; 
+            return [];
         }
     };
 
@@ -74,19 +69,19 @@ const CanchasDisponibles = () => {
     return (
         <>
             <NavbarClient />
-                <Box sx={{
-                    width: '100%',
-                    minHeight: '100vh',
-                    overflow: 'hidden',
-                    p: 0, 
-                    m: 0,
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                }}
-                >
+            <Box sx={{
+                width: '100%',
+                minHeight: '100vh',
+                overflow: 'hidden',
+                pt: { xs: '12px', sm: '60px' },
+                m: 0,
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+            }}
+            >
                 <Typography
                     variant='h4'
                     component="h4"
@@ -94,7 +89,7 @@ const CanchasDisponibles = () => {
                         fontFamily: "Bungee, sans-serif",
                         fontWeight: 400,
                         mb: '30px',
-                        mt: '30px' 
+                        mt: '30px'
                     }}
                 >
                     2. Selecciona una cancha
@@ -106,37 +101,40 @@ const CanchasDisponibles = () => {
                     onChange={(e) => setTipoDeCancha(e.target.value)}
                     sx={{
                         width: {
-                            xs: '150px', 
+                            xs: '150px',
                             sm: '200px',
                             md: '250px',
                         },
-                        marginBottom: 3, 
-                        marginTop: -2 
+                        marginBottom: 3
                     }}
+                    
                 >
-                    <MenuItem value="Todos">
+                    <MenuItem value="Todos" sx={{ fontFamily: "Fjalla One, sans-serif", textAlign: 'center' }}>
                         Todos
                     </MenuItem>
                     {
                         opcionesDeCancha.map((opcion) => (
-                            <MenuItem key={opcion.value} value={opcion.value}>
+                            <MenuItem 
+                                sx={{ fontFamily: "Fjalla One, sans-serif", textAlign: 'center' }}
+                                key={opcion.value} 
+                                value={opcion.value}>
                                 {opcion.label}
                             </MenuItem>
                         ))
                     }
                 </TextField>
-                
+
                 <Grid container spacing={2}>
                     {canchasFiltradas.length > 0 ? (
                         canchasFiltradas.map((cancha) => (
                             <Grid item key={cancha.id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}>
                                 <Card sx={{ width: '100%', maxWidth: '300px', minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 2, height: 'auto' }}>
                                     <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant="h4">{cancha.nombre}</Typography>
-                                        <Typography variant="h5">{cancha.tipo}</Typography>
+                                        <Typography variant="h4" sx={{ fontFamily: "Fjalla One, sans-serif" }}>{cancha.tipo}</Typography>
                                         <hr style={{ margin: '10px 0' }} />
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Precio por hora:</Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>${cancha.precioHora}</Typography>
+                                        <Typography variant="h5" sx={{ fontFamily: "Fjalla One, sans-serif", color:"green" }}>{cancha.nombre}</Typography>
+                                        <hr style={{ margin: '10px 0' }} />
+                                        <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: "Fjalla One, sans-serif" }}>${cancha.precioHora} x hora</Typography>
                                         <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                                             {cancha.descripcion}
                                         </Typography>
@@ -149,28 +147,30 @@ const CanchasDisponibles = () => {
                                             alignSelf: 'center',
                                             paddingY: 1.5,
                                             width: 'fit-content',
-                                            marginBottom: 2.7 
+                                            marginBottom: 2.7,
+                                            fontFamily: "Bungee, sans-serif",
                                         }}
                                     >
-                                        Ver Turnos
+                                        Ver Turnos disponibles
                                     </Button>
                                 </Card>
                             </Grid>
                         ))
                     ) : (
                         <Grid item xs={12}>
-                        <Typography variant="body1" sx={{ textAlign: 'center', marginTop:5 }}>
-                            No se encontraron canchas disponibles.
-                        </Typography>
-                    </Grid>
+                            <Typography variant="body1" sx={{ textAlign: 'center', fontFamily:"Fjalla One, sans serif", margin: 3 }}>
+                                No se encontraron canchas disponibles :(
+                            </Typography>
+                        </Grid>
                     )}
                 </Grid>
-                <Grid container justifyContent="center" sx={{ marginTop: 2, marginBottom: 4 }}>
-                    <Button variant="contained" color="black" onClick={handleBack}>
+                <Grid container justifyContent="center" sx={{marginBottom: 6}}>
+                    <Button variant="contained" color="black" onClick={() => navigate(-1)} sx={{
+                        fontFamily: "Bungee, sans-serif", minWidth: '130px'} }>
                         Atras
                     </Button>
                 </Grid>
-                </Box>
+            </Box>
         </>
     );
 };
