@@ -1,132 +1,124 @@
-import React, { useState } from "react";
-//MUI imports
+import { useState } from "react";
 import { Button, Grid, Paper, TextField, Box, Typography, Stack, IconButton, Alert, FormControlLabel, Switch } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import axios from "axios";
 import NavbarClient from "../../components/NavbarClient"
 import backgroundImage from '../../assets/images/imagen_background_adv.png';
 
-// Telefono Validation
 const isTelefono = (telefono) =>
     /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
+
+const paperStyle = {
+    padding: '32px 24px',
+    borderRadius: 20,
+    maxWidth: 420,
+    margin: 'auto',
+    background: 'rgba(255,255,255,0.97)',
+    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+};
+
+const titleFont = {
+    fontFamily: 'Bungee, sans-serif',
+    fontWeight: 400,
+    fontStyle: 'normal',
+    fontSize: 30,
+    marginBottom: 8,
+};
+
+const emailFont = {
+    fontFamily: 'Bungee Hairline, sans-serif',
+    fontWeight: 'bold',
+    fontSize: 18.7,
+};
+
+const buttonStyle = {
+    fontFamily: 'Bungee, sans-serif',
+    fontWeight: 400,
+    borderRadius: 12,
+    padding: '8px 24px',
+    fontSize: 16,
+    marginTop: 16,
+};
 
 const ClientProfile = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const tokenConfig = {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     };
-
-    const [nameDisabled, setNameDisabled] = useState(true)
-    const [telDisabled, setTelDisabled] = useState(true)
+    const [nameDisabled, setNameDisabled] = useState(true);
+    const [telDisabled, setTelDisabled] = useState(true);
     const [originalNombre, setOriginalNombre] = useState(currentUser?.nombre || "");
     const [originalTelefono, setOriginalTelefono] = useState(currentUser?.telefono || "");
     const [recibirNotificaciones, setRecibirNotificaciones] = useState(currentUser?.notificaciones || false);
-
     const [editedNombre, setEditedNombre] = useState(originalNombre);
     const [editedTelefono, setEditedTelefono] = useState(originalTelefono);
-
     const [showSaveButton, setShowSaveButton] = useState(false);
-
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const paperStyle = { paddingTop: 0.02, paddingBottom: 26, paddingLeft: 23, paddingRight: 23 }
-
     const handleEditClick = (field) => {
         if (field === "nombre") {
-            if (!nameDisabled) {
-                setEditedNombre(originalNombre); // Restaurar valores originales
-            }
+            if (!nameDisabled) setEditedNombre(originalNombre);
             setNameDisabled(!nameDisabled);
         }
-
         if (field === "telefono") {
-            if (!telDisabled) {
-                setEditedTelefono(originalTelefono); // Restaurar valores originales
-            }
+            if (!telDisabled) setEditedTelefono(originalTelefono);
             setTelDisabled(!telDisabled);
         }
-
         setShowSaveButton(false);
-        setErrorMessage("")
-        setSuccessMessage("")
+        setErrorMessage("");
+        setSuccessMessage("");
     };
 
     const handleInputChange = (e, field) => {
         const { value } = e.target;
-
-        if (field === "nombre") {
-            setEditedNombre(value);
-        } else if (field === "telefono") {
-            setEditedTelefono(value);
-        }
-
-        setShowSaveButton(true); // Mostrar botón cuando hay cambios
-        setErrorMessage("")
+        if (field === "nombre") setEditedNombre(value);
+        else if (field === "telefono") setEditedTelefono(value);
+        setShowSaveButton(true);
+        setErrorMessage("");
     };
 
     const handleSwitchChange = (e) => {
-        const newValue = e.target.checked;
-        setRecibirNotificaciones(newValue);
+        setRecibirNotificaciones(e.target.checked);
         setShowSaveButton(true);
     };
 
-
     const handleSaveChanges = async () => {
-
         if (editedTelefono && !isTelefono(editedTelefono)) {
-            setErrorMessage("Teléfono no válido.")
+            setErrorMessage("Teléfono no válido.");
             return;
         }
-
         if (editedNombre.length > 30) {
-            setErrorMessage("El nombre es demasiado largo.")
+            setErrorMessage("El nombre es demasiado largo.");
             return;
         } else if (editedNombre.length < 4) {
-            setErrorMessage("El nombre es demasiado corto.")
+            setErrorMessage("El nombre es demasiado corto.");
             return;
         }
-
-
         const newValues = {
             nombre: editedNombre === originalNombre ? null : editedNombre,
             telefono: editedTelefono === originalTelefono ? null : editedTelefono,
             notificaciones: recibirNotificaciones
         };
-
-
-
         try {
             const response = await axios.put(`http://localhost:8080/api/usuarios/${currentUser.id}/edit-profile`, newValues, tokenConfig);
-            console.log("Perfil actualizado:", response.data);
-            setSuccessMessage("Datos actualizados correctamente!")
-            setTimeout(() => {
-                setSuccessMessage("");
-            }, 2500);
-            // Actualizar valores originales y desactivar edición
+            setSuccessMessage("Datos actualizados correctamente!");
+            setTimeout(() => setSuccessMessage(""), 2500);
             setOriginalNombre(editedNombre);
             setOriginalTelefono(editedTelefono);
-
-            // Actualizar currentUser en localStorage
             const updatedUser = { ...currentUser, nombre: editedNombre, telefono: editedTelefono, notificaciones: recibirNotificaciones };
             localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
             setNameDisabled(true);
             setTelDisabled(true);
             setShowSaveButton(false);
-
         } catch (error) {
-            setErrorMessage("Error actualizando datos")
-            console.error("Error actualizando perfil:", error);
+            setErrorMessage("Error actualizando datos");
         }
-
     };
-
 
     return (
         <>
             <NavbarClient />
-
             <Box
                 display={'flex'}
                 justifyContent={'center'}
@@ -139,15 +131,10 @@ const ClientProfile = () => {
                     backgroundPosition: 'center',
                 }}
             >
-
                 <Grid item>
-                    <Paper elevation={24} style={{ ...paperStyle, marginTop: '10px' }} >
-                        <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', fontSize: 30 }}>Datos
-                            <br />
-                            personales</h2>
-                        <Typography fontFamily={"Bungee Hairline, sans-serif"} fontWeight={'bold'} fontSize={18.7}>{currentUser?.email}</Typography>
-
-
+                    <Paper elevation={24} style={paperStyle}>
+                        <h2 style={titleFont}>Datos<br />personales</h2>
+                        <Typography style={emailFont}>{currentUser?.email}</Typography>
                         <Stack direction="row" spacing={2} justifyContent="center" marginTop="20px">
                             <TextField
                                 label="Nombre"
@@ -157,11 +144,8 @@ const ClientProfile = () => {
                                 disabled={nameDisabled}
                                 onChange={(e) => handleInputChange(e, "nombre")}
                             />
-                            <IconButton color="custom" onClick={() => handleEditClick("nombre")} >
-                                <Edit />
-                            </IconButton>
+                            <IconButton color="primary" onClick={() => handleEditClick("nombre")}> <Edit /> </IconButton>
                         </Stack>
-
                         <Stack direction="row" spacing={2} justifyContent="center" marginTop="20px">
                             <TextField
                                 label="Teléfono"
@@ -172,12 +156,8 @@ const ClientProfile = () => {
                                 disabled={telDisabled}
                                 onChange={(e) => handleInputChange(e, "telefono")}
                             />
-                            <IconButton color="custom" onClick={() => handleEditClick("telefono")}>
-                                <Edit />
-                            </IconButton>
+                            <IconButton color="primary" onClick={() => handleEditClick("telefono")}> <Edit /> </IconButton>
                         </Stack>
-
-
                         <Stack direction="row" spacing={2} justifyContent="center" marginTop="20px">
                             <TextField
                                 label="Contraseña"
@@ -185,13 +165,9 @@ const ClientProfile = () => {
                                 margin="dense"
                                 variant="outlined"
                                 disabled
-
                             />
-                            <IconButton color="error" href="/client-changepassword">
-                                <Edit />
-                            </IconButton>
+                            <IconButton color="error" href="/client-changepassword"> <Edit /> </IconButton>
                         </Stack>
-
                         <Stack direction="row" alignItems="center" spacing={1}>
                             <FormControlLabel
                                 control={
@@ -200,22 +176,17 @@ const ClientProfile = () => {
                                         onChange={handleSwitchChange}
                                     />
                                 }
-                                label ="Recibir notificaciones sobre torneos."
+                                label="Recibir notificaciones sobre torneos."
                             />
                         </Stack>
-
                         {errorMessage && (
                             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                                <Alert severity="error">
-                                    {errorMessage}
-                                </Alert>
+                                <Alert severity="error">{errorMessage}</Alert>
                             </Stack>
                         )}
                         {successMessage && (
                             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                                <Alert severity="success">
-                                    {successMessage}
-                                </Alert>
+                                <Alert severity="success">{successMessage}</Alert>
                             </Stack>
                         )}
                         {showSaveButton && (
@@ -223,7 +194,7 @@ const ClientProfile = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleSaveChanges}
-                                sx={{ marginTop: 2 }}
+                                sx={buttonStyle}
                             >
                                 Guardar Cambios
                             </Button>
@@ -232,8 +203,7 @@ const ClientProfile = () => {
                 </Grid>
             </Box>
         </>
-    )
+    );
 };
-
 
 export default ClientProfile;
