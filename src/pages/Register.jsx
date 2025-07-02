@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
 import {
@@ -13,7 +13,6 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import LoginIcon from '@mui/icons-material/Login';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 import Footer from '../components/Footer';
-import { borderRadius } from '@mui/system';
 
 const isEmail = (email) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -61,7 +60,7 @@ const Register = () => {
     boxSizing: 'border-box',
     padding: { xs: '17px 32px', sm: '32px 32px' },
     mx: 'auto',
-    borderRadius: '5%',
+    borderRadius: '7%',
   };
   const avatarStyle = { backgroundColor: "#121212" };
 
