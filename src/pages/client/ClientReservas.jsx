@@ -11,42 +11,43 @@ import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { useNavigate } from 'react-router-dom';
 import NavbarClient from "../../components/NavbarClient";
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#4CAF50',
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const tableButtonStyle = {
+  fontFamily: "Bungee Inline, sans-serif",
+  marginBottom: 2
+};
 
 const ClientReservas = () => {
   const [reservas, setReservas] = useState([]);
-  const [showCompleted, setShowCompleted]=useState(false);
-  const navigate = useNavigate();
-
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  const userId = currentUser.id;
-  // Dialogo
+  const [showCompleted, setShowCompleted] = useState(false);
   const [open, setDialogOpen] = useState(false);
   const [reservaToCancelId, setReservaToCancelId] = useState(null);
+  const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const userId = currentUser.id;
+  const tokenConfig = {
+    headers: { Authorization: `Bearer ${currentUser.token}` }
+  };
 
   useEffect(() => {
     fetchReservas(showCompleted);
   }, [showCompleted]);
 
-  const tokenConfig = {
-    headers: { Authorization: `Bearer ${currentUser.token}` }
-  };
-
   const fetchReservas = async (includeCompleted) => {
     try {
       const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
-      setReservas(response.data)
-      // if (response) {
-
-      //   const today = new Date();
-      //   const sortedReservas = response.data
-      //     .filter(reserva => new Date(reserva.turno.fecha) >= today) 
-      //     .sort((a, b) => new Date(a.turno.fecha) - new Date(b.turno.fecha)); 
-  
-      //   setReservas(sortedReservas);
-      // }
+      setReservas(response.data);
     } catch (error) {
       if (error.response && error.response.status === 403) {
         navigate("/login");
@@ -56,9 +57,9 @@ const ClientReservas = () => {
     }
   };
 
-  const handleShowCompletedToggle=()=>{
-    setShowCompleted(prev=>!prev); 
-  }
+  const handleShowCompletedToggle = () => {
+    setShowCompleted(prev => !prev);
+  };
 
   const handleCancelReservaClick = (id) => {
     setDialogOpen(true);
@@ -76,46 +77,36 @@ const ClientReservas = () => {
     fetchReservas(showCompleted);
   };
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: '#4CAF50',
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
-  
   return (
     <>
       <Box sx={{ backgroundColor: 'white', minHeight: '100vh' }}>
         <NavbarClient />
-        <Box sx={{ textAlign: 'center', padding: 2}}>
-          <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{m:3}}>
+        <Box sx={{ textAlign: 'center', padding: 2 }}>
+          <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{ m: 3 }}>
             Mis Reservas
           </Typography>
-          <Button 
-            variant="contained" 
-            color={showCompleted ? "secondary" : "primary"} 
+          <Button
+            variant="contained"
+            color={showCompleted ? "secondary" : "primary"}
             onClick={handleShowCompletedToggle}
+            sx={tableButtonStyle}
           >
             {showCompleted ? "Ocultar Completadas" : "Mostrar Completadas"}
           </Button>
         </Box>
         <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-            <StyledTableCell align='right'>Fecha de creación</StyledTableCell>
-              <StyledTableCell align='right'>Fecha de turno</StyledTableCell>
-              <StyledTableCell align='right'>Hora de Inicio</StyledTableCell>
-              <StyledTableCell align='right'>Hora de Fin</StyledTableCell>
-              <StyledTableCell align='right'>Estado</StyledTableCell>
-              <StyledTableCell align='right'>Acciones</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align='right'>Fecha de creación</StyledTableCell>
+                <StyledTableCell align='right'>Fecha de turno</StyledTableCell>
+                <StyledTableCell align='right'>Hora de Inicio</StyledTableCell>
+                <StyledTableCell align='right'>Hora de Fin</StyledTableCell>
+                <StyledTableCell align='right'>Estado</StyledTableCell>
+                <StyledTableCell align='right'>Acciones</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {reservas.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} align="center">
@@ -136,7 +127,7 @@ const ClientReservas = () => {
                         style={{
                           color: reserva.estado === 'CONFIRMADA' ? 'green' :
                             reserva.estado === 'CANCELADA' ? 'red' :
-                            'default'
+                              'default'
                         }}
                       >
                         {reserva.estado}
@@ -153,9 +144,7 @@ const ClientReservas = () => {
                 ))
               )}
             </TableBody>
-        </Table>
-
-
+          </Table>
           <Dialog
             open={open}
             onClose={handleAbortCancel}
