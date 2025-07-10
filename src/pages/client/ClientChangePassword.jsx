@@ -186,7 +186,7 @@ const ChangePassword = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, fontFamily: 'Bungee, sans-serif', fontWeight: 400, fontSize: 16, padding: '8px 24px' }}
               >
                 Confirmar Cambio
               </Button>

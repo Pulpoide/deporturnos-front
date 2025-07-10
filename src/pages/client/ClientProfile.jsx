@@ -4,6 +4,7 @@ import { Edit } from '@mui/icons-material';
 import axios from "axios";
 import NavbarClient from "../../components/NavbarClient"
 import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import { margin } from "@mui/system";
 
 const isTelefono = (telefono) =>
     /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
@@ -22,7 +23,8 @@ const titleFont = {
     fontWeight: 400,
     fontStyle: 'normal',
     fontSize: 30,
-    marginBottom: 8,
+    marginTop: 0,
+    marginBottom: 20,
 };
 
 const emailFont = {
@@ -35,9 +37,8 @@ const buttonStyle = {
     fontFamily: 'Bungee, sans-serif',
     fontWeight: 400,
     borderRadius: 12,
-    padding: '8px 24px',
+    padding: '8px 16px',
     fontSize: 16,
-    marginTop: 16,
 };
 
 const ClientProfile = () => {
@@ -168,7 +169,7 @@ const ClientProfile = () => {
                             />
                             <IconButton color="error" href="/client-changepassword"> <Edit /> </IconButton>
                         </Stack>
-                        <Stack direction="row" alignItems="center" spacing={1}>
+                        <Box sx={{marginTop: 3}}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -176,9 +177,10 @@ const ClientProfile = () => {
                                         onChange={handleSwitchChange}
                                     />
                                 }
-                                label="Recibir notificaciones sobre torneos."
+                                label="Recibir notificaciones"
+                                componentsProps={{typography: { style: { fontFamily: 'Fjalla One, sans-serif'} }}}
                             />
-                        </Stack>
+                        </Box>
                         {errorMessage && (
                             <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
                                 <Alert severity="error">{errorMessage}</Alert>

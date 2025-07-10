@@ -17,7 +17,7 @@ const Footer = () => {
 
           <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <Typography variant="h6" sx={{fontFamily: "Bungee hairline, sans-serif", fontWeight:"bold", paddingBottom:1 }}>Contacto directo</Typography>
-            <Link href="mailto:contacto@deporturnos.com" color="inherit" underline="hover" sx={{ textAlign: 'center', fontFamily: "Fjalla One, sans-serif", paddingBottom:1.2}}>contacto@deporturnos.com</Link>
+            <Link href="mailto:deporturnos@gmail.com" color="inherit" underline="hover" sx={{ textAlign: 'center', fontFamily: "Fjalla One, sans-serif", paddingBottom:1.2}}>contacto@deporturnos.com</Link>
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>

@@ -90,18 +90,18 @@ const NavbarClient = () => {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
-              <DialogTitle id="alert-dialog-title">Cerrar Sesión</DialogTitle>
+              <DialogTitle id="alert-dialog-title" sx={{fontFamily:'Bungee, sans-serif', textAlign:'center'}}>Cerrar Sesión</DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText id="alert-dialog-description" sx={{fontFamily:'Fjalla One, sans-serif', textAlign:'center'}}>
                   ¿Estás seguro de que deseas cerrar sesión?
                 </DialogContentText>
               </DialogContent>
-              <DialogActions>
-                <Button onClick={handleLogoutCancel} color="primary">
-                  Cancelar
-                </Button>
-                <Button onClick={handleLogoutConfirm} color="error" autoFocus>
+              <DialogActions sx={{ justifyContent: 'center' }}>
+                <Button onClick={handleLogoutConfirm} color="error" autoFocus sx={{ fontFamily: 'Bungee, sans-serif' }}>
                   Confirmar
+                </Button>
+                <Button onClick={handleLogoutCancel} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>
+                  Cancelar
                 </Button>
               </DialogActions>
             </Dialog>

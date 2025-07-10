@@ -299,16 +299,16 @@ const AdminCanchas = () => {
             </DialogActions>
           </Dialog>
           <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
-            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogTitle sx={{fontFamily:'Bungee, sans serif'}}>Confirmar Eliminación</DialogTitle>
             <DialogContent>
-              <Typography>¿Estás seguro de que deseas eliminar esta cancha?</Typography>
-              <Typography>Puede que haya turnos registrados en esta cancha.</Typography>
+              <Typography sx={{fontFamily:'Fjalla One, sans-serif', textAlign:'center'}}>¿Estás seguro de eliminar esta cancha? </Typography>
+              <Typography sx={{fontFamily:'Fjalla One, sans-serif', textAlign:'center'}}>Puede que haya turnos registrados en ella.</Typography>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCancelDelete} color="primary">
+              <Button onClick={handleCancelDelete} color="primary" sx={{fontFamily:'Bungee, sans-serif'}}>
                 Cancelar
               </Button>
-              <Button onClick={handleConfirmDelete} color="error">
+              <Button onClick={handleConfirmDelete} color="error" sx={{fontFamily:'Bungee, sans-serif'}}>
                 Eliminar
               </Button>
             </DialogActions>
