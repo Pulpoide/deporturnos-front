@@ -1,7 +1,8 @@
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, Stack } from '@mui/material';
 import NavbarClient from '../../components/NavbarClient';
 import { useNavigate } from 'react-router';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
+import { width } from '@mui/system';
 
 const buttonStyle = {
   backgroundColor: '#4CAF50',
@@ -13,6 +14,8 @@ const buttonStyle = {
     backgroundColor: '#45a048',
   },
   fontFamily: 'Bungee, sans-serif',
+  width:'250px'
+  
 };
 
 const ClientHome = () => {
@@ -65,29 +68,37 @@ const ClientHome = () => {
               fontFamily: 'Bungee Inline, sans-serif',
               fontWeight: 100,
               color: 'white',
-              fontSize: { xs: '2.2rem', sm: '3.5rem', md: '6rem' },
+              fontSize: { xs: '2.5rem', sm: '3.5rem', md: '6rem' },
+              marginBottom: '20px',
             }}
           >
             LOS GIGANTES
           </Typography>
-          <Button
-            sx={buttonStyle}
-            color="custom"
-            type="submit"
-            variant="contained"
-            onClick={handleReserveNow}
+          <Stack
+            direction="column"
+            spacing={2}
+            alignItems="center"
+            sx={{ width: '100%' }}
           >
-            Reservar Ahora
-          </Button>
-          <Button
-            sx={buttonStyle}
-            color="custom"
-            type="submit"
-            variant="contained"
-            onClick={handleSeeReservations}
-          >
-            Mis Reservas
-          </Button>
+            <Button
+              sx={buttonStyle}
+              color="custom"
+              type="submit"
+              variant="contained"
+              onClick={handleReserveNow}
+            >
+              Reservar Ahora
+            </Button>
+            <Button
+              sx={buttonStyle}
+              color="custom"
+              type="submit"
+              variant="contained"
+              onClick={handleSeeReservations}
+            >
+              Mis Reservas
+            </Button>
+          </Stack>
         </Box>
       </Box>
     </div>
