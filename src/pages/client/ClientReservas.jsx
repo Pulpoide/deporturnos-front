@@ -156,7 +156,7 @@ const ClientReservas = () => {
                 <TableRow>
                   <TableCell colSpan={6} align="center">
                     <Typography variant="h6" color="textSecondary">
-                      No hay reservas aún.
+                      No hay reservas aún
                     </Typography>
                   </TableCell>
                 </TableRow>

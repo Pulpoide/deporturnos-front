@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
-  DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel, Box
+  DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel,
+  Box, Typography, Stack, useTheme, useMediaQuery
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -17,6 +18,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontFamily: 'Fjalla One, sans-serif',
+    fontSize: 18,
   },
   [`.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -43,7 +46,12 @@ const AdminUsuarios = () => {
   const [notificaciones, setNotificaciones] = useState(false);
   const [rol, setRol] = useState('');
   const [initialValues, setInitialValues] = useState({});
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [usuarioToDelete, setUsuarioToDelete] = useState(null);
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     fetchUsuarios();
@@ -93,8 +101,24 @@ const AdminUsuarios = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/usuarios/${id}`, tokenConfig);
-    } catch (err) {}
+    } catch (err) { }
     fetchUsuarios();
+  };
+
+  const handleDeleteClick = (id) => {
+    setUsuarioToDelete(id);
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDelete(usuarioToDelete);
+    setConfirmDialogOpen(false);
+    setUsuarioToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDialogOpen(false);
+    setUsuarioToDelete(null);
   };
 
   const handleSave = async () => {
@@ -129,127 +153,104 @@ const AdminUsuarios = () => {
   return (
     <>
       <NavbarAdmin />
-      <TableContainer component={Paper}>
-        <Box justifyContent={'center'} display={'flex'}>
-          <Button
-            variant="contained"
-            color="custom"
-            startIcon={<Add />}
-            onClick={handleAdd}
-            style={buttonStyle}
-          >
-            Agregar Usuario
-          </Button>
-        </Box>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align='center'>ID</StyledTableCell>
-              <StyledTableCell align='center'>Nombre</StyledTableCell>
-              <StyledTableCell align='center'>Email</StyledTableCell>
-              <StyledTableCell align='center'>Teléfono</StyledTableCell>
-              <StyledTableCell align='center'>Recibe notificaciones</StyledTableCell>
-              <StyledTableCell align='center'>Rol</StyledTableCell>
-              <StyledTableCell align='center'>Cuenta Activada</StyledTableCell>
-              <StyledTableCell align='center'>Acciones</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {usuarios.map((usuario) => (
-              <TableRow key={usuario.id}>
-                <TableCell align='center'>{usuario.id}</TableCell>
-                <TableCell align='center'>{usuario.nombre}</TableCell>
-                <TableCell align='center'>{usuario.email}</TableCell>
-                <TableCell align='center'>{usuario.telefono}</TableCell>
-                <TableCell align='center'>{usuario.notificaciones ? 'Sí' : 'No'}</TableCell>
-                <TableCell align='center'>{usuario.rol}</TableCell>
-                <TableCell align='center'>{usuario.activada ? 'Sí' : 'No'}</TableCell>
-                <TableCell align='right'>
-                  <IconButton color="custom" onClick={() => handleEdit(usuario)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton color="error" onClick={() => handleDelete(usuario.id)}>
-                    <Delete />
-                  </IconButton>
-                  <IconButton onClick={() => handleRoleChange(usuario.id, usuario.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN')}>
-                    {usuario.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon color='black' />}
-                  </IconButton>
-                  <IconButton onClick={() => handleAccountStatusChange(usuario.id, !usuario.enabled)}>
-                    {usuario.activada ? <LockOpen /> : <Lock color='black' />}
-                  </IconButton>
-                </TableCell>
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
+          <Button variant="contained" color="custom" startIcon={<Add />} onClick={handleAdd} sx={buttonStyle}>Agregar Usuario</Button>
+        </Stack>
+      </Box>
+
+      {!isMobile && (
+        <TableContainer component={Paper} sx={{ mx: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {['ID', 'Nombre', 'Email', 'Teléfono', 'Notifs', 'Rol', 'Activa', 'Acciones'].map(h => <StyledTableCell key={h} align="center">{h}</StyledTableCell>)}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>{selectedUsuario ? 'Editar Usuario' : 'Agregar Usuario'}</DialogTitle>
-          <DialogContent>
-            <TextField
-              color='custom'
-              autoFocus
-              margin="dense"
-              label="Nombre"
-              fullWidth
-              value={nombre || ''}
-              onChange={(e) => setNombre(e.target.value)}
-            />
-            <TextField
-              color='custom'
-              margin="dense"
-              label="Email"
-              fullWidth
-              value={email || ''}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              color='custom'
-              margin="dense"
-              label="Password"
-              fullWidth
-              type="password"
-              value={password || ''}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <TextField
-              color='custom'
-              margin="dense"
-              label="Teléfono"
-              fullWidth
-              value={telefono || ''}
-              onChange={(e) => setTelefono(e.target.value)}
-            />
-            <FormControl fullWidth margin="dense" color='custom'>
-              <InputLabel>Rol</InputLabel>
-              <Select
-                value={rol || ''}
-                onChange={(e) => setRol(e.target.value)}
-              >
-                <MenuItem value="ADMIN">Admin</MenuItem>
-                <MenuItem value="CLIENTE">Cliente</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={notificaciones}
-                  onChange={(e) => setNotificaciones(e.target.checked)}
-                  color="primary"
-                />
-              }
-              label="Recibe notificaciones"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)} color="custom">
-              Cancelar
-            </Button>
-            <Button onClick={handleSave} color="custom">
-              Guardar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {usuarios.map(u => (
+                <TableRow key={u.id}>
+                  <TableCell align="center">{u.id}</TableCell>
+                  <TableCell align="center">{u.nombre}</TableCell>
+                  <TableCell align="center">{u.email}</TableCell>
+                  <TableCell align="center">{u.telefono}</TableCell>
+                  <TableCell align="center">{u.notificaciones ? 'Sí' : 'No'}</TableCell>
+                  <TableCell align="center">{u.rol}</TableCell>
+                  <TableCell align="center">{u.activada ? 'Sí' : 'No'}</TableCell>
+                  <TableCell align="center">
+                    <IconButton onClick={() => handleEdit(u)}><Edit /></IconButton>
+                    <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
+                    <IconButton onClick={() => handleRoleChange(u.id, u.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN')}>
+                      {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
+                    </IconButton>
+                    <IconButton onClick={() => handleAccountStatus(u.id, !u.enabled)}>
+                      {u.activada ? <LockOpen /> : <Lock />}
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {isMobile && (
+        <Box sx={{ px: 2 }}>
+          {usuarios.map(u => (
+            <Paper key={u.id} sx={{ mb: 2, p: 2 }}>
+              <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif'}}>#{u.id} {u.nombre}</Typography>
+              <Typography variant="body1">Email: {u.email}</Typography>
+              <Typography variant="body1">Tel: {u.telefono}</Typography>
+              <Typography variant="body1">Notifs: {u.notificaciones ? 'Sí' : 'No'}</Typography>
+              <Typography variant="body1">Rol: {u.rol}</Typography>
+              <Typography variant="body1">Activa: {u.activada ? 'Sí' : 'No'}</Typography>
+              <Box sx={{ mt: 1, textAlign: 'right' }}>
+                <IconButton onClick={() => handleEdit(u)}><Edit /></IconButton>
+                <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
+                <IconButton onClick={() => handleRoleChange(u.id, u.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN')}>
+                  {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
+                </IconButton>
+                <IconButton onClick={() => handleAccountStatus(u.id, !u.enabled)}>
+                  {u.activada ? <LockOpen /> : <Lock />}
+                </IconButton>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+      )}
+
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>{selectedUsuario ? 'Editar Usuario' : 'Agregar Usuario'}</DialogTitle>
+        <DialogContent>
+          <TextField fullWidth margin="dense" label="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} sx={{ mb: 2 }} />
+          <TextField fullWidth margin="dense" label="Email" value={email} onChange={e => setEmail(e.target.value)} sx={{ mb: 2 }} />
+          <TextField fullWidth margin="dense" label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} sx={{ mb: 2 }} />
+          <TextField fullWidth margin="dense" label="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} sx={{ mb: 2 }} />
+          <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
+            <InputLabel>Rol</InputLabel>
+            <Select value={rol} onChange={e => setRol(e.target.value)}>
+              <MenuItem value="ADMIN">Admin</MenuItem>
+              <MenuItem value="CLIENTE">Cliente</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControlLabel control={<Switch checked={notificaciones} onChange={e => setNotificaciones(e.target.checked)} color="primary" />} label="Recibe notificaciones" />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={handleSave} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Guardar</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmDialogOpen} onClose={handleCancelDelete} disableScrollLock>
+        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar Eliminación</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

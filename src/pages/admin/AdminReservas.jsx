@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
-  DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField
+  DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField,
+  useTheme, useMediaQuery, Stack
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import NavbarAdmin from '../../components/NavbarAdmin';
+import backgroundImage from '../../assets/images/imagen_background_club.png';
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 
@@ -16,6 +18,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontFamily: 'Fjalla One, sans-serif',
+    fontSize: 18,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -43,7 +47,12 @@ const AdminReservas = () => {
   const [initialValues, setInitialValues] = useState({});
   const [fechaDesdeInput, setFechaDesdeInput] = useState('');
   const [fechaHastaInput, setFechaHastaInput] = useState('');
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [reservaToDelete, setReservaToDelete] = useState(null);
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     fetchReservas();
@@ -143,6 +152,22 @@ const AdminReservas = () => {
     fetchReservas();
   };
 
+  const handleDeleteClick = (id) => {
+    setReservaToDelete(id);
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await handleDelete(reservaToDelete);
+    setConfirmDialogOpen(false);
+    setReservaToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDialogOpen(false);
+    setReservaToDelete(null);
+  };
+
   const handleSave = async () => {
     const oldReservaData = initialValues && initialValues.usuario && initialValues.turno ? {
       usuarioId: initialValues.usuario.id,
@@ -183,141 +208,172 @@ const AdminReservas = () => {
   return (
     <>
       <NavbarAdmin />
-      <TableContainer component={Paper}>
-        <Box justifyContent={'center'} display={'flex'}>
+      <Box sx={{ p: 4, textAlign: 'center' }}>
+        <Stack
+          direction={isMobile ? 'column' : 'row'}
+          spacing={2}
+          justifyContent="center"
+          alignItems={'center'}
+        >
           <Button
             variant="contained"
             color="custom"
             startIcon={<Add />}
             onClick={handleAdd}
-            style={buttonStyle}
+            sx={buttonStyle}
           >
             Agregar Reserva
           </Button>
-        </Box>
-        <Box justifyContent={'center'} display={'flex'}>
+
           <TextField
             label="Fecha Desde"
             type="date"
-            onChange={(e) => setFechaDesdeInput(e.target.value)}
+            onChange={e => setFechaDesdeInput(e.target.value)}
             InputLabelProps={{ shrink: true }}
           />
+
           <TextField
             label="Fecha Hasta"
             type="date"
-            onChange={(e) => setFechaHastaInput(e.target.value)}
+            onChange={e => setFechaHastaInput(e.target.value)}
             InputLabelProps={{ shrink: true }}
           />
-        </Box>
-        <Box justifyContent={'center'} display={'flex'}>
+
           <Button
             variant="contained"
             color="custom"
             onClick={handleSearch}
-            style={buttonStyle}
+            sx={buttonStyle}
           >
             Buscar
           </Button>
-        </Box>
-        {reservas.length === 0 ? (
-          <Box justifyContent={'center'} display={'flex'} padding={2}>
-            <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
-              Aún no hay reservas
-            </Typography>
-          </Box>
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="right">Fecha de reserva</StyledTableCell>
-                <StyledTableCell align="right">Fecha de turno</StyledTableCell>
-                <StyledTableCell align="right">Hora inicio</StyledTableCell>
-                <StyledTableCell align="right">Hora fin</StyledTableCell>
-                <StyledTableCell align="right">Usuario</StyledTableCell>
-                <StyledTableCell align="right">Turno</StyledTableCell>
-                <StyledTableCell align="right">Cancha</StyledTableCell>
-                <StyledTableCell align="right">Estado</StyledTableCell>
-                <StyledTableCell align="right">Acciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {reservas.map((reserva) => (
-                <TableRow key={reserva.id}>
-                  <TableCell align="right">{dayjs(reserva.fecha).format('DD/MM/YYYY')}</TableCell>
-                  <TableCell align="right">{dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</TableCell>
-                  <TableCell align="right">{reserva.turno.horaInicio}</TableCell>
-                  <TableCell align="right">{reserva.turno.horaFin}</TableCell>
-                  <TableCell align="right">{reserva.usuario.nombre}</TableCell>
-                  <TableCell align="right">{reserva.turno.id}</TableCell>
-                  <TableCell align="right">{reserva.turno.cancha.nombre}</TableCell>
-                  <TableCell align="right">{reserva.estado}</TableCell>
-                  <TableCell align="right">
-                    <IconButton color="custom" onClick={() => handleEdit(reserva)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton color="error" onClick={() => handleDelete(reserva.id)}>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        </Stack>
+      </Box>
+      <Box
+        sx={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          py: 4
+        }}>
+
+        {!isMobile && (
+          <TableContainer component={Paper}>
+            {reservas.length === 0 ? (
+              <Box sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+                  Aún no hay reservas
+                </Typography>
+              </Box>
+            ) : (
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">Fecha Reserva</StyledTableCell>
+                    <StyledTableCell align="center">Fecha Turno</StyledTableCell>
+                    <StyledTableCell align="center">Hora Inicio</StyledTableCell>
+                    <StyledTableCell align="center">Hora Fin</StyledTableCell>
+                    <StyledTableCell align="center">Usuario</StyledTableCell>
+                    <StyledTableCell align="center">Turno ID</StyledTableCell>
+                    <StyledTableCell align="center">Cancha</StyledTableCell>
+                    <StyledTableCell align="center">Estado</StyledTableCell>
+                    <StyledTableCell align="center">Acciones</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {reservas.map(r => (
+                    <TableRow key={r.id}>
+                      <TableCell align="center">{dayjs(r.fecha).format('DD/MM/YYYY')}</TableCell>
+                      <TableCell align="center">{dayjs(r.turno.fecha).format('DD/MM/YYYY')}</TableCell>
+                      <TableCell align="center">{r.turno.horaInicio}</TableCell>
+                      <TableCell align="center">{r.turno.horaFin}</TableCell>
+                      <TableCell align="center">{r.usuario.nombre}</TableCell>
+                      <TableCell align="center">{r.turno.id}</TableCell>
+                      <TableCell align="center">{r.turno.cancha.nombre}</TableCell>
+                      <TableCell align="center">
+                        <Typography style={{color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange' , fontFamily: 'Bungee, sans-serif' }}>{r.estado}</Typography></TableCell>
+                      <TableCell align="center">
+                        <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                        <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </TableContainer>
         )}
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>{selectedReserva ? 'Editar Reserva' : 'Agregar Reserva'}</DialogTitle>
+
+        {isMobile && (
+          <Box sx={{ px: 2 }}>
+            {reservas.length === 0 ? (
+              <Box sx={{ p: 2, textAlign: 'center' }}>
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+                  Aún no hay reservas
+                </Typography>
+              </Box>
+            ) : (
+              reservas.map(r => (
+                <Paper key={r.id} sx={{ mb: 2, p: 2, textAlign: 'center' }}>
+                  <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif', color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange' }}>{r.estado}</Typography>
+                  <hr />
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Reserva:</strong> {dayjs(r.fecha).format('DD/MM/YYYY')}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Nombre de Usuario:</strong> {r.usuario.nombre}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Turno ID:</strong> {r.turno.id}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Turno:</strong> {dayjs(r.turno.fecha).format('DD/MM/YYYY')}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Hora: </strong>{r.turno.horaInicio} <strong>a</strong> {r.turno.horaFin}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Cancha:</strong> {r.turno.cancha.nombre}</Typography>
+                  <Box sx={{ mt: 1, textAlign: 'center' }}>
+                    <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                    <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                  </Box>
+                </Paper>
+              ))
+            )}
+          </Box>
+        )}
+
+        <Dialog open={open} onClose={() => setOpen(false)} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>{selectedReserva ? 'Editar Reserva' : 'Agregar Reserva'}</DialogTitle>
           <DialogContent>
             <FormControl fullWidth margin="dense" color="custom">
               <InputLabel>Usuario</InputLabel>
-              <Select
-                value={usuarioId || ''}
-                onChange={(e) => setUsuarioId(e.target.value)}
-              >
-                {usuarios.map((usuario) => (
-                  <MenuItem key={usuario.id} value={usuario.id}>
-                    {usuario.nombre}
-                  </MenuItem>
-                ))}
+              <Select value={usuarioId} onChange={e => setUsuarioId(e.target.value)}>
+                {usuarios.map(u => <MenuItem key={u.id} value={u.id}>{u.nombre}</MenuItem>)}
               </Select>
             </FormControl>
             <FormControl fullWidth margin="dense" color="custom">
               <InputLabel>Turno</InputLabel>
-              <Select
-                value={turnoId || ''}
-                onChange={(e) => setTurnoId(e.target.value)}
-              >
-                {turnos.map((turno) => (
-                  <MenuItem key={turno.id} value={turno.id}>
-                    {turno.id}) {turno.fecha} {turno.horaInicio} - {turno.horaFin} - {turno.estado}
-                  </MenuItem>
-                ))}
+              <Select value={turnoId} onChange={e => setTurnoId(e.target.value)}>
+                {turnos.map(t => <MenuItem key={t.id} value={t.id}>{`${t.id} - ${dayjs(t.fecha).format('DD/MM/YYYY')} ${t.horaInicio}-${t.horaFin}`}</MenuItem>)}
               </Select>
             </FormControl>
             <FormControl fullWidth margin="dense" color="custom">
               <InputLabel>Estado</InputLabel>
-              <Select
-                value={estado || ''}
-                onChange={(e) => setEstado(e.target.value)}
-                defaultValue="CONFIRMADA"
-              >
-                <MenuItem value="CONFIRMADA">CONFIRMADA</MenuItem>
-                <MenuItem value="MODIFICADA">MODIFICADA</MenuItem>
-                <MenuItem value="CANCELADA">CANCELADA</MenuItem>
-                <MenuItem value="COMPLETADA">COMPLETADA</MenuItem>
-                <MenuItem value="EN_PROCESO">EN PROCESO</MenuItem>
+              <Select value={estado} onChange={e => setEstado(e.target.value)}>
+                {['CONFIRMADA', 'MODIFICADA', 'CANCELADA', 'COMPLETADA', 'EN_PROCESO'].map(val => <MenuItem key={val} value={val}>{val}</MenuItem>)}
               </Select>
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button color="custom" onClick={() => setOpen(false)}>
-              Cancelar
-            </Button>
-            <Button color="custom" onClick={handleSave}>
-              Guardar
-            </Button>
+            <Button color="black" onClick={() => setOpen(false)} sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button color="custom" onClick={handleSave} sx={{ fontFamily: 'Bungee, sans-serif' }}>Guardar</Button>
           </DialogActions>
         </Dialog>
-      </TableContainer>
+
+        <Dialog open={confirmDialogOpen} onClose={handleCancelDelete} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar Eliminación</DialogTitle>
+          <DialogContent>
+            <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>¿Estás seguro de eliminar esta reserva? Esta acción no se puede deshacer.</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
+          </DialogActions>
+        </Dialog>
+
+      </Box>
     </>
   );
 };
