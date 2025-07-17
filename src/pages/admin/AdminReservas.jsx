@@ -263,7 +263,7 @@ const AdminReservas = () => {
             {reservas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
-                  Aún no hay reservas
+                  No hay reservas aún
                 </Typography>
               </Box>
             ) : (
@@ -309,8 +309,8 @@ const AdminReservas = () => {
           <Box sx={{ px: 2 }}>
             {reservas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
-                  Aún no hay reservas
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif', color:'white' }}>
+                  No hay reservas aún
                 </Typography>
               </Box>
             ) : (
