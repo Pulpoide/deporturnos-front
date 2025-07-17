@@ -108,10 +108,10 @@ const VerifyAccout = () => {
                                 )}
 
                                 <Stack direction="column" spacing={2} justifyContent="center" marginTop="20px">
-                                    <Button variant="contained" color="primary" onClick={handleVerify}>
+                                    <Button variant="contained" color="primary" onClick={handleVerify} sx={{ fontFamily: 'Bungee, sans-serif' }}>
                                         Verificar cuenta
                                     </Button>
-                                    <Button variant="outlined" color="black" onClick={handleResendCode} startIcon={loading ? <CircularProgress size={20} /> : null}>
+                                    <Button variant="outlined" color="black" onClick={handleResendCode} sx={{ fontFamily: 'Bungee, sans-serif' }} startIcon={loading ? <CircularProgress size={20} /> : null}>
                                         Volver a enviar código
                                     </Button>
                                 </Stack>
