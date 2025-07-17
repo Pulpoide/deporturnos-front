@@ -13,9 +13,10 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavbarAdmin from '../../components/NavbarAdmin';
+import backgroundImage from '../../assets/images/imagen_background_club.png';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`.${tableCellClasses.head}`]: {
+  [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
     fontFamily: 'Fjalla One, sans-serif',
@@ -47,6 +48,10 @@ const AdminUsuarios = () => {
   const [rol, setRol] = useState('');
   const [initialValues, setInitialValues] = useState({});
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmRoleDialogOpen, setConfirmRoleDialogOpen] = useState(false);
+  const [confirmAccountStatusDialogOpen, setConfirmAccountStatusDialogOpen] = useState(false);
+  const [usuarioToUpdate, setUsuarioToUpdate] = useState(null);
+  const [newAccountStatus, setNewAccountStatus] = useState(true);
   const [usuarioToDelete, setUsuarioToDelete] = useState(null);
   const navigate = useNavigate();
 
@@ -98,10 +103,13 @@ const AdminUsuarios = () => {
     setInitialValues(usuario);
   };
 
+  // ELIMINAR USUARIO
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/usuarios/${id}`, tokenConfig);
-    } catch (err) { }
+    } catch (err) {
+      console.error("Error al eliminar el usuario:", err);
+    }
     fetchUsuarios();
   };
 
@@ -121,46 +129,94 @@ const AdminUsuarios = () => {
     setUsuarioToDelete(null);
   };
 
-  const handleSave = async () => {
-    const updatedFields = {};
-    if (nombre !== initialValues.nombre) updatedFields.nombre = nombre;
-    if (email !== initialValues.email) updatedFields.email = email;
-    if (password !== '') updatedFields.password = password;
-    if (telefono !== initialValues.telefono) updatedFields.telefono = telefono;
-    if (notificaciones !== initialValues.notificaciones) updatedFields.notificaciones = notificaciones;
-    if (rol !== initialValues.rol) updatedFields.rol = rol;
-    if (Object.keys(updatedFields).length > 0) {
-      if (selectedUsuario) {
-        await axios.put(`http://localhost:8080/api/usuarios/${selectedUsuario.id}`, updatedFields, tokenConfig);
-      } else {
-        await axios.post('http://localhost:8080/api/auth/register', updatedFields, tokenConfig);
-      }
-    }
-    fetchUsuarios();
-    setOpen(false);
-  };
-
+  // CAMBIO DE ROL
   const handleRoleChange = async (id, newRole) => {
     await axios.put(`http://localhost:8080/api/usuarios/${id}/role`, { rol: newRole }, tokenConfig);
     fetchUsuarios();
   };
 
+  const handleRoleChangeClick = (id) => {
+    setUsuarioToUpdate(id);
+    setConfirmRoleDialogOpen(true);
+  };
+
+  const handleConfirmRoleChange = async () => {
+    await handleRoleChange(usuarioToUpdate.id, usuarioToUpdate.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN');
+    setConfirmRoleDialogOpen(false);
+    setUsuarioToUpdate(null);
+  };
+
+  const handleCancelRoleChange = () => {
+    setConfirmRoleDialogOpen(false);
+    setUsuarioToUpdate(null);
+  };
+
+  // CAMBIO DE ESTADO DE CUENTA
   const handleAccountStatusChange = async (id, status) => {
     await axios.put(`http://localhost:8080/api/usuarios/${id}/account`, { enabled: status }, tokenConfig);
     fetchUsuarios();
   };
 
+  const handleAccountStatusChangeClick = (usuario, status) => {
+    setUsuarioToUpdate(usuario);
+    setNewAccountStatus(status);
+    setConfirmAccountStatusDialogOpen(true);
+  };
+
+  const handleConfirmAccountStatusChange = async () => {
+    await handleAccountStatusChange(usuarioToUpdate.id, newAccountStatus);
+    setConfirmAccountStatusDialogOpen(false);
+    setUsuarioToUpdate(null);
+  };
+
+  const handleCancelAccountStatusChange = () => {
+    setConfirmAccountStatusDialogOpen(false);
+    setUsuarioToUpdate(null);
+  };
+
+  const handleSave = async () => {
+    const updatedFields = {};
+    if (nombre !== initialValues.nombre) updatedFields.nombre = nombre;
+    if (email !== initialValues.email) updatedFields.email = email;
+    if (telefono !== initialValues.telefono) updatedFields.telefono = telefono;
+    if (notificaciones !== initialValues.notificaciones) updatedFields.notificaciones = notificaciones;
+    if (rol !== initialValues.rol) updatedFields.rol = rol;
+    if (password !== '') updatedFields.password = password;
+
+    if (Object.keys(updatedFields).length > 0) {
+      if (selectedUsuario) {
+        await axios.put(`http://localhost:8080/api/usuarios/${selectedUsuario.id}`, updatedFields, tokenConfig);
+      } else {
+        await axios.post('http://localhost:8080/api/usuarios', updatedFields, tokenConfig);
+      }
+    }
+
+    fetchUsuarios();
+    setOpen(false);
+    setSelectedUsuario(null);
+  };
+
   return (
     <>
       <NavbarAdmin />
-      <Box sx={{ p: 2, textAlign: 'center' }}>
+      <Box sx={{ p: 3, textAlign: 'center' }}>
         <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
           <Button variant="contained" color="custom" startIcon={<Add />} onClick={handleAdd} sx={buttonStyle}>Agregar Usuario</Button>
         </Stack>
       </Box>
 
+      <Box
+        sx={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          py: 4
+        }}
+      >
+
       {!isMobile && (
-        <TableContainer component={Paper} sx={{ mx: 2 }}>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -178,13 +234,13 @@ const AdminUsuarios = () => {
                   <TableCell align="center">{u.rol}</TableCell>
                   <TableCell align="center">{u.activada ? 'Sí' : 'No'}</TableCell>
                   <TableCell align="center">
-                    <IconButton onClick={() => handleEdit(u)}><Edit /></IconButton>
+                    <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
                     <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
-                    <IconButton onClick={() => handleRoleChange(u.id, u.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN')}>
+                    <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
                       {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
                     </IconButton>
-                    <IconButton onClick={() => handleAccountStatus(u.id, !u.enabled)}>
-                      {u.activada ? <LockOpen /> : <Lock />}
+                    <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
+                      {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -198,20 +254,28 @@ const AdminUsuarios = () => {
         <Box sx={{ px: 2 }}>
           {usuarios.map(u => (
             <Paper key={u.id} sx={{ mb: 2, p: 2 }}>
-              <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif'}}>#{u.id} {u.nombre}</Typography>
-              <Typography variant="body1">Email: {u.email}</Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif' }}>#{u.id} {u.nombre}</Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontFamily: 'Bungee, sans-serif',
+                  color: u.rol === 'ADMIN' ? 'green' : 'orange'
+                }}
+              >
+                {u.rol}
+              </Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>{u.email}</Typography>
               <Typography variant="body1">Tel: {u.telefono}</Typography>
-              <Typography variant="body1">Notifs: {u.notificaciones ? 'Sí' : 'No'}</Typography>
-              <Typography variant="body1">Rol: {u.rol}</Typography>
               <Typography variant="body1">Activa: {u.activada ? 'Sí' : 'No'}</Typography>
-              <Box sx={{ mt: 1, textAlign: 'right' }}>
-                <IconButton onClick={() => handleEdit(u)}><Edit /></IconButton>
+              <Typography variant="body1">Notificaciones {u.notificaciones ? 'activadas' : 'desactivadas'}</Typography>
+              <Box sx={{ mt: 1, textAlign: 'center' }}>
+                <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
                 <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
-                <IconButton onClick={() => handleRoleChange(u.id, u.rol === 'ADMIN' ? 'CLIENTE' : 'ADMIN')}>
-                  {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
+                <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
+                  {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon color='black' />}
                 </IconButton>
-                <IconButton onClick={() => handleAccountStatus(u.id, !u.enabled)}>
-                  {u.activada ? <LockOpen /> : <Lock />}
+                <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
+                  {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
                 </IconButton>
               </Box>
             </Paper>
@@ -236,8 +300,38 @@ const AdminUsuarios = () => {
           <FormControlLabel control={<Switch checked={notificaciones} onChange={e => setNotificaciones(e.target.checked)} color="primary" />} label="Recibe notificaciones" />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={() => setOpen(false)} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
           <Button onClick={handleSave} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Guardar</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmRoleDialogOpen} onClose={handleCancelRoleChange} disableScrollLock>
+        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de rol</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
+            ¿Estás seguro de cambiar el rol de este usuario a {usuarioToUpdate?.rol === 'ADMIN' ? 'Cliente' : 'Administrador'}?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelRoleChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={handleConfirmRoleChange} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Confirmar</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmAccountStatusDialogOpen} onClose={handleCancelAccountStatusChange} disableScrollLock>
+        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de estado de cuenta</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
+            ¿Estás seguro de {newAccountStatus ? 'activar' : 'desactivar'} esta cuenta?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelAccountStatusChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={handleConfirmAccountStatusChange}
+            color={newAccountStatus ? "custom" : "error"}
+            sx={{ fontFamily: 'Bungee, sans-serif' }}>
+            Confirmar
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -247,10 +341,11 @@ const AdminUsuarios = () => {
           <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelDelete} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+          <Button onClick={handleCancelDelete} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
           <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
         </DialogActions>
       </Dialog>
+      </Box>
     </>
   );
 };
