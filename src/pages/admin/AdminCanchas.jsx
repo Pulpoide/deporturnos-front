@@ -156,7 +156,7 @@ const AdminCanchas = () => {
     <>
       <NavbarAdmin />
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" >
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center"> 
           <Button
             variant="contained"
             color="custom"
@@ -183,7 +183,7 @@ const AdminCanchas = () => {
             {canchas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
-                  Aún no hay canchas
+                  No hay canchas aún
                 </Typography>
               </Box>
             ) : (
@@ -228,8 +228,8 @@ const AdminCanchas = () => {
           <Box sx={{ px: 2 }}>
             {canchas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
-                  Aún no hay canchas
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif', color: 'white' }}>
+                  No hay canchas aún
                 </Typography>
               </Box>
             ) : (
