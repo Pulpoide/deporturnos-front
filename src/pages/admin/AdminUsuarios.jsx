@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel,
-  Box, Typography, Stack, useTheme, useMediaQuery
+  Box, Typography, useTheme, useMediaQuery
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
-import { Add, Edit, Delete, Lock, LockOpen } from '@mui/icons-material';
+import { Edit, Delete, Lock, LockOpen } from '@mui/icons-material';
 import PersonIcon from '@mui/icons-material/Person';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import axios from 'axios';
@@ -77,18 +77,6 @@ const AdminUsuarios = () => {
         navigate('/login');
       }
     }
-  };
-
-  const handleAdd = () => {
-    setSelectedUsuario(null);
-    setNombre('');
-    setEmail('');
-    setPassword('');
-    setTelefono('');
-    setNotificaciones(false);
-    setRol('');
-    setOpen(true);
-    setInitialValues({});
   };
 
   const handleEdit = (usuario) => {
@@ -199,12 +187,7 @@ const AdminUsuarios = () => {
   return (
     <>
       <NavbarAdmin />
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
-          <Button variant="contained" color="custom" startIcon={<Add />} onClick={handleAdd} sx={buttonStyle}>Agregar Usuario</Button>
-        </Stack>
-      </Box>
-
+      
       <Box
         sx={{
           backgroundImage: `url(${backgroundImage})`,
