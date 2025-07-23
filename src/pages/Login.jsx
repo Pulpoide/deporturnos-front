@@ -218,7 +218,7 @@ const Login = () => {
               </Stack>
             }
 
-            <div style={{ marginTop: "23px", fontSize: "15px", fontFamily:"Roboto, sans-serif" }} margin="left">
+            <div style={{ marginTop: "23px", fontSize: "15px", fontFamily:"Roboto, sans-serif" }} >
               <a href='/forgot-password'>¿Olvidaste tu contraseña?</a>
             </div>
 
