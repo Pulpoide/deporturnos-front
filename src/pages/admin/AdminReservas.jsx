@@ -66,7 +66,7 @@ const AdminReservas = () => {
 
   const fetchReservas = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/reservas', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas`, tokenConfig);
       setReservas(response.data);
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -81,7 +81,7 @@ const AdminReservas = () => {
 
   const fetchUsuarios = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/usuarios', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
       setUsuarios(response.data);
     } catch (error) {
       console.error('Error fetchUsuarios:', error);
@@ -90,7 +90,7 @@ const AdminReservas = () => {
 
   const fetchTurnos = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/turnos', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos`, tokenConfig);
       if (response.data && response.data.length > 0) {
         const sortedReservas = response.data
           .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
@@ -110,7 +110,7 @@ const AdminReservas = () => {
 
   const fetchReservasByFecha = async (fechaDesde, fechaHasta) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/reservas/filtrar', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas/filtrar`, {
         params: { fechaDesde, fechaHasta },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
@@ -148,7 +148,7 @@ const AdminReservas = () => {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8080/api/reservas/${id}`, tokenConfig);
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/reservas/${id}`, tokenConfig);
     fetchReservas();
   };
 
@@ -192,9 +192,9 @@ const AdminReservas = () => {
     if (Object.keys(reservaData).length > 0) {
       try {
         if (selectedReserva) {
-          await axios.put(`http://localhost:8080/api/reservas/${selectedReserva.id}`, reservaData, tokenConfig);
+          await axios.put(`${import.meta.env.VITE_API_URL}/api/reservas/${selectedReserva.id}`, reservaData, tokenConfig);
         } else {
-          await axios.post('http://localhost:8080/api/reservas', reservaData, tokenConfig);
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas`, reservaData, tokenConfig);
         }
       } catch (error) {
         console.log(error.response.data.message);

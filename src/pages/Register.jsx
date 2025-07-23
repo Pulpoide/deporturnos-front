@@ -137,7 +137,7 @@ const Register = () => {
 
     const user = { nombre, email, password, telefono };
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/signup', user);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, user);
       const result = response.data;
 
       localStorage.setItem('currentUser', JSON.stringify(result));

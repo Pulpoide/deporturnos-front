@@ -77,7 +77,7 @@ const AdminCanchas = () => {
 
   const fetchCanchas = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/canchas', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/canchas`, tokenConfig);
       if (response && response.data) {
         setCanchas(response.data);
       }
@@ -119,9 +119,9 @@ const AdminCanchas = () => {
     }
     try {
       if (selectedCancha) {
-        await axios.put(`http://localhost:8080/api/canchas/${selectedCancha.id}`, canchaForm, tokenConfig);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/canchas/${selectedCancha.id}`, canchaForm, tokenConfig);
       } else {
-        await axios.post('http://localhost:8080/api/canchas', canchaForm, tokenConfig);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/canchas`, canchaForm, tokenConfig);
       }
       fetchCanchas();
     } finally {
@@ -136,7 +136,7 @@ const AdminCanchas = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/canchas/${canchaToDelete}`, tokenConfig);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/canchas/${canchaToDelete}`, tokenConfig);
     } catch (error) {
       if (error.response && error.response.status === 502) {
         console.error(error.response.data);
