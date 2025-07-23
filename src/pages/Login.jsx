@@ -90,7 +90,7 @@ const Login = () => {
     setError(null);
     const credentials = { email, password };
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', credentials);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, credentials);
       const result = response.data;
       localStorage.setItem('currentUser', JSON.stringify(result));
       localStorage.setItem('token', response.data.token);

@@ -58,7 +58,7 @@ const CreateReserva = () => {
         const turnoData = { turnoId };
         setLoading(true);
         try {
-            const response = await axios.post(`http://localhost:8080/api/reservas/byuser`, turnoData, tokenConfig);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas/byuser`, turnoData, tokenConfig);
             setSnackbarMessage("Reserva Confirmada!♥");
             setOpenSnackbar(true);
             setTimeout(() => {

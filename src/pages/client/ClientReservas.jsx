@@ -66,7 +66,7 @@ const ClientReservas = () => {
 
   const fetchReservas = async (includeCompleted) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
       setReservas(response.data);
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -96,7 +96,7 @@ const ClientReservas = () => {
   };
 
   const handleCancelReserva = async () => {
-    await axios.put(`http://localhost:8080/api/reservas/${reservaToCancelId}/cancelar`, {}, tokenConfig);
+    await axios.put(`${import.meta.env.VITE_API_URL}/api/reservas/${reservaToCancelId}/cancelar`, {}, tokenConfig);
     setDialogOpen(false);
     fetchReservas(showCompleted);
   };

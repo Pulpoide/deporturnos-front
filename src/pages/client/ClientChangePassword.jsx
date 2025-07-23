@@ -65,7 +65,7 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await axios.put(`http://localhost:8080/api/usuarios/change-password`, credentials, tokenConfig);
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/change-password`, credentials, tokenConfig);
       setSuccessMessage(response.data.body.message)
       setErrorMessage("");
       setTimeout(() => {

@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-// Crear una instancia de Axios
 const api = axios.create({
-  baseURL: 'http://localhost:8080', // URL base de tu backend
+  baseURL: `${import.meta.env.VITE_API_URL}`,
 });
 
-// Interceptor para incluir el token en las cabeceras de las solicitudes
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); // Obtener el token del localStorage
+    const token = localStorage.getItem('token'); 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Incluir el token en las cabeceras
+      config.headers.Authorization = `Bearer ${token}`; 
     }
     return config;
   },

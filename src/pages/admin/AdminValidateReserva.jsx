@@ -24,11 +24,11 @@ const AdminValidateReserva = () => {
 
     const fetchReserva = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/reservas/${reservaId}`, tokenConfig);
-            setReserva(response.data); // Guardar los datos de la reserva
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas/${reservaId}`, tokenConfig);
+            setReserva(response.data); 
         } catch (error) {
             if (error.response && error.response.status === 403) {
-                navigate('/login'); // Redirigir a login si no está autorizado
+                navigate('/login'); 
             } else if (error.response && error.response.status === 404) {
                 setError('Reserva no encontrada.');
             } else {
@@ -41,7 +41,7 @@ const AdminValidateReserva = () => {
     const handleEmpezar = async () => {
 
         try {
-            const response = await axios.put(`http://localhost:8080/api/reservas/${reservaId}/empezar`, {}, tokenConfig);
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/reservas/${reservaId}/empezar`, {}, tokenConfig);
             console.log('Reserva empezada:', response.data);
             alert("¡Reserva iniciada correctamente! Los jugadores pueden ingresar a la cancha.")
             navigate('/admin-home');

@@ -51,7 +51,7 @@ const TurnosDisponibles = () => {
     useEffect(() => {
         const fetchTurnos = (date) => {
             const formattedDate = date.format('YYYY-MM-DD');
-            axios.get(`http://localhost:8080/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
+            axios.get(`${import.meta.env.VITE_API_URL}/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
                 .then(response => {
                     setTurnos(response.data);
                 })

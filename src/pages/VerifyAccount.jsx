@@ -28,7 +28,7 @@ const VerifyAccout = () => {
 
     const handleVerify = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/verify', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify`, {
                 email,
                 verificationCode,
             });
@@ -52,7 +52,7 @@ const VerifyAccout = () => {
         // Lógica para reenviar el código de verificación
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/resend', null, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/resend`, null, {
                 params: {
                     email: email,
                 }

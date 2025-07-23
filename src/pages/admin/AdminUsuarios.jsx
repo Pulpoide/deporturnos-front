@@ -68,7 +68,7 @@ const AdminUsuarios = () => {
 
   const fetchUsuarios = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/usuarios', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
       if (response && response.data) {
         setUsuarios(response.data);
       }
@@ -94,7 +94,7 @@ const AdminUsuarios = () => {
   // ELIMINAR USUARIO
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/usuarios/${id}`, tokenConfig);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/usuarios/${id}`, tokenConfig);
     } catch (err) {
       console.error("Error al eliminar el usuario:", err);
     }
@@ -119,7 +119,7 @@ const AdminUsuarios = () => {
 
   // CAMBIO DE ROL
   const handleRoleChange = async (id, newRole) => {
-    await axios.put(`http://localhost:8080/api/usuarios/${id}/role`, { rol: newRole }, tokenConfig);
+    await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${id}/role`, { rol: newRole }, tokenConfig);
     fetchUsuarios();
   };
 
@@ -141,7 +141,7 @@ const AdminUsuarios = () => {
 
   // CAMBIO DE ESTADO DE CUENTA
   const handleAccountStatusChange = async (id, status) => {
-    await axios.put(`http://localhost:8080/api/usuarios/${id}/account`, { enabled: status }, tokenConfig);
+    await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${id}/account`, { enabled: status }, tokenConfig);
     fetchUsuarios();
   };
 
@@ -173,9 +173,9 @@ const AdminUsuarios = () => {
 
     if (Object.keys(updatedFields).length > 0) {
       if (selectedUsuario) {
-        await axios.put(`http://localhost:8080/api/usuarios/${selectedUsuario.id}`, updatedFields, tokenConfig);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${selectedUsuario.id}`, updatedFields, tokenConfig);
       } else {
-        await axios.post('http://localhost:8080/api/usuarios', updatedFields, tokenConfig);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/usuarios`, updatedFields, tokenConfig);
       }
     }
 

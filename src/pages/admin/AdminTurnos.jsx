@@ -73,7 +73,7 @@ const AdminTurnos = () => {
 
   const fetchTurnos = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/turnos', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos`, tokenConfig);
       if (response.data && response.data.length > 0) {
         const sortedReservas = response.data
           .sort((a, b) => {
@@ -100,7 +100,7 @@ const AdminTurnos = () => {
 
   const fetchTurnosByFecha = async (fechaDesde, fechaHasta) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/turnos/filtrar', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos/filtrar`, {
         params: { fechaDesde, fechaHasta },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
@@ -144,7 +144,7 @@ const AdminTurnos = () => {
 
   const fetchCanchas = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/canchas', tokenConfig);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/canchas`, tokenConfig);
       if (response && response.data) {
         setCanchas(response.data);
       }
@@ -168,7 +168,7 @@ const AdminTurnos = () => {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8080/api/turnos/${id}`, tokenConfig);
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/turnos/${id}`, tokenConfig);
     fetchTurnos();
   };
 
@@ -191,7 +191,7 @@ const AdminTurnos = () => {
     };
     try {
       await axios.post(
-        'http://localhost:8080/api/turnos/massive-charge',
+        `${import.meta.env.VITE_API_URL}/api/turnos/massive-charge`,
         turnoData,
         tokenConfig
       );
@@ -211,9 +211,9 @@ const AdminTurnos = () => {
     if (estado !== initialValues.estado) turnoData.estado = estado;
     if (Object.keys(turnoData).length > 0) {
       if (selectedTurno) {
-        await axios.put(`http://localhost:8080/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/turnos/${selectedTurno.id}`, turnoData, tokenConfig);
       } else {
-        await axios.post('http://localhost:8080/api/turnos', turnoData, tokenConfig);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/turnos`, turnoData, tokenConfig);
       }
     }
     fetchTurnos();

@@ -42,7 +42,7 @@ const AdminProfits = () => {
     const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
     const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
     try {
-      const response = await fetch(`http://localhost:8080/api/reportes/calculate-profits?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reportes/calculate-profits?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

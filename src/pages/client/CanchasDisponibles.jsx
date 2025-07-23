@@ -35,7 +35,7 @@ const CanchasDisponibles = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/canchas/disponibles/${deporte}`, tokenConfig)
+      .get(`${import.meta.env.VITE_API_URL}/api/canchas/disponibles/${deporte}`, tokenConfig)
       .then((response) => {
         setCanchas(response.data);
       })

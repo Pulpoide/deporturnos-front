@@ -102,7 +102,7 @@ const ClientProfile = () => {
             notificaciones: recibirNotificaciones
         };
         try {
-            const response = await axios.put(`http://localhost:8080/api/usuarios/${currentUser.id}/edit-profile`, newValues, tokenConfig);
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${currentUser.id}/edit-profile`, newValues, tokenConfig);
             setSuccessMessage("Datos actualizados correctamente!");
             setTimeout(() => setSuccessMessage(""), 2500);
             setOriginalNombre(editedNombre);
