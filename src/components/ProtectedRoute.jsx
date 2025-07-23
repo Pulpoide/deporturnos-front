@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const getUserRole = () => {
   const token = localStorage.getItem('token');
@@ -25,8 +26,13 @@ const ProtectedRoute = ({ children, role }) => {
   if (userRole === role) {
     return children;
   } else {
-    return null; // O muestra un spinner/loading mientras redirige
+    return null; 
   }
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  role: PropTypes.string.isRequired,
 };
 
 export default ProtectedRoute;

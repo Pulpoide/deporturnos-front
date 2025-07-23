@@ -2,7 +2,6 @@ import { Typography, Box, Button, Stack } from '@mui/material';
 import NavbarClient from '../../components/NavbarClient';
 import { useNavigate } from 'react-router';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
-import { width } from '@mui/system';
 
 const buttonStyle = {
   backgroundColor: '#4CAF50',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavbarClient from '../../components/NavbarClient';
 import { Button, Typography, Grid, Card, CardContent, Snackbar, Alert, Box, CircularProgress } from '@mui/material';
@@ -58,7 +58,7 @@ const CreateReserva = () => {
         const turnoData = { turnoId };
         setLoading(true);
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas/byuser`, turnoData, tokenConfig);
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas/byuser`, turnoData, tokenConfig);
             setSnackbarMessage("Reserva Confirmada!♥");
             setOpenSnackbar(true);
             setTimeout(() => {

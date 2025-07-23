@@ -27,15 +27,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const buttonStyle = {
-  marginTop: '1.2rem',
-  marginBottom: '1.2rem',
-  fontFamily: 'Bungee, sans-serif',
-  minWidth: 120,
-  width: '100%',
-  maxWidth: 220,
-};
-
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [open, setOpen] = useState(false);
@@ -187,7 +178,7 @@ const AdminUsuarios = () => {
   return (
     <>
       <NavbarAdmin />
-      
+
       <Box
         sx={{
           backgroundImage: `url(${backgroundImage})`,
@@ -198,136 +189,152 @@ const AdminUsuarios = () => {
         }}
       >
 
-      {!isMobile && (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {['ID', 'Nombre', 'Email', 'Teléfono', 'Notifs', 'Rol', 'Activa', 'Acciones'].map(h => <StyledTableCell key={h} align="center">{h}</StyledTableCell>)}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {usuarios.map(u => (
-                <TableRow key={u.id}>
-                  <TableCell align="center">{u.id}</TableCell>
-                  <TableCell align="center">{u.nombre}</TableCell>
-                  <TableCell align="center">{u.email}</TableCell>
-                  <TableCell align="center">{u.telefono}</TableCell>
-                  <TableCell align="center">{u.notificaciones ? 'Sí' : 'No'}</TableCell>
-                  <TableCell align="center">{u.rol}</TableCell>
-                  <TableCell align="center">{u.activada ? 'Sí' : 'No'}</TableCell>
-                  <TableCell align="center">
-                    <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
-                    <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
-                    <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
-                      {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
-                    </IconButton>
-                    <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
-                      {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
-                    </IconButton>
-                  </TableCell>
+        {!isMobile && (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {['ID', 'Nombre', 'Email', 'Teléfono', 'Notifs', 'Rol', 'Activa', 'Acciones'].map(h => <StyledTableCell key={h} align="center">{h}</StyledTableCell>)}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody>
+                {usuarios.map(u => (
+                  <TableRow key={u.id}>
+                    <TableCell align="center">{u.id}</TableCell>
+                    <TableCell align="center">{u.nombre}</TableCell>
+                    <TableCell align="center">{u.email}</TableCell>
+                    <TableCell align="center">{u.telefono}</TableCell>
+                    <TableCell align="center">{u.notificaciones ? 'Sí' : 'No'}</TableCell>
+                    <TableCell align="center">{u.rol}</TableCell>
+                    <TableCell align="center">{u.activada ? 'Sí' : 'No'}</TableCell>
+                    <TableCell align="center">
+                      <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
+                      {u.id !== 1 && (
+                        <IconButton color="error" onClick={() => handleDeleteClick(u.id)}>
+                          <Delete />
+                        </IconButton>
+                      )}        
+                      {u.id !== 1 && (
+                      <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
+                        {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
+                      </IconButton>
+                      )}
+                      {u.id !== 1 && (
+                      <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
+                        {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
+                      </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
-      {isMobile && (
-        <Box sx={{ px: 2 }}>
-          {usuarios.map(u => (
-            <Paper key={u.id} sx={{ mb: 2, p: 2 }}>
-              <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif' }}>#{u.id} {u.nombre}</Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  fontFamily: 'Bungee, sans-serif',
-                  color: u.rol === 'ADMIN' ? 'green' : 'orange'
-                }}
-              >
-                {u.rol}
-              </Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>{u.email}</Typography>
-              <Typography variant="body1">Tel: {u.telefono}</Typography>
-              <Typography variant="body1">Activa: {u.activada ? 'Sí' : 'No'}</Typography>
-              <Typography variant="body1">Notificaciones {u.notificaciones ? 'activadas' : 'desactivadas'}</Typography>
-              <Box sx={{ mt: 1, textAlign: 'center' }}>
-                <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
-                <IconButton color="error" onClick={() => handleDeleteClick(u.id)}><Delete /></IconButton>
-                <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
-                  {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon color='black' />}
-                </IconButton>
-                <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
-                  {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
-                </IconButton>
-              </Box>
-            </Paper>
-          ))}
-        </Box>
-      )}
+        {isMobile && (
+          <Box sx={{ px: 2 }}>
+            {usuarios.map(u => (
+              <Paper key={u.id} sx={{ mb: 2, p: 2 }}>
+                <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif' }}>#{u.id} {u.nombre}</Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontFamily: 'Bungee, sans-serif',
+                    color: u.rol === 'ADMIN' ? 'green' : 'orange'
+                  }}
+                >
+                  {u.rol}
+                </Typography>
+                <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>{u.email}</Typography>
+                <Typography variant="body1">Tel: {u.telefono}</Typography>
+                <Typography variant="body1">Activa: {u.activada ? 'Sí' : 'No'}</Typography>
+                <Typography variant="body1">Notificaciones {u.notificaciones ? 'activadas' : 'desactivadas'}</Typography>
+                <Box sx={{ mt: 1, textAlign: 'center' }}>
+                  <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
+                  {u.id !== 1 && (
+                    <IconButton color="error" onClick={() => handleDeleteClick(u.id)}>
+                      <Delete />
+                    </IconButton>
+                  )}
+                  {u.id !== 1 && (
+                  <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
+                    {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon color='black' />}
+                  </IconButton>
+                  )}
+                  {u.id !== 1 && (
+                  <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
+                    {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
+                  </IconButton>
+                  )}
+                </Box>
+              </Paper>
+            ))}
+          </Box>
+        )}
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>{selectedUsuario ? 'Editar Usuario' : 'Agregar Usuario'}</DialogTitle>
-        <DialogContent>
-          <TextField fullWidth margin="dense" label="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} sx={{ mb: 2 }} />
-          <TextField fullWidth margin="dense" label="Email" value={email} onChange={e => setEmail(e.target.value)} sx={{ mb: 2 }} />
-          <TextField fullWidth margin="dense" label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} sx={{ mb: 2 }} />
-          <TextField fullWidth margin="dense" label="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} sx={{ mb: 2 }} />
-          <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
-            <InputLabel>Rol</InputLabel>
-            <Select value={rol} onChange={e => setRol(e.target.value)}>
-              <MenuItem value="ADMIN">Admin</MenuItem>
-              <MenuItem value="CLIENTE">Cliente</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControlLabel control={<Switch checked={notificaciones} onChange={e => setNotificaciones(e.target.checked)} color="primary" />} label="Recibe notificaciones" />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
-          <Button onClick={handleSave} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Guardar</Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={open} onClose={() => setOpen(false)} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>{selectedUsuario ? 'Editar Usuario' : 'Agregar Usuario'}</DialogTitle>
+          <DialogContent>
+            <TextField fullWidth margin="dense" label="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} sx={{ mb: 2 }} />
+            <TextField fullWidth margin="dense" label="Email" value={email} onChange={e => setEmail(e.target.value)} sx={{ mb: 2 }} />
+            <TextField fullWidth margin="dense" label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} sx={{ mb: 2 }} />
+            <TextField fullWidth margin="dense" label="Teléfono" value={telefono} onChange={e => setTelefono(e.target.value)} sx={{ mb: 2 }} />
+            <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
+              <InputLabel>Rol</InputLabel>
+              <Select value={rol} onChange={e => setRol(e.target.value)}>
+                <MenuItem value="ADMIN">Admin</MenuItem>
+                <MenuItem value="CLIENTE">Cliente</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControlLabel control={<Switch checked={notificaciones} onChange={e => setNotificaciones(e.target.checked)} color="primary" />} label="Recibe notificaciones" />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button onClick={handleSave} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Guardar</Button>
+          </DialogActions>
+        </Dialog>
 
-      <Dialog open={confirmRoleDialogOpen} onClose={handleCancelRoleChange} disableScrollLock>
-        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de rol</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
-            ¿Estás seguro de cambiar el rol de este usuario a {usuarioToUpdate?.rol === 'ADMIN' ? 'Cliente' : 'Administrador'}?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelRoleChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
-          <Button onClick={handleConfirmRoleChange} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Confirmar</Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={confirmRoleDialogOpen} onClose={handleCancelRoleChange} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de rol</DialogTitle>
+          <DialogContent>
+            <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
+              ¿Estás seguro de cambiar el rol de este usuario a {usuarioToUpdate?.rol === 'ADMIN' ? 'Cliente' : 'Administrador'}?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelRoleChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button onClick={handleConfirmRoleChange} color="custom" sx={{ fontFamily: 'Bungee, sans-serif' }}>Confirmar</Button>
+          </DialogActions>
+        </Dialog>
 
-      <Dialog open={confirmAccountStatusDialogOpen} onClose={handleCancelAccountStatusChange} disableScrollLock>
-        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de estado de cuenta</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
-            ¿Estás seguro de {newAccountStatus ? 'activar' : 'desactivar'} esta cuenta?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelAccountStatusChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
-          <Button onClick={handleConfirmAccountStatusChange}
-            color={newAccountStatus ? "custom" : "error"}
-            sx={{ fontFamily: 'Bungee, sans-serif' }}>
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={confirmAccountStatusDialogOpen} onClose={handleCancelAccountStatusChange} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar cambio de estado de cuenta</DialogTitle>
+          <DialogContent>
+            <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
+              ¿Estás seguro de {newAccountStatus ? 'activar' : 'desactivar'} esta cuenta?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelAccountStatusChange} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button onClick={handleConfirmAccountStatusChange}
+              color={newAccountStatus ? "custom" : "error"}
+              sx={{ fontFamily: 'Bungee, sans-serif' }}>
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      <Dialog open={confirmDialogOpen} onClose={handleCancelDelete} disableScrollLock>
-        <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar Eliminación</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelDelete} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
-          <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={confirmDialogOpen} onClose={handleCancelDelete} disableScrollLock>
+          <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>Confirmar Eliminación</DialogTitle>
+          <DialogContent>
+            <Typography sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete} color="black" sx={{ fontFamily: 'Bungee, sans-serif' }}>Cancelar</Button>
+            <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );

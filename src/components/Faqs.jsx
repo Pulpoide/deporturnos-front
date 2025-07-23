@@ -1,4 +1,3 @@
-import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Box } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 
@@ -21,7 +20,7 @@ const Faqs = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography sx={{ color: '#636368' , fontFamily: "Fjalla One, sans-serif",}}>
-                            <b>Para poder reservar un turno, debes registrarte e iniciar sesion en tu cuenta.</b> Ingresa tu dirección de correo electrónico, a la cual se te enviará un email con un código. Abre tu correo electronico e ingresa el código proporcionado para activar tu cuenta. Una vez dentro podrás proceder con la reserva.
+                            <b>{`"Para poder reservar un turno, debes registrarte e iniciar sesion en tu cuenta."`}</b> Ingresa tu dirección de correo electrónico, a la cual se te enviará un email con un código. Abre tu correo electronico e ingresa el código proporcionado para activar tu cuenta. Una vez dentro podrás proceder con la reserva.
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -37,7 +36,7 @@ const Faqs = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography sx={{ color: '#636368' , fontFamily: "Fjalla One, sans-serif",}}>
-                            Si no encuentras el email en tu bandeja de entrada, te recomendamos que revises la <b>bandeja de spam o correo no deseado</b>. Por cualquier otro inconveniente puedes comunicarte con el área de soporte.
+                            Si no encuentras el email en tu bandeja de entrada, te recomendamos que revises la <b>{`"bandeja de spam o correo no deseado"`}</b>. Por cualquier otro inconveniente puedes comunicarte con el área de soporte.
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
@@ -53,7 +52,7 @@ const Faqs = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            Luego de iniciar sesión, deberas seleccionar el deporte y cancha que desees reservar. Deporturnos te mostrará una lista con los turnos disponibles según los filtros que hayas aplicado. Verifica que los datos que seleccionaste sean correctos, selecciona el botón de <b>"Confirmar reserva"</b> y ¡Listo!. A continuación te llegará un <b>email de confirmación con los datos de la reserva y un código QR</b> que debes mostrar para ingresar a la cancha.
+                            Luego de iniciar sesión, deberas seleccionar el deporte y cancha que desees reservar. Deporturnos te mostrará una lista con los turnos disponibles según los filtros que hayas aplicado. Verifica que los datos que seleccionaste sean correctos, selecciona el botón de <b>{`"Confirmar reserva"`}</b> y ¡Listo!. A continuación te llegará un <b>{`"email de confirmación con los datos de la reserva y un código QR"`}</b> que debes mostrar para ingresar a la cancha.
 
                         </Typography>
                     </AccordionDetails>
@@ -70,7 +69,7 @@ const Faqs = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            Deberías haber recibido un correo electrónico de confirmación de reserva. Te sugerimos que revises tu carpeta de spam o correo no deseado por si acaso. Si no encuentras el correo electrónico de confirmación, tambien puedes acceder a la sección <b>"Mis reservas"</b> de tu cuenta. En el caso de que el turno este confirmado lo verás reflejado en tus reservas activas. 
+                            Deberías haber recibido un correo electrónico de confirmación de reserva. Te sugerimos que revises tu carpeta de spam o correo no deseado por si acaso. Si no encuentras el correo electrónico de confirmación, tambien puedes acceder a la sección <b>{`"Mis reservas"`}</b> de tu cuenta. En el caso de que el turno este confirmado lo verás reflejado en tus reservas activas. 
                         </Typography>
                     </AccordionDetails>
                 </Accordion>

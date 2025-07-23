@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Grid, Paper, Stack, Alert, CircularProgress, Box } from '@mui/material';
 
 import { useNavigate } from "react-router";
-import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
 import Navbar from "../components/Navbar";
@@ -49,7 +48,6 @@ const VerifyAccout = () => {
     }
 
     const handleResendCode = async () => {
-        // Lógica para reenviar el código de verificación
         setLoading(true);
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/resend`, null, {

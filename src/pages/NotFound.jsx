@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';

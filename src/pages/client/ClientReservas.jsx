@@ -12,7 +12,6 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { useNavigate } from 'react-router-dom';
 import NavbarClient from "../../components/NavbarClient";
 import dayjs from 'dayjs';
-import { fontFamily, fontSize, margin, width } from "@mui/system";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -197,6 +196,7 @@ const ClientReservas = () => {
             onClose={handleAbortCancel}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            disableScrollLock
           >
             <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>
               ¿Estás seguro de cancelar esta reserva?
@@ -251,6 +251,7 @@ const ClientReservas = () => {
             onClose={handleAbortCancel}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            disableScrollLock
           >
             <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>
               ¿Estás seguro de cancelar esta reserva?

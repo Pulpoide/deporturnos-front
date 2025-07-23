@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Grid, Paper, Avatar, TextField, Button, InputAdornment, IconButton } from "@mui/material";
@@ -32,10 +32,6 @@ const ClientResetPassword = () => {
 
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-
-    const tokenConfig = {
-        headers: { Authorization: `Bearer ${token}` }
-    };
 
     const paperStyle = { padding: 27, width: 450 };
     const avatarStyle = { backgroundColor: "#121212" };

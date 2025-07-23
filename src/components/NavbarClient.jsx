@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Container
 } from '@mui/material';
@@ -89,6 +89,7 @@ const NavbarClient = () => {
               onClose={handleLogoutCancel}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              disableScrollLock
             >
               <DialogTitle id="alert-dialog-title" sx={{fontFamily:'Bungee, sans-serif', textAlign:'center'}}>Cerrar Sesión</DialogTitle>
               <DialogContent>
