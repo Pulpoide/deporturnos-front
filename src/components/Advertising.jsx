@@ -1,6 +1,6 @@
-import React from 'react';
 import { Box, Grid, Typography, Container, styled, Button } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 
 const theme = createTheme({
@@ -24,13 +24,14 @@ const theme = createTheme({
   },
 });
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(() => ({
   backgroundColor: '#4CAF50',
   color: 'white',
   borderRadius: '5px',
 }));
 
 const Advertising = () => {
+  const navigate = useNavigate();
   return (
     <Box sx={{
       width: '100%',

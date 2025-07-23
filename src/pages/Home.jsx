@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -33,7 +33,7 @@ const theme = createTheme({
   }
 });
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)(() => ({
   backgroundColor: '#4CAF50',
   color: 'white',
   padding: '10px 20px',
@@ -48,10 +48,6 @@ const Carousel = () => {
 
   const next = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
   useEffect(() => {

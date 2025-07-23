@@ -4,7 +4,6 @@ import { Edit } from '@mui/icons-material';
 import axios from "axios";
 import NavbarClient from "../../components/NavbarClient"
 import backgroundImage from '../../assets/images/imagen_background_adv.png';
-import { margin } from "@mui/system";
 
 const isTelefono = (telefono) =>
     /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
@@ -102,7 +101,7 @@ const ClientProfile = () => {
             notificaciones: recibirNotificaciones
         };
         try {
-            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${currentUser.id}/edit-profile`, newValues, tokenConfig);
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/usuarios/${currentUser.id}/edit-profile`, newValues, tokenConfig);
             setSuccessMessage("Datos actualizados correctamente!");
             setTimeout(() => setSuccessMessage(""), 2500);
             setOriginalNombre(editedNombre);

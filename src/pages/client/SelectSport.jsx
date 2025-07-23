@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, Grid, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import NavbarClient from '../../components/NavbarClient';

@@ -84,8 +84,11 @@ const Login = () => {
       setEmailError(false)
     }
     if (!password) {
+      setPasswordError(true)
       setError("Ingrese su contraseña.");
       return;
+    } else {
+      setPasswordError(false)
     }
     setError(null);
     const credentials = { email, password };
