@@ -7,7 +7,7 @@ import backgroundImage from '../../assets/images/imagen_background_adv.png';
 import dayjs from 'dayjs';
 
 const AdminValidateReserva = () => {
-    const {reservaId} = useParams();
+    const { reservaId } = useParams();
     const [reserva, setReserva] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -25,10 +25,10 @@ const AdminValidateReserva = () => {
     const fetchReserva = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas/${reservaId}`, tokenConfig);
-            setReserva(response.data); 
+            setReserva(response.data);
         } catch (error) {
             if (error.response && error.response.status === 403) {
-                navigate('/login'); 
+                navigate('/login');
             } else if (error.response && error.response.status === 404) {
                 setError('Reserva no encontrada.');
             } else {
@@ -59,24 +59,28 @@ const AdminValidateReserva = () => {
     }
 
     return (
-        <Box sx={{ backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        textAlign: 'center',
-        padding: 5}}>
-            <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{m:3}}>Validación de Reserva</Typography>
+        <>
+        <NavbarAdmin />
+        <Box sx={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            textAlign: 'center',
+            padding: 5
+        }}>
+            <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{ m: 3 }}>Validación de Reserva</Typography>
             <Typography variant="h5">
                 {reserva.usuario.nombre}
             </Typography>
             <Typography variant="h5">
                 {reserva.usuario.email}
             </Typography>
-            <br/>
+            <br />
             <Typography variant="body1">
                 Fecha: {dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}
             </Typography>
@@ -86,17 +90,18 @@ const AdminValidateReserva = () => {
             <Typography variant="body1">
                 Cancha: {reserva.turno.cancha.nombre}
             </Typography>
-            
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={handleEmpezar}
-                    sx={{ marginTop: 2 }}
-                >
-                    EMPEZAR
-                </Button>
-            
+
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEmpezar}
+                sx={{ marginTop: 2, fontFamily: 'Bungee Inline, sans-serif', fontSize: '1.2rem' }}
+            >
+                EMPEZAR
+            </Button>
+
         </Box>
+        </>
     );
 };
 
