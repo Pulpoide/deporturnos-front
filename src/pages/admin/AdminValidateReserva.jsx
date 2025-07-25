@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../../assets/images/imagen_background_adv.png';
 import dayjs from 'dayjs';
+import NavbarAdmin from '../../components/NavbarAdmin';
 
 const AdminValidateReserva = () => {
     const { reservaId } = useParams();
