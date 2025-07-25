@@ -68,7 +68,8 @@ const Login = () => {
     boxSizing: 'border-box',
     padding: { xs: '27px 32px', sm: '32px 32px' },
     mx: 'auto',
-    borderRadius:'25%'
+    borderRadius: '25%',
+    textAlign: 'center',
   };
 
   const avatarStyle = { backgroundColor: "#121212" };
@@ -119,31 +120,29 @@ const Login = () => {
 
   return (
     <>
-    <Navbar/>
-    <Box sx={{
-      width: '100%',
-      height: '100dvh', 
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundImage:`url(${backgroundImage})`,
-      backgroundSize:'cover',
-      backgroundPosition:'center',
-      overflow:'hidden',
-    }}>
+      <Navbar />
       <Box
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
-        textAlign={'center'}
-        flexGrow={1}
+        component="main"
         sx={{
-          paddingTop: { xs: '12px', sm: '60px' }, 
-          py: { xs: 2, sm: 0 }, 
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          px: { xs: 0.5, sm: 0 },
-        }}
-      >
-        <Grid>
+          minHeight: {xs:'calc(100vh - 110px)', sm: 'calc(100vh - 66px)'},
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pt: { xs: 2, sm: 0 },
+            px: { xs: 2, sm: 0 },
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            overflowY: 'auto',
+          }}
+        >
           <Paper elevation={24} sx={paperStyle} >
             <Grid align="center">
               <Avatar style={avatarStyle}>
@@ -194,7 +193,7 @@ const Login = () => {
 
             <FormControlLabel control={<CustomSwitch color='#26a69a' checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />} label="Recordarme" />
 
-            <Button color='custom' sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop:'12px' }} size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
+            <Button color='custom' sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop: '12px' }} size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} startIcon={
               <LoginIcon />
             }>Ingresar</Button>
 
@@ -218,15 +217,13 @@ const Login = () => {
               </Stack>
             }
 
-            <div style={{ marginTop: "23px", fontSize: "15px", fontFamily:"Roboto, sans-serif" }} >
+            <div style={{ marginTop: "23px", fontSize: "15px", fontFamily: "Roboto, sans-serif" }} >
               <a href='/forgot-password'>¿Olvidaste tu contraseña?</a>
             </div>
 
           </Paper>
-        </Grid>
+        </Box>
       </Box>
-      <Footer/>
-    </Box>
     </>
   );
 };
