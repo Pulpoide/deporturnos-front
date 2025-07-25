@@ -13,6 +13,7 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import LoginIcon from '@mui/icons-material/Login';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
 import Footer from '../components/Footer';
+import { textAlign } from '@mui/system';
 
 const isEmail = (email) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -40,7 +41,7 @@ const Register = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   const [loading, setLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -61,6 +62,8 @@ const Register = () => {
     padding: { xs: '17px 32px', sm: '32px 32px' },
     mx: 'auto',
     borderRadius: '7%',
+    textAlign: 'center',
+    overflowY: { xs: 'auto', sm: 'visible' },
   };
   const avatarStyle = { backgroundColor: "#121212" };
 
@@ -163,152 +166,147 @@ const Register = () => {
     <>
       <Navbar />
       <Box
+        component="main"
         sx={{
-          width: '100%',
-          height: '100dvh',
+          minHeight: { xs: 'calc(100vh - 110px)', sm: 'calc(100vh - 66px)' },
           display: 'flex',
           flexDirection: 'column',
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          overflow: 'hidden',
         }}
       >
         <Box
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          textAlign={'center'}
-          flexGrow={1}
           sx={{
-            paddingTop: { xs: '4px', sm: '60px' },
-            py: { xs: 1, sm: 0 },
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pt: { xs: 2, sm: 0 },
+            px: { xs: 2, sm: 0 },
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            px: { xs: 0.5, sm: 0 },
+            overflowY: 'auto',
           }}
         >
-          <Grid>
-            <Paper elevation={24} sx={paperStyle} >
-              <Grid align="center">
-                <Avatar style={avatarStyle}>
-                  <AppRegistrationIcon />
-                </Avatar>
-                <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Registro</h2>
-              </Grid>
-              <TextField
-                onChange={(e) => setNombre(e.target.value)}
-                error={nombreError}
-                onBlur={handleNombre}
-                helperText="Por favor ingrese su nombre completo"
-                margin='normal'
-                label="Nombre"
-                placeholder='Juan Morales'
-                color='custom'
+          <Paper elevation={24} sx={paperStyle} >
+            <Grid align="center">
+              <Avatar style={avatarStyle}>
+                <AppRegistrationIcon />
+              </Avatar>
+              <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Registro</h2>
+            </Grid>
+            <TextField
+              onChange={(e) => setNombre(e.target.value)}
+              error={nombreError}
+              onBlur={handleNombre}
+              helperText="Por favor ingrese su nombre completo"
+              margin='normal'
+              label="Nombre"
+              placeholder='Juan Morales'
+              color='custom'
+              onKeyDown={handleKeyPress}
+              fullWidth required
+            />
+            <TextField
+              onChange={(e) => setEmail(e.target.value)}
+              error={emailError}
+              onBlur={handleEmail}
+              helperText="Por favor ingrese su correo electrónico"
+              margin='normal'
+              label="Email"
+              placeholder='example@gmail.com'
+              color='custom'
+              onKeyDown={handleKeyPress}
+              fullWidth required
+            />
+            <TextField
+              onChange={(e) => setTelefono(e.target.value)}
+              error={telefonoError}
+              onBlur={handleTelefono}
+              helperText="Por favor ingrese su teléfono"
+              margin='normal'
+              label="Teléfono"
+              placeholder='3512767955'
+              color='custom'
+              onKeyDown={handleKeyPress}
+              fullWidth
+            />
+            <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
+              <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+              <OutlinedInput
+                error={passwordError}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={handlePassword}
+                required
+                placeholder='**************'
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
                 onKeyDown={handleKeyPress}
-                fullWidth required
               />
-              <TextField
-                onChange={(e) => setEmail(e.target.value)}
-                error={emailError}
-                onBlur={handleEmail}
-                helperText="Por favor ingrese su correo electrónico"
-                margin='normal'
-                label="Email"
-                placeholder='example@gmail.com'
-                color='custom'
+              <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
+            </FormControl>
+            <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
+              <InputLabel error={secondPasswordError} htmlFor="outlined-adornment-password">Confirmar</InputLabel>
+              <OutlinedInput
+                error={secondPasswordError}
+                onChange={(e) => setSecondPassword(e.target.value)}
+                onBlur={handleSecondPassword}
+                required
+                placeholder='**************'
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
                 onKeyDown={handleKeyPress}
-                fullWidth required
               />
-              <TextField
-                onChange={(e) => setTelefono(e.target.value)}
-                error={telefonoError}
-                onBlur={handleTelefono}
-                helperText="Por favor ingrese su teléfono"
-                margin='normal'
-                label="Teléfono"
-                placeholder='3512767955'
-                color='custom'
-                onKeyDown={handleKeyPress}
-                fullWidth
-              />
-              <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
-                <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-                <OutlinedInput
-                  error={passwordError}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onBlur={handlePassword}
-                  required
-                  placeholder='**************'
-                  type={showPassword ? 'text' : 'password'}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                  onKeyDown={handleKeyPress}
-                />
-                <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
-              </FormControl>
-              <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
-                <InputLabel error={secondPasswordError} htmlFor="outlined-adornment-password">Confirmar</InputLabel>
-                <OutlinedInput
-                  error={secondPasswordError}
-                  onChange={(e) => setSecondPassword(e.target.value)}
-                  onBlur={handleSecondPassword}
-                  required
-                  placeholder='**************'
-                  type={showPassword ? 'text' : 'password'}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Password"
-                  onKeyDown={handleKeyPress}
-                />
-                <FormHelperText id="standard-weight-helper-text">Repita su contraseña</FormHelperText>
-              </FormControl>
-              <Button
-                type='submit'
-                color='custom'
-                sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop:'12px' }}
-                variant='contained'
-                fullWidth
-                onClick={handleSubmit}
-                startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
-                disabled={loading}
-              >
-                Registrarme
-              </Button>
-              {error && (
-                <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                  <Alert severity="error">{error}</Alert>
-                </Stack>
-              )}
-              {success && (
-                <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                  <Alert severity="success">{success}</Alert>
-                </Stack>
-              )}
-            </Paper>
-          </Grid>
+              <FormHelperText id="standard-weight-helper-text">Repita su contraseña</FormHelperText>
+            </FormControl>
+            <Button
+              type='submit'
+              color='custom'
+              sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop: '12px' }}
+              variant='contained'
+              fullWidth
+              onClick={handleSubmit}
+              startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
+              disabled={loading}
+            >
+              Registrarme
+            </Button>
+            {error && (
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="error">{error}</Alert>
+              </Stack>
+            )}
+            {success && (
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="success">{success}</Alert>
+              </Stack>
+            )}
+          </Paper>
         </Box>
-        <Footer />
       </Box>
     </>
   );

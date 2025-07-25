@@ -20,7 +20,17 @@ const ClientForgotPassword = () => {
     const [error, setError] = useState();
     const [success, setSuccess] = useState();
 
-    const paperStyle = { padding: 27, width: 450 }
+    const paperStyle = {
+        maxWidth: 500,
+        width: '100%',
+        boxSizing: 'border-box',
+        padding: { xs: '27px 32px', sm: '32px 32px' },
+        mx: 'auto',
+        borderRadius: '7%',
+        textAlign: 'center',
+        maxHeight: { xs: '80vh', sm: 'auto' },
+        overflowY: { xs: 'auto', sm: 'visible' },
+    }
     const avatarStyle = { backgroundColor: "#121212" }
 
     const handleSubmit = async () => {
@@ -31,7 +41,7 @@ const ClientForgotPassword = () => {
             setEmailError(true)
             setError("Ingrese su email.")
             return;
-        }else if(!isEmail(email)){
+        } else if (!isEmail(email)) {
             setEmailError(true)
             setError("Ingrese un email válido.")
             return;
@@ -50,81 +60,86 @@ const ClientForgotPassword = () => {
             setSuccess('Fue enviado un link a tu email para restablecer tu contraseña.')
         } catch (error) {
             setError(error.response?.data || "Ocurrió un error al procesar la solicitud.");
-        } 
+        }
     }
 
     return (
-        <div>
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '75vh',
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: 'auto',
-                    backgroundPosition: 'center',
-                    opacity: 1,
-                    zIndex: -1,
-                }}
-            />
-            <Navbar />
+  <>
+    <Navbar />
 
-            <Box
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                textAlign={'center'}
-                minHeight={'75vh'}
-            >
-                <Grid>
-                    <Paper elevation={24} style={paperStyle} >
-                        <Grid align="center">
-                            <Avatar style={avatarStyle}>
-                                <LockResetIcon />
-                            </Avatar>
-                            <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>
-                                Recuperar contraseña
-                            </h2>
-                        </Grid>
+    <Box
+      component="main"
+      sx={{
+        minHeight: { xs: 'calc(100vh - 110px)', sm: 'calc(100vh - 66px)' },
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pt: { xs: 2, sm: 0 },
+          px: { xs: 2, sm: 0 },
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          overflowY: 'auto',
+        }}
+      >
+        <Paper elevation={24} sx={paperStyle}>
+          <Grid align="center">
+            <Avatar style={avatarStyle}>
+              <LockResetIcon />
+            </Avatar>
+            <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400 }}>
+              Recuperar contraseña
+            </h2>
+          </Grid>
 
-                        <TextField
-                            onChange={(e) => setEmail(e.target.value)}
-                            error={emailError}
-                            value={email}
-                            helperText="Por favor ingrese su correo electrónico"
-                            placeholder='example@gmail.com'
-                            fullWidth required
-                        />
+          <TextField
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
+            value={email}
+            helperText="Por favor ingrese su correo electrónico"
+            placeholder="example@gmail.com"
+            fullWidth
+            required
+            margin="normal"
+          />
 
-                        <Button color='custom' size='large' type='submit' variant='contained' fullWidth onClick={handleSubmit} >
-                            Recuperar
-                        </Button>
+          <Button
+            fullWidth
+            size="large"
+            variant="contained"
+            sx={{
+              fontFamily: "Bungee, sans-serif",
+              fontWeight: 400,
+              mt: 2,
+            }}
+            onClick={handleSubmit}
+          >
+            Recuperar
+          </Button>
 
-                        {
-                            error &&
-                            <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                                <Alert severity="error">
-                                    {error}
-                                </Alert>
-                            </Stack>
-                        }
-
-                        {
-                            success &&
-                            <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                                <Alert severity="success">
-                                    {success}
-                                </Alert>
-                            </Stack>
-                        }
-                    </Paper>
-                </Grid>
-            </Box>
-
-        </div>
-    );
+          {error && (
+            <Stack sx={{ width: "100%", pt: 1 }} spacing={2}>
+              <Alert severity="error">{error}</Alert>
+            </Stack>
+          )}
+          {success && (
+            <Stack sx={{ width: "100%", pt: 1 }} spacing={2}>
+              <Alert severity="success">{success}</Alert>
+            </Stack>
+          )}
+        </Paper>
+      </Box>
+    </Box>
+  </>
+);
 }
 
 export default ClientForgotPassword;

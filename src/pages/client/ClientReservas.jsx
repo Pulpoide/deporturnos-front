@@ -224,10 +224,10 @@ const ClientReservas = () => {
 
               <Typography variant="body2" sx={{
                 color: reserva.estado === 'CONFIRMADA' ? 'green' :
-                  reserva.estado === 'CANCELADA' ? 'red' : 'inherit',
+                  reserva.estado === 'CANCELADA' ? 'red' : reserva.estado === 'EN_PROCESO' ? 'orange' : 'default',
                 fontFamily: 'Bungee, sans-serif', textAlign: 'center'
               }}>
-                {reserva.estado}
+                {reserva.estado === 'EN_PROCESO' ? 'En Proceso' : reserva.estado}
               </Typography>
               <hr />
 
