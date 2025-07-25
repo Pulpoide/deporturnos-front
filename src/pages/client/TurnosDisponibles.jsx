@@ -86,7 +86,7 @@ const TurnosDisponibles = () => {
                     component="h4"
                     sx={titleStyle}
                 >
-                    2. Selecciona un turno:
+                    2. Selecciona un turno
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
