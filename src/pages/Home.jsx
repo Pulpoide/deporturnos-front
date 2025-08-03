@@ -116,7 +116,7 @@ const Home = () => {
               variant="h4"
               component="h4"
               sx={{
-                fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                fontSize: { xs: '2.7rem', sm: '2.5rem', md: '3rem' },
                 lineHeight: { xs: '2.2rem', sm: '2.7rem', md: '3rem' },
                 fontFamily: "Bungee inline, sans-serif",
               }}
@@ -128,10 +128,10 @@ const Home = () => {
               variant="h5"
               component="h5"
               sx={{
-                fontSize: { xs: '1.1rem', sm: '1.35rem', md: '1.5rem' },
+                fontSize: { xs: '1.5rem', sm: '1.35rem', md: '1.5rem' },
                 mt: 1,
                 fontFamily: "Bungee hairline, sans-serif",
-                fontWeight: '700',
+                fontWeight: 'bold',
               }}
             >
               Explorá las canchas disponibles en tiempo real
