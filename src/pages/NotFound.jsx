@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
+import NavBar from '../components/Navbar';
 
 const NotFound = () => {
     const navigate = useNavigate();
@@ -36,7 +37,9 @@ const NotFound = () => {
     };
 
     return (
-        <Container sx={{ textAlign: 'center', marginTop: '50px' }}>
+        <>
+        <NavBar/>
+        <Container sx={{ textAlign: 'center', padding: '2rem', backgroundColor: '#f5f5f5', minHeight: '100vh', paddingTop: '5rem' }}>
             <Typography variant="h2" gutterBottom fontFamily={"Bungee"}>
                    404 
             </Typography>
@@ -46,10 +49,11 @@ const NotFound = () => {
             <Typography variant="body1" gutterBottom sx={{marginBottom:3}}>
                 Lo sentimos, pero la página que estás buscando no existe.
             </Typography>
-            <Button variant="contained" color="primary" onClick={handleBackToHome}>
+            <Button variant="contained" color="primary" onClick={handleBackToHome} sx={{ fontFamily: 'Bungee Inline, sans-serif', fontSize: '1rem' }}>
                 Volver al Inicio
             </Button>
         </Container>
+        </>
     );
 };
 
