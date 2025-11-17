@@ -163,10 +163,10 @@ const ClientReservas = () => {
                 filteredReservas.map((reserva) => (
 
                   <TableRow key={reserva.id}>
-                    <TableCell align='center'>{dayjs(reserva.fecha).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell align='center'>{dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell align='center'>{reserva.turno.horaInicio}</TableCell>
-                    <TableCell align='center'>{reserva.turno.horaFin}</TableCell>
+                    <TableCell align='center'>{dayjs(reserva.fechaCreacion).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align='center'>{dayjs(reserva.fechaTurno).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell align='center'>{reserva.horaInicio}</TableCell>
+                    <TableCell align='center'>{reserva.horaFin}</TableCell>
                     <TableCell align='center'>
                       <Typography
                         style={{
