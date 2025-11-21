@@ -1,8 +1,10 @@
+// ==== IMPORTS IGUALES ==== 
 import { useState, useEffect } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, IconButton, Dialog, DialogActions, DialogContent,
-  DialogTitle, Button, Typography, Box, useTheme, useMediaQuery, Stack
+  DialogTitle, Button, Typography, Box, useTheme, useMediaQuery,
+  Pagination, ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import DialogContentText from '@mui/material/DialogContentText';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -24,11 +26,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
-const buttonStyle = {
-  fontFamily: "Bungee Inline, sans-serif",
-  marginBottom: 2,
-  width: '233px',
-};
+
 const cardStyle = {
   fontFamily: 'Fjalla One, sans-serif',
   fontSize: '16px',
@@ -39,49 +37,55 @@ const cardStyle = {
   backgroundColor: '#f9f9f9',
   textAlign: 'left',
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  margin: '8px 0',
 };
 
 
-
 const ClientReservas = () => {
-  const [reservas, setReservas] = useState([]);
-  const [showCompleted, setShowCompleted] = useState(false);
-  const [showCancelled, setShowCancelled] = useState(false);
+
+  const [reservasPage, setReservasPage] = useState(null);
+  const [estado, setEstado] = useState("FUTURAS");
+  const [page, setPage] = useState(0);
+  const [pageSize] = useState(8);
+
   const [open, setDialogOpen] = useState(false);
   const [reservaToCancelId, setReservaToCancelId] = useState(null);
+
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  const userId = currentUser.id;
+  const userId = currentUser?.id;
+
   const tokenConfig = {
-    headers: { Authorization: `Bearer ${currentUser.token}` }
+    headers: { Authorization: `Bearer ${currentUser?.token}` }
   };
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    fetchReservas(showCompleted);
-  }, [showCompleted]);
+    fetchReservas();
+  }, [estado, page]);
 
-  const fetchReservas = async (includeCompleted) => {
+  const fetchReservas = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios/${userId}/reservas?includeCompleted=${includeCompleted}`, tokenConfig);
-      setReservas(response.data);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/usuarios/${userId}/reservas`,
+        {
+          ...tokenConfig,
+          params: {
+            estado,
+            page,
+            size: pageSize,
+          }
+        }
+      );
+      setReservasPage(response.data);
     } catch (error) {
-      if (error.response && error.response.status === 403) {
+      if (error.response?.status === 403) {
         navigate("/login");
       } else {
-        console.log('Error fetchReservas:', error);
+        console.log("Error fetchReservas:", error);
       }
     }
-  };
-
-  const handleShowCompletedToggle = () => {
-    setShowCompleted(prev => !prev);
-  };
-
-  const handleShowCancelledToggle = () => {
-    setShowCancelled(prev => !prev);
   };
 
   const handleCancelReservaClick = (id) => {
@@ -95,90 +99,106 @@ const ClientReservas = () => {
   };
 
   const handleCancelReserva = async () => {
-    await axios.put(`${import.meta.env.VITE_API_URL}/api/reservas/${reservaToCancelId}/cancelar`, {}, tokenConfig);
+    await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/reservas/${reservaToCancelId}/cancelar`,
+      {},
+      tokenConfig
+    );
     setDialogOpen(false);
-    fetchReservas(showCompleted);
+    fetchReservas();
   };
 
-  const filteredReservas = reservas.filter(reserva => {
-    if (!showCancelled && reserva.estado === 'CANCELADA') return false;
-    return true;
-  });
+  const reservas = reservasPage?.content || [];
+
 
   return (
-    <>
-      <Box sx={{ backgroundColor: 'white', minHeight: '100vh' }}>
-        <NavbarClient />
-        <Box sx={{ textAlign: 'center', padding: 2 }}>
-          <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{ m: 3 }}>
-            Mis Reservas
-          </Typography>
-          <Stack
-            direction="column"
-            spacing={2}
-            alignItems="center"
-            sx={{ width: '100%' }}
-          >
-            <Button
-              variant="contained"
-              color={showCompleted ? "black" : "primary"}
-              onClick={handleShowCompletedToggle}
-              sx={buttonStyle}
-            >
-              {showCompleted ? "Ocultar Completas" : "Mostrar Completas"}
-            </Button>
-            <Button
-              variant="contained"
-              color={showCancelled ? "black" : "primary"}
-              onClick={handleShowCancelledToggle}
-              sx={buttonStyle}
-            >
-              {showCancelled ? "Ocultar Canceladas" : "Mostrar Canceladas"}
-            </Button>
-          </Stack>
-        </Box>
+    <Box sx={{ backgroundColor: 'white', minHeight: '100vh' }}>
+      <NavbarClient />
 
-        {!isMobile && (<TableContainer component={Paper} sx={{ display: { xs: 'none', sm: 'block' } }}>
+      <Box sx={{ textAlign: 'center', padding: 2 }}>
+        <Typography variant="h4" fontFamily="Bungee Inline, sans-serif" sx={{ m: 3 }}>
+          Mis Reservas
+        </Typography>
+
+        <ToggleButtonGroup
+          value={estado}
+          exclusive
+          onChange={(e, val) => {
+            if (val !== null) {
+              setPage(0);
+              setEstado(val);
+            }
+          }}
+          color="primary"
+          sx={{
+            mb: 3,
+            display: 'flex',
+            flexWrap: { xs: 'wrap', sm: 'nowrap' },
+            justifyContent: 'center',       // 👈 Centrado en todas las pantallas
+            width: '100%',
+            '& .MuiToggleButton-root': {
+              flex: { xs: '1 1 50%', sm: 'initial' }, // 2 por fila en mobile
+            }
+          }}
+        >
+          <ToggleButton value="FUTURAS">Futuras</ToggleButton>
+          <ToggleButton value="COMPLETADAS">Completadas</ToggleButton>
+          <ToggleButton value="CANCELADAS">Canceladas</ToggleButton>
+          <ToggleButton value="TODAS">Todas</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+
+      {/* ================== DESKTOP ================== */}
+      {!isMobile && (
+        <TableContainer component={Paper} sx={{ width: '95%', margin: 'auto' }}>
           <Table>
             <TableHead>
               <TableRow>
-                <StyledTableCell align='center'>Fecha de Creación</StyledTableCell>
-                <StyledTableCell align='center'>Fecha de Turno</StyledTableCell>
-                <StyledTableCell align='center'>Hora de Inicio</StyledTableCell>
-                <StyledTableCell align='center'>Hora de Fin</StyledTableCell>
+                <StyledTableCell align='center'>Fecha</StyledTableCell>
+                <StyledTableCell align='center'>Inicio</StyledTableCell>
+                <StyledTableCell align='center'>Fin</StyledTableCell>
+                <StyledTableCell align='center'>Cancha</StyledTableCell>
+                <StyledTableCell align='center'>Tipo</StyledTableCell>
                 <StyledTableCell align='center'>Estado</StyledTableCell>
-                <StyledTableCell align='center'>Cancelar</StyledTableCell>
+                <StyledTableCell align='center'>Acciones</StyledTableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
-              {filteredReservas.length === 0 ? (
+              {reservas.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
+                  <TableCell colSpan={7} align="center">
                     <Typography variant="h6" color="textSecondary">
-                      No hay reservas aún
+                      No hay reservas que mostrar
                     </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredReservas.map((reserva) => (
-
+                reservas.map((reserva) => (
                   <TableRow key={reserva.id}>
-                    <TableCell align='center'>{dayjs(reserva.fechaCreacion).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell align='center'>{dayjs(reserva.fechaTurno).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell align='center'>{reserva.horaInicio}</TableCell>
-                    <TableCell align='center'>{reserva.horaFin}</TableCell>
+                    <TableCell align='center'>
+                      {dayjs(reserva.turno?.fecha).format('DD/MM/YYYY')}
+                    </TableCell>
+                    <TableCell align='center'>{reserva.turno?.horaInicio}</TableCell>
+                    <TableCell align='center'>{reserva.turno?.horaFin}</TableCell>
+                    <TableCell align='center'>{reserva.turno?.cancha?.nombre}</TableCell>
+                    <TableCell align='center'>{reserva.turno?.cancha?.tipo}</TableCell>
                     <TableCell align='center'>
                       <Typography
-                        style={{
-                          color: reserva.estado === 'CONFIRMADA' ? 'green' :
-                            reserva.estado === 'CANCELADA' ? 'red' :
-                              'default',
-                          fontFamily: 'Bungee, sans-serif'
+                        sx={{
+                          fontFamily: 'Bungee, sans-serif',
+                          color:
+                            reserva.estado === 'CONFIRMADA' ? 'green' :
+                              reserva.estado === 'CANCELADA' ? 'red' :
+                                reserva.estado === 'COMPLETADA' ? 'blue' :
+                                  'default'
                         }}
                       >
                         {reserva.estado}
                       </Typography>
                     </TableCell>
+
                     <TableCell align='center'>
                       {reserva.estado === 'CONFIRMADA' && (
                         <IconButton color="warning" onClick={() => handleCancelReservaClick(reserva.id)}>
@@ -191,50 +211,58 @@ const ClientReservas = () => {
               )}
             </TableBody>
           </Table>
-          <Dialog
-            open={open}
-            onClose={handleAbortCancel}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            disableScrollLock
-          >
-            <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>
-              ¿Estás seguro de cancelar esta reserva?
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
-                No podrás deshacer esta acción.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCancelReserva} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>
-                Cancelar reserva
-              </Button>
-              <Button onClick={handleAbortCancel} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>
-                No cancelar
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </TableContainer>)}
+
+          {reservasPage && reservasPage.totalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+              <Pagination
+                count={reservasPage.totalPages}
+                page={page + 1}
+                onChange={(e, value) => setPage(value - 1)}
+              />
+            </Box>
+          )}
+        </TableContainer>
+      )}
 
 
-        {isMobile && (<Box sx={{ display: { xs: 'block', sm: 'none' }, p: 2 }}>
-          {filteredReservas.map(reserva => (
+      {/* ================== MOBILE ================== */}
+      {isMobile && (
+        <Box sx={{ p: 2 }}>
+          {reservas.map(reserva => (
             <Paper key={reserva.id} sx={{ mb: 2, p: 2 }}>
-
-              <Typography variant="body2" sx={{
-                color: reserva.estado === 'CONFIRMADA' ? 'green' :
-                  reserva.estado === 'CANCELADA' ? 'red' : reserva.estado === 'EN_PROCESO' ? 'orange' : 'default',
-                fontFamily: 'Bungee, sans-serif', textAlign: 'center'
-              }}>
-                {reserva.estado === 'EN_PROCESO' ? 'En Proceso' : reserva.estado}
+              <Typography
+                variant="body2"
+                sx={{
+                  color:
+                    reserva.estado === 'CONFIRMADA' ? 'green' :
+                      reserva.estado === 'CANCELADA' ? 'red' :
+                        reserva.estado === 'COMPLETADA' ? 'blue' :
+                          'default',
+                  fontFamily: 'Bungee, sans-serif',
+                  textAlign: 'center'
+                }}
+              >
+                {reserva.estado}
               </Typography>
+
               <hr />
 
-              <Typography variant="body2" style={cardStyle}><strong>Fecha de creación:</strong> {dayjs(reserva.fecha).format('DD/MM/YYYY')}</Typography>
-              <Typography variant="body2" style={cardStyle}><strong>Turno:</strong> {dayjs(reserva.turno.fecha).format('DD/MM/YYYY')}</Typography>
-              <Typography variant="body2" style={cardStyle}><strong>Hora Inicio:</strong> {reserva.turno.horaInicio}</Typography>
-              <Typography variant="body2" style={cardStyle}><strong>Hora Fin:</strong> {reserva.turno.horaFin}</Typography>
+
+              <Typography variant="body2" style={cardStyle}>
+                <strong>Día:</strong> {dayjs(reserva.turno?.fecha).format('DD/MM/YYYY')}
+              </Typography>
+              <Typography variant="body2" style={cardStyle}>
+                <strong>Inicio:</strong> {reserva.turno?.horaInicio}
+              </Typography>
+              <Typography variant="body2" style={cardStyle}>
+                <strong>Fin:</strong> {reserva.turno?.horaFin}
+              </Typography>
+              <Typography variant="body2" style={cardStyle}>
+                <strong>Cancha:</strong> {reserva.turno?.cancha?.nombre}
+              </Typography>
+              <Typography variant="body2" style={cardStyle}>
+                <strong>Tipo:</strong> {reserva.turno?.cancha?.tipo}
+              </Typography>
 
               {reserva.estado === 'CONFIRMADA' && (
                 <Box sx={{ textAlign: 'center' }}>
@@ -243,39 +271,49 @@ const ClientReservas = () => {
                   </IconButton>
                 </Box>
               )}
-
             </Paper>
           ))}
-          <Dialog
-            open={open}
-            onClose={handleAbortCancel}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            disableScrollLock
-          >
-            <DialogTitle id="alert-dialog-title" sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>
-              ¿Estás seguro de cancelar esta reserva?
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description" sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
-                No podrás deshacer esta acción.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: 'center' }}>
-              <Button onClick={handleCancelReserva} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>
-                Cancelar reserva
-              </Button>
-              <Button onClick={handleAbortCancel} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>
-                No cancelar
-              </Button>
-            </DialogActions>
-          </Dialog>
+
+          {reservasPage && reservasPage.totalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 1 }}>
+              <Pagination
+                count={reservasPage.totalPages}
+                page={page + 1}
+                onChange={(e, value) => setPage(value - 1)}
+              />
+            </Box>
+          )}
         </Box>
-        )}
-      </Box>
-    </>
+      )}
+
+
+      {/* ================== DIALOG ================== */}
+      <Dialog open={open} onClose={handleAbortCancel} disableScrollLock>
+        <DialogTitle
+          sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}
+        >
+          ¿Cancelar reserva?
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText
+            sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}
+          >
+            No podrás deshacer esta acción.
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button onClick={handleCancelReserva} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>
+            Cancelar reserva
+          </Button>
+          <Button onClick={handleAbortCancel} color="primary" sx={{ fontFamily: 'Bungee, sans-serif' }}>
+            No cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
 export default ClientReservas;
-
