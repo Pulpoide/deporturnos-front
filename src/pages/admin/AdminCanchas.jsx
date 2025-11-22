@@ -179,7 +179,7 @@ const AdminCanchas = () => {
       >
 
         {!isMobile && (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ width: '95%', maxWidth: 1200, margin: '0 auto 24px' }}>
             {canchas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
