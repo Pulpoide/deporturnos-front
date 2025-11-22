@@ -103,24 +103,60 @@ const SelectField = () => {
           label="Tipo de cancha"
           value={tipoDeCancha}
           onChange={(e) => setTipoDeCancha(e.target.value)}
+          variant="outlined"
           sx={{
-            width: { xs: '150px', sm: '200px', md: '250px' },
-            marginBottom: 3,
+            width: { xs: "160px", sm: "220px", md: "260px" },
+            mb: 4,
+            background: "rgba(255,255,255,0.9)",
+            borderRadius: 3,
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 3,
+              fontFamily: "Fjalla One",
+              "& fieldset": {
+                borderColor: "rgba(0,0,0,0.3)",
+              },
+              "&:hover fieldset": {
+                borderColor: "#009688",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#009688",
+                borderWidth: 2,
+              },
+            },
+            "& .MuiInputLabel-root": {
+              fontFamily: "Fjalla One",
+            }
+          }}
+          SelectProps={{
+            MenuProps: {
+              disableScrollLock: true,
+              PaperProps: {
+                elevation: 4,
+                sx: {
+                  borderRadius: 3,
+                  mt: 1,
+                  background: "white",
+                  "& .MuiMenuItem-root": {
+                    fontFamily: "Fjalla One",
+                    py: 1.5,
+                    px: 2,
+                    "&:hover": {
+                      backgroundColor: "rgba(0,150,136,0.1)",
+                    }
+                  }
+                }
+              }
+            }
           }}
         >
-          <MenuItem value="Todos" sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}>
-            Todos
-          </MenuItem>
+          <MenuItem value="Todos">Todos</MenuItem>
           {opcionesDeCancha.map((opcion) => (
-            <MenuItem
-              sx={{ fontFamily: 'Fjalla One, sans-serif', textAlign: 'center' }}
-              key={opcion.value}
-              value={opcion.value}
-            >
+            <MenuItem key={opcion.value} value={opcion.value}>
               {opcion.label}
             </MenuItem>
           ))}
         </TextField>
+
         <Grid container spacing={2}>
           {canchasFiltradas.length > 0 ? (
             canchasFiltradas.map((cancha) => (
@@ -130,55 +166,89 @@ const SelectField = () => {
                 xs={12}
                 sm={6}
                 md={3}
-                sx={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}
+                sx={{ display: "flex", justifyContent: "center" }}
               >
                 <Card
                   sx={{
-                    width: '100%',
-                    maxWidth: '300px',
-                    minHeight: '300px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    padding: 2,
-                    height: 'auto',
+                    width: "100%",
+                    maxWidth: 280,
+                    p: 2,
+                    borderRadius: 4,
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                    transition: "0.25s",
+                    display: "flex",
+                    flexDirection: "column",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      boxShadow: "0 6px 24px rgba(0,0,0,0.18)",
+                    }
                   }}
                 >
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h4" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ opacity: 0.7, mb: 0.5 }}
+                    >
+                      Tipo de cancha
+                    </Typography>
+
+                    <Typography
+                      variant="h5"
+                      sx={{ fontFamily: "Fjalla One", fontWeight: "bold" }}
+                    >
                       {cancha.tipo}
                     </Typography>
-                    <hr style={{ margin: '10px 0' }} />
-                    <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif', color: 'green' }}>
+
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1, opacity: 0.8 }}
+                    >
                       {cancha.nombre}
                     </Typography>
-                    <hr style={{ margin: '10px 0' }} />
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: 'Fjalla One, sans-serif' }}>
-                      ${cancha.precioHora} x hora
-                    </Typography>
+
                     <Typography
-                      variant="body1"
+                      variant="h6"
+                      sx={{ mt: 1.5, color: "#009688", fontFamily: "Fjalla One" }}
+                    >
+                      ${cancha.precioHora} / hora
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
                       sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
+                        mt: 1,
+                        opacity: 0.7,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical"
                       }}
                     >
                       {cancha.descripcion}
                     </Typography>
+
                   </CardContent>
+
                   <Button
                     variant="contained"
-                    color="primary"
                     onClick={() => handleViewTurnos(cancha.id)}
-                    sx={cardButtonStyle}
+                    sx={{
+                      mt: 2,
+                      py: 1.2,
+                      borderRadius: 3,
+                      fontFamily: "Bungee",
+                      textTransform: "none",
+                      width: "100%"
+                    }}
                   >
-                    Ver Turnos disponibles
+                    Ver turnos disponibles
                   </Button>
+
                 </Card>
               </Grid>
+
             ))
           ) : (
             <Grid item xs={12}>
@@ -191,7 +261,7 @@ const SelectField = () => {
             </Grid>
           )}
         </Grid>
-        <Grid container justifyContent="center" sx={{ marginBottom: 6 }}>
+        <Grid container justifyContent="center" sx={{ mt: 6, mb: 6 }}>
           <Button variant="contained" color="black" onClick={() => navigate(-1)} sx={buttonStyle}>
             Atras
           </Button>
