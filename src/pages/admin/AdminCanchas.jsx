@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Switch, FormControlLabel, MenuItem, Select,
-  Box, InputLabel, Typography, Stack, useTheme, useMediaQuery
+  Box, InputLabel, Typography, Stack, useTheme, useMediaQuery, Tooltip
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -156,7 +156,7 @@ const AdminCanchas = () => {
     <>
       <NavbarAdmin />
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center"> 
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
           <Button
             variant="contained"
             color="custom"
@@ -213,8 +213,12 @@ const AdminCanchas = () => {
                       <TableCell align="center">{c.descripcion}</TableCell>
                       <TableCell align="center">{c.deporte}</TableCell>
                       <TableCell align="center">
-                        <IconButton color="custom" onClick={() => handleEdit(c)}><Edit /></IconButton>
-                        <IconButton color="error" onClick={() => handleDeleteClick(c.id)}><Delete /></IconButton>
+                        <Tooltip title="Editar cancha" arrow placement="top">
+                          <IconButton color="custom" onClick={() => handleEdit(c)}><Edit /></IconButton>
+                        </Tooltip>
+                        <Tooltip title="Eliminar cancha" arrow placement="top">
+                          <IconButton color="error" onClick={() => handleDeleteClick(c.id)}><Delete /></IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -245,9 +249,9 @@ const AdminCanchas = () => {
                   <hr />
 
                   <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Tipo:</strong> {c.tipo}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt:1 }}><strong>Precio / Hora:</strong> ${c.precioHora}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt:1 }}><strong>Deporte:</strong> {c.deporte}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt:1 }}><strong>Descripción:</strong> {c.descripcion}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt: 1 }}><strong>Precio / Hora:</strong> ${c.precioHora}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt: 1 }}><strong>Deporte:</strong> {c.deporte}</Typography>
+                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif', mt: 1 }}><strong>Descripción:</strong> {c.descripcion}</Typography>
                   <Box sx={{ mt: 1 }}>
                     <IconButton color="custom" onClick={() => handleEdit(c)}><Edit /></IconButton>
                     <IconButton color="error" onClick={() => handleDeleteClick(c.id)}><Delete /></IconButton>

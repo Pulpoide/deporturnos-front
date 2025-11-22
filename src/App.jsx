@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProtectedRoute from './components/ProtectedRoute';
 import ClientReservas from './pages/client/ClientReservas';
 import SelectSport from './pages/client/SelectSport';
-import CanchasDisponibles from './pages/client/CanchasDisponibles';
+import SelectField from './pages/client/SelectField';
 import TurnosDisponibles from './pages/client/TurnosDisponibles';
 import CreateReserva from './pages/client/CreateReserva';
 import ClientProfile from './pages/client/ClientProfile';
@@ -112,7 +112,7 @@ function App() {
           path="/canchas-disponibles/:deporte"
           element={
             <ProtectedRoute role={"CLIENTE"}>
-              <CanchasDisponibles />
+              <SelectField />
             </ProtectedRoute>
           } />
 

@@ -3,13 +3,15 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField,
-  useTheme, useMediaQuery, Stack, Pagination, CircularProgress, Alert
+  useTheme, useMediaQuery, Stack, Pagination, CircularProgress, Alert, Tooltip
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import NavbarAdmin from '../../components/NavbarAdmin';
+import StyledSelect from '../../components/StyledSelect';
+import StyledDateField from '../../components/StyledDateField';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
@@ -54,9 +56,9 @@ const AdminReservas = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState('fecha'); 
+  const [sortBy, setSortBy] = useState('fecha');
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +82,7 @@ const AdminReservas = () => {
   const fetchUsuarios = async () => {
     try {
       const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
-      setUsuarios(resp.data.content ?? resp.data ?? []); 
+      setUsuarios(resp.data.content ?? resp.data ?? []);
     } catch (err) {
       console.error('Error fetchUsuarios:', err);
       if (err.response?.status === 403) navigate('/login');
@@ -261,10 +263,10 @@ const AdminReservas = () => {
   const endIndex = Math.min((currentPage + 1) * pageSize, totalElements);
 
   const sortOptions = [
-    { label: 'Fecha de Reserva', value: 'fecha' },           
-    { label: 'Fecha de Turno', value: 'turno.fecha' },       
-    { label: 'Cancha', value: 'turno.cancha.nombre' },       
-    { label: 'Estado', value: 'estado' },                   
+    { label: 'Fecha de Reserva', value: 'fecha' },
+    { label: 'Fecha de Turno', value: 'turno.fecha' },
+    { label: 'Cancha', value: 'turno.cancha.nombre' },
+    { label: 'Estado', value: 'estado' },
   ];
 
   return (
@@ -272,71 +274,72 @@ const AdminReservas = () => {
       <NavbarAdmin />
 
       <Box sx={{ textAlign: 'center', p: 4 }}>
-        <Paper sx={{ display: 'inline-block', p: 2, width: '95%', maxWidth: 1200, boxShadow: 3 }}>
-          <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
-            <Button
-              variant="contained"
-              color="custom"
-              startIcon={<Add />}
-              onClick={handleAdd}
-              sx={buttonStyle}
-            >
-              Agregar Reserva
-            </Button>
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
+          <Button
+            variant="contained"
+            color="custom"
+            startIcon={<Add />}
+            onClick={handleAdd}
+            sx={buttonStyle}
+          >
+            Agregar Reserva
+          </Button>
 
-            <TextField
-              label="Fecha Desde"
-              type="date"
-              value={fechaDesdeInput}
-              onChange={e => { setFechaDesdeInput(e.target.value); setCurrentPage(0); }}
-              InputLabelProps={{ shrink: true }}
-              size="small"
-            />
+          <StyledDateField
+            label="Fecha Desde"
+            value={fechaDesdeInput}
+            onChange={(e) => {
+              setFechaDesdeInput(e.target.value);
+              setCurrentPage(0);
+            }}
+          />
 
-            <TextField
-              label="Fecha Hasta"
-              type="date"
-              value={fechaHastaInput}
-              onChange={e => { setFechaHastaInput(e.target.value); setCurrentPage(0); }}
-              InputLabelProps={{ shrink: true }}
-              size="small"
-            />
+          <StyledDateField
+            label="Fecha Hasta"
+            value={fechaHastaInput}
+            onChange={(e) => {
+              setFechaHastaInput(e.target.value);
+              setCurrentPage(0);
+            }}
+          />
 
-            <FormControl size="small" sx={{ minWidth: 160 }}>
-              <InputLabel>Ordenar por</InputLabel>
-              <Select
-                value={sortBy}
-                label="Ordenar por"
-                onChange={(e) => { setSortBy(e.target.value); setCurrentPage(0); }}
-              >
-                {sortOptions.map(s => <MenuItem key={s.value} value={s.value}>{s.label}</MenuItem>)}
-              </Select>
-            </FormControl>
 
-            <FormControl size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Mostrar</InputLabel>
-              <Select
-                value={pageSize}
-                label="Mostrar"
-                onChange={onChangeSize}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-            </FormControl>
+          <StyledSelect
+            label="Ordenar por"
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setCurrentPage(0);
+            }}
+            items={sortOptions.map(s => ({
+              value: s.value,
+              label: s.label
+            }))}
+            minWidth={{ xs: 160, sm: 200 }}
+          />
 
-            <Button
-              variant="contained"
-              color="black"
-              onClick={handleClearFilters}
-              sx={buttonStyle}
-            >
-              Limpiar Filtros
-            </Button>
-          </Stack>
-        </Paper>
+          <StyledSelect
+            label="Mostrar"
+            value={pageSize}
+            onChange={onChangeSize}
+            items={[
+              { value: 10, label: "10" },
+              { value: 20, label: "20" },
+              { value: 50, label: "50" },
+              { value: 100, label: "100" },
+            ]}
+            minWidth={{ xs: 120, sm: 150 }}
+          />
+
+          <Button
+            variant="contained"
+            color="black"
+            onClick={handleClearFilters}
+            sx={buttonStyle}
+          >
+            Limpiar Filtros
+          </Button>
+        </Stack>
       </Box>
 
       <Box
@@ -403,8 +406,12 @@ const AdminReservas = () => {
                         </TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={1} justifyContent="center">
-                            <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
-                            <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                            <Tooltip title="Editar reserva" arrow placement="top">
+                              <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                            </Tooltip>
+                            <Tooltip title="Eliminar reserva" arrow placement="top">
+                              <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                            </Tooltip>
                           </Stack>
                         </TableCell>
                       </TableRow>
