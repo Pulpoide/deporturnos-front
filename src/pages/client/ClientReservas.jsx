@@ -75,6 +75,7 @@ const ClientReservas = () => {
             estado,
             page,
             size: pageSize,
+            sort: 'turno.fecha,desc'
           }
         }
       );
