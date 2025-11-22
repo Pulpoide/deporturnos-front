@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField,
-  useTheme, useMediaQuery, Stack, Pagination, CircularProgress, Alert
+  useTheme, useMediaQuery, Stack, Pagination, CircularProgress, Alert, Tooltip
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -54,9 +54,9 @@ const AdminReservas = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState('fecha'); 
+  const [sortBy, setSortBy] = useState('fecha');
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +80,7 @@ const AdminReservas = () => {
   const fetchUsuarios = async () => {
     try {
       const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
-      setUsuarios(resp.data.content ?? resp.data ?? []); 
+      setUsuarios(resp.data.content ?? resp.data ?? []);
     } catch (err) {
       console.error('Error fetchUsuarios:', err);
       if (err.response?.status === 403) navigate('/login');
@@ -261,10 +261,10 @@ const AdminReservas = () => {
   const endIndex = Math.min((currentPage + 1) * pageSize, totalElements);
 
   const sortOptions = [
-    { label: 'Fecha de Reserva', value: 'fecha' },           
-    { label: 'Fecha de Turno', value: 'turno.fecha' },       
-    { label: 'Cancha', value: 'turno.cancha.nombre' },       
-    { label: 'Estado', value: 'estado' },                   
+    { label: 'Fecha de Reserva', value: 'fecha' },
+    { label: 'Fecha de Turno', value: 'turno.fecha' },
+    { label: 'Cancha', value: 'turno.cancha.nombre' },
+    { label: 'Estado', value: 'estado' },
   ];
 
   return (
@@ -403,8 +403,12 @@ const AdminReservas = () => {
                         </TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={1} justifyContent="center">
-                            <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
-                            <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                            <Tooltip title="Editar reserva" arrow placement="top">
+                              <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                            </Tooltip>
+                            <Tooltip title="Eliminar reserva" arrow placement="top">
+                              <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                            </Tooltip>
                           </Stack>
                         </TableCell>
                       </TableRow>
