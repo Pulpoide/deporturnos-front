@@ -11,6 +11,8 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import NavbarAdmin from '../../components/NavbarAdmin';
+import StyledSelect from '../../components/StyledSelect';
+import StyledDateField from '../../components/StyledDateField';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -39,7 +41,6 @@ const buttonStyle = {
 };
 
 const AdminTurnos = () => {
-  // data + dialogs
   const [turnos, setTurnos] = useState([]);
   const [open, setOpen] = useState(false);
   const [horaInicio, setHoraInicio] = useState('');
@@ -59,7 +60,6 @@ const AdminTurnos = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [turnoToDelete, setTurnoToDelete] = useState(null);
 
-  // pagination / sorting / loading
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [sortBy, setSortBy] = useState('fecha');
@@ -158,7 +158,6 @@ const AdminTurnos = () => {
     }
   };
 
-  // Actions - keep your existing flows but call unified fetch afterwards
   const handleEdit = (turno) => {
     setSelectedTurno(turno);
     setFecha(turno.fecha);
@@ -265,7 +264,6 @@ const AdminTurnos = () => {
 
   const sortedCanchas = [...canchas].sort((a, b) => a.deporte?.localeCompare(b.deporte));
 
-  // UI helpers
   const startIndex = totalElements === 0 ? 0 : currentPage * pageSize + 1;
   const endIndex = Math.min((currentPage + 1) * pageSize, totalElements);
 
@@ -287,50 +285,62 @@ const AdminTurnos = () => {
             </Button>
 
             {/* Fecha inputs */}
-            <TextField
+            <StyledDateField
               label="Fecha Desde"
-              type="date"
               value={fechaDesdeInput}
-              onChange={e => setFechaDesdeInput(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                setFechaDesdeInput(e.target.value);
+                setCurrentPage(0);
+              }}
             />
-            <TextField
+
+            <StyledDateField
               label="Fecha Hasta"
-              type="date"
               value={fechaHastaInput}
-              onChange={e => setFechaHastaInput(e.target.value)}
-              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                setFechaHastaInput(e.target.value);
+                setCurrentPage(0);
+              }}
             />
 
             {/* Sort By */}
             <FormControl size="small" sx={{ minWidth: 160 }}>
-              <InputLabel>Ordenar por</InputLabel>
-              <Select
-                value={sortBy}
+              <StyledSelect
                 label="Ordenar por"
-                onChange={(e) => { setSortBy(e.target.value); setCurrentPage(0); }}
-              >
-                <MenuItem value="fecha">Fecha</MenuItem>
-                <MenuItem value="horaInicio">Hora Inicio</MenuItem>
-                <MenuItem value="cancha">Cancha</MenuItem>
-                <MenuItem value="estado">Estado</MenuItem>
-              </Select>
+                value={sortBy}
+                onChange={(e) => {
+                  setSortBy(e.target.value);
+                  setCurrentPage(0);
+                }}
+                items={[
+                  { value: "fecha", label: "Fecha" },
+                  { value: "horaInicio", label: "Hora Inicio" },
+                  { value: "cancha", label: "Cancha" },
+                  { value: "estado", label: "Estado" },
+                ]}
+              />
             </FormControl>
+
 
             {/* Page size */}
             <FormControl size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Mostrar</InputLabel>
-              <Select
-                value={pageSize}
+              <StyledSelect
                 label="Mostrar"
-                onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(0); }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(0);
+                }}
+                minWidth={{ xs: 120, sm: 150 }}
+                items={[
+                  { value: 10, label: "10" },
+                  { value: 20, label: "20" },
+                  { value: 50, label: "50" },
+                  { value: 100, label: "100" },
+                ]}
+              />
             </FormControl>
+
 
             <Button
               variant="contained"
@@ -673,7 +683,7 @@ const AdminTurnos = () => {
             </DialogActions>
           </Dialog>
         </Box>
-      </LocalizationProvider>
+      </LocalizationProvider >
     </>
   );
 };

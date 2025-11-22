@@ -13,6 +13,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavbarAdmin from '../../components/NavbarAdmin';
+import StyledSelect from '../../components/StyledSelect';
 import backgroundImage from '../../assets/images/imagen_background_club.png';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -258,22 +259,46 @@ const AdminUsuarios = () => {
             size="small"
             fullWidth
             placeholder="Escribe nombre o email..."
+            variant="outlined"
+            sx={{
+              background: "rgba(255,255,255,0.9)",
+              borderRadius: 3,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 3,
+                fontFamily: "Fjalla One",
+                "& fieldset": {
+                  borderColor: "rgba(0,0,0,0.3)",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#009688",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#009688",
+                  borderWidth: 2,
+                },
+                "& input::placeholder": {
+                  fontFamily: "Fjalla One",
+                  opacity: 0.7,
+                }
+              },
+              "& .MuiInputLabel-root": {
+                fontFamily: "Fjalla One",
+              }
+            }}
           />
 
-          <FormControl size="small" sx={{ minWidth: isMobile ? '100%' : 120 }}>
-            <InputLabel id="select-size-label">Mostrar</InputLabel>
-            <Select
-              labelId="select-size-label"
-              value={size}
-              label="Mostrar"
-              onChange={onChangeSize}
-            >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-              <MenuItem value={100}>100</MenuItem>
-            </Select>
-          </FormControl>
+          <StyledSelect
+            label="Mostrar"
+            value={pageSize}
+            onChange={onChangeSize}
+            items={[
+              { value: 10, label: "10" },
+              { value: 20, label: "20" },
+              { value: 50, label: "50" },
+              { value: 100, label: "100" },
+            ]}
+            minWidth={{ xs: 120, sm: 150 }}
+          />
 
           {!isMobile && (
             <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
