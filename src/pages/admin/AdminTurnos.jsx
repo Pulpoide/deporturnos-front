@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Box,
-  Typography, Stack, Alert, useTheme, useMediaQuery, Pagination, CircularProgress
+  Typography, Stack, Alert, useTheme, useMediaQuery, Pagination, CircularProgress, Tooltip
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -401,12 +401,16 @@ const AdminTurnos = () => {
                           </TableCell>
                           <TableCell align="center">{turno.cancha?.nombre}</TableCell>
                           <TableCell align="center">
-                            <IconButton color='custom' onClick={() => handleEdit(turno)}>
-                              <Edit />
-                            </IconButton>
-                            <IconButton color="error" onClick={() => handleDeleteClick(turno.id)}>
-                              <Delete />
-                            </IconButton>
+                            <Tooltip title="Editar turno" arrow placement="top">
+                              <IconButton color='custom' onClick={() => handleEdit(turno)}>
+                                <Edit />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Eliminar turno" arrow placement="top">
+                              <IconButton color="error" onClick={() => handleDeleteClick(turno.id)}>
+                                <Delete />
+                              </IconButton>
+                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       ))}
