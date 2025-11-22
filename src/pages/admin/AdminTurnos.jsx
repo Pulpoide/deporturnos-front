@@ -60,9 +60,9 @@ const AdminTurnos = () => {
   const [turnoToDelete, setTurnoToDelete] = useState(null);
 
   // pagination / sorting / loading
-  const [currentPage, setCurrentPage] = useState(0); // backend 0-based
+  const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState('fecha'); // default sort field
+  const [sortBy, setSortBy] = useState('fecha');
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,12 +75,10 @@ const AdminTurnos = () => {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
-  // Fetch canchas once
   useEffect(() => {
     fetchCanchas();
   }, []);
 
-  // Unified fetch: runs whenever pagination, pageSize, sortBy or date filters change
   useEffect(() => {
     fetchPaginatedTurnos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,25 +94,20 @@ const AdminTurnos = () => {
         sortBy,
       };
 
-      // If date filters are set, include them
       const hasFechaDesde = !!fechaDesdeInput;
       const hasFechaHasta = !!fechaHastaInput;
 
       if (hasFechaDesde) params.fechaDesde = fechaDesdeInput;
       if (hasFechaHasta) params.fechaHasta = fechaHastaInput;
 
-      // Choose endpoint
       const endpointBase = `${import.meta.env.VITE_API_URL}/api/turnos`;
       const endpoint = (hasFechaDesde || hasFechaHasta) ? `${endpointBase}/filtrar` : endpointBase;
 
       const response = await axios.get(endpoint, { params, headers: tokenConfig.headers });
 
-      // Expect backend to return paginated object: { content: [...], totalPages, totalElements }
       const data = response.data;
 
-      // Defensive handling if backend returns array (older behavior)
       if (Array.isArray(data)) {
-        // backend returned array (non-paginated) — adapt: treat as single page
         const futureTurnos = data
           .sort((a, b) => {
             const dateA = new Date(a.fecha);
@@ -180,7 +173,6 @@ const AdminTurnos = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/turnos/${id}`, tokenConfig);
-      // If last element on page was deleted and now page is out of range, go back one page
       const likelyNewTotal = totalElements - 1;
       const lastPossiblePage = Math.max(0, Math.ceil(likelyNewTotal / pageSize) - 1);
       if (currentPage > lastPossiblePage) setCurrentPage(lastPossiblePage);
@@ -216,7 +208,6 @@ const AdminTurnos = () => {
         tokenConfig
       );
       setOpenMassiveChargeDialog(false);
-      // After mass upload, reset to first page to show results
       setCurrentPage(0);
       fetchPaginatedTurnos();
     } catch (error) {
@@ -369,7 +360,7 @@ const AdminTurnos = () => {
 
           {/* Desktop Table */}
           {!isMobile && (
-            <TableContainer component={Paper} >
+            <TableContainer component={Paper} sx={{ width: '95%', maxWidth: 1200, margin: '0 auto 24px' }}>
               {isLoading ? (
                 <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
                   <CircularProgress />
