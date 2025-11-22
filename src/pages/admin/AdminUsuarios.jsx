@@ -28,7 +28,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const AdminUsuarios = () => {
-  // pagination / filter state
   const [usuariosPage, setUsuariosPage] = useState({ content: [], totalPages: 0, totalElements: 0, number: 0, size: 10 });
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
@@ -36,7 +35,6 @@ const AdminUsuarios = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const searchDebounceRef = useRef(null);
 
-  // existing states
   const [open, setOpen] = useState(false);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
   const [nombre, setNombre] = useState('');
@@ -57,23 +55,20 @@ const AdminUsuarios = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // token config
   const tokenConfig = {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
-  // Fetch users when page / size / debouncedSearch change
   useEffect(() => {
     fetchUsuarios();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, size, debouncedSearch]);
 
-  // debounce search input (300ms)
   useEffect(() => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
-      setPage(0); // reset page on search
+      setPage(0); 
     }, 300);
     return () => {
       if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
@@ -82,7 +77,6 @@ const AdminUsuarios = () => {
 
   const fetchUsuarios = async () => {
     try {
-      // Build params — backend supports search (name or email)
       const params = {
         page,
         size,
@@ -100,7 +94,6 @@ const AdminUsuarios = () => {
       );
 
       if (response && response.data) {
-        // Expecting Spring Page response
         const pageData = response.data;
         setUsuariosPage({
           content: pageData.content || [],
@@ -120,7 +113,6 @@ const AdminUsuarios = () => {
     }
   };
 
-  // ----- CRUD / actions keep the same behavior but refresh paginated list -----
   const handleEdit = (usuario) => {
     setSelectedUsuario(usuario);
     setNombre(usuario.nombre || '');
@@ -139,7 +131,6 @@ const AdminUsuarios = () => {
     } catch (err) {
       console.error('Error al eliminar el usuario:', err);
     }
-    // reload current page
     fetchUsuarios();
   };
 
@@ -227,10 +218,8 @@ const AdminUsuarios = () => {
     setSelectedUsuario(null);
   };
 
-  // helpers
   const onChangePage = (event, value) => {
     setPage(value - 1);
-    // fetchUsuarios();  // effect will handle
   };
 
   const onChangeSize = (e) => {
@@ -250,7 +239,6 @@ const AdminUsuarios = () => {
   return (
     <>
       <NavbarAdmin />
-
 
       <Box
         sx={{ textAlign: 'center', padding: 4 }}
@@ -322,7 +310,7 @@ const AdminUsuarios = () => {
       >
         {/* Desktop table */}
         {!isMobile && (
-          <TableContainer component={Paper} sx={{ width: '95%', margin: '0 auto 24px' }}>
+          <TableContainer component={Paper} sx={{ width: '95%', maxWidth: 1200, margin: '0 auto 24px' }}>
             <Table>
               <TableHead>
                 <TableRow>
