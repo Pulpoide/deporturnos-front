@@ -24,13 +24,21 @@ const cardFont = {
 };
 
 const confirmButtonStyle = {
-    marginTop: 2,
-    fontFamily: 'Bungee, sans-serif'
+    marginTop: 6,
+    fontFamily: "Bungee, sans-serif",
+    height: 50,
+    paddingX: 3,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    whiteSpace: "nowrap",
+    minWidth: '250px',
 };
+
 
 const backButtonStyle = {
     fontFamily: "Bungee, sans-serif",
-    minWidth: '130px'
+    minWidth: '250px',
 };
 
 const snackbarStyle = {
@@ -115,21 +123,41 @@ const CreateReserva = () => {
                         <Typography variant='h6' sx={cardFont}>Precio por hora: ${turno.cancha.precioHora}</Typography>
                     </CardContent>
                 </Card>
-                <Button variant="contained" color="primary" onClick={handleConfirm} sx={confirmButtonStyle} disabled={loading}>
-                    {loading ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <CircularProgress size={24} sx={{ marginRight: 1 }} />
-                            <Typography variant="body1" sx={confirmButtonStyle}>La cancha ya casi es tuya...</Typography>
-                        </Box>
-                    ) : (
-                        "Confirmar"
-                    )}
-                </Button>
+                <Grid container justifyContent="center">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleConfirm}
+                        sx={confirmButtonStyle}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <>
+                                <CircularProgress size={22} />
+                                <Typography
+                                    variant="body1"
+                                    sx={{ marginLeft: 1, fontFamily: "Bungee, sans-serif" }}
+                                >
+                                    La cancha ya casi es tuya...
+                                </Typography>
+                            </>
+                        ) : (
+                            "Confirmar"
+                        )}
+                    </Button>
+                </Grid>
+
                 <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
-                    <Button variant="contained" color="black" onClick={() => navigate(-1)} sx={backButtonStyle}>
+                    <Button
+                        variant="contained"
+                        color="black"
+                        onClick={() => navigate(-1)}
+                        sx={backButtonStyle}
+                    >
                         Atras
                     </Button>
                 </Grid>
+
                 <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                     <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={snackbarStyle}>
                         {snackbarMessage}
