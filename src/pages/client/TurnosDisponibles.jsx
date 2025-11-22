@@ -53,7 +53,10 @@ const TurnosDisponibles = () => {
             const formattedDate = date.format('YYYY-MM-DD');
             axios.get(`${import.meta.env.VITE_API_URL}/api/turnos/disponibles/${canchaId}/cancha?fecha=${formattedDate}`, tokenConfig)
                 .then(response => {
-                    setTurnos(response.data);
+                    const sorted = [...response.data].sort((a, b) =>
+                        dayjs(a.horaInicio, "HH:mm").unix() - dayjs(b.horaInicio, "HH:mm").unix()
+                    );
+                    setTurnos(sorted);
                 })
                 .catch(error => {
                     console.error("Hay un error fetching los turnos!", error.response ? error.response.data : error.message);
@@ -100,17 +103,59 @@ const TurnosDisponibles = () => {
                 <Grid container spacing={2} sx={{ marginTop: 2 }}>
                     {turnos.length > 0 ? (
                         turnos.map((turno) => (
-                            <Grid item key={turno.id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}>
-                                <Card sx={{ width: '100%', maxWidth: '300px', minHeight: '177px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 2, height: 'auto' }}>
-                                    <CardContent sx={{ flexGrow: 1 }}>
-                                        <Typography variant='h6' sx={cardTitleFont}>Horario:</Typography>
-                                        <Typography variant="h5" sx={cardHourFont}>{`${turno.horaInicio}`} a {`${turno.horaFin}`}</Typography>
-                                        <hr style={{ margin: '10px 0' }} />
-                                        <Typography variant="h5" sx={cardTitleFont}>{`Turno #${turno.id}`}</Typography>
-                                        <hr style={{ margin: '10px 0' }} />
-                                        <Button variant="contained" color="primary" onClick={() => handleCreateReserva(turno.id, turno)} sx={reservarButtonStyle}>
+                            <Grid item key={turno.id} xs={12} sm={6} md={3}
+                                sx={{ display: "flex", justifyContent: "center" }}
+                            >
+                                <Card
+                                    sx={{
+                                        width: "100%",
+                                        maxWidth: 260,
+                                        p: 2,
+                                        borderRadius: 4,
+                                        boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                                        transition: "0.25s",
+                                        "&:hover": {
+                                            transform: "translateY(-4px)",
+                                            boxShadow: "0 6px 24px rgba(0,0,0,0.18)",
+                                        },
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    <CardContent>
+
+                                        <Typography variant="subtitle2" sx={{ opacity: 0.7 }}>
+                                            Horario
+                                        </Typography>
+
+                                        <Typography
+                                            variant="h5"
+                                            sx={{ fontFamily: "Fjalla One", fontWeight: "bold", color: "#009688" }}
+                                        >
+                                            {turno.horaInicio} – {turno.horaFin}
+                                        </Typography>
+
+                                        <Typography
+                                            variant="caption"
+                                            sx={{ display: "block", mt: 1, opacity: 0.6 }}
+                                        >
+                                            Turno #{turno.id}
+                                        </Typography>
+
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => handleCreateReserva(turno.id, turno)}
+                                            fullWidth
+                                            sx={{
+                                                mt: 2,
+                                                py: 1,
+                                                borderRadius: 3,
+                                                fontFamily: "Bungee",
+                                                textTransform: "none"
+                                            }}
+                                        >
                                             Reservar
                                         </Button>
+
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -123,7 +168,7 @@ const TurnosDisponibles = () => {
                         </Grid>
                     )}
                 </Grid>
-                <Grid container justifyContent="center" sx={{ marginBottom: 6 }}>
+                <Grid container justifyContent="center" sx={{ mt: 6, mb: 6 }}>
                     <Button variant="contained" color="black" onClick={() => navigate(-1)} sx={backButtonStyle}>
                         Atras
                     </Button>
