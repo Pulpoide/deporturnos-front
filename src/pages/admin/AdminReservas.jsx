@@ -1,4 +1,3 @@
-// src/pages/admin/AdminReservas.jsx
 import { useState, useEffect } from "react";
 import {
   Table, TableBody, TableContainer, TableHead, TableRow,
@@ -37,7 +36,6 @@ const buttonStyle = {
 };
 
 const AdminReservas = () => {
-  // data + dialogs
   const [reservas, setReservas] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [turnos, setTurnos] = useState([]);
@@ -56,10 +54,9 @@ const AdminReservas = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // pagination / sorting / loading
-  const [currentPage, setCurrentPage] = useState(0); // backend 0-based
+  const [currentPage, setCurrentPage] = useState(0); 
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState('fecha'); // default sort: reserva.fecha
+  const [sortBy, setSortBy] = useState('fecha'); 
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,24 +66,21 @@ const AdminReservas = () => {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
-  // Fetch static lists once
   useEffect(() => {
     fetchUsuarios();
     fetchTurnosList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch paginated reservas whenever page/size/sortBy/fechaDesde/fechaHasta change
   useEffect(() => {
     fetchPaginatedReservas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, pageSize, sortBy, fechaDesdeInput, fechaHastaInput]);
 
-  // -------- API calls --------
   const fetchUsuarios = async () => {
     try {
       const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
-      setUsuarios(resp.data.content ?? resp.data ?? []); // defensive
+      setUsuarios(resp.data.content ?? resp.data ?? []); 
     } catch (err) {
       console.error('Error fetchUsuarios:', err);
       if (err.response?.status === 403) navigate('/login');
@@ -96,7 +90,6 @@ const AdminReservas = () => {
   const fetchTurnosList = async () => {
     try {
       const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos`, tokenConfig);
-      // turnos endpoint might return page or array. Normalize to array of turnos.
       const data = resp.data;
       if (Array.isArray(data)) {
         setTurnos(data);
@@ -123,11 +116,9 @@ const AdminReservas = () => {
       const hasFechaDesde = !!fechaDesdeInput;
       const hasFechaHasta = !!fechaHastaInput;
 
-      // If both or at least one date is present, include them (backend handles missing? we send only present ones)
       if (hasFechaDesde) params.fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
       if (hasFechaHasta) params.fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
 
-      // Choose endpoint
       const endpointBase = `${import.meta.env.VITE_API_URL}/api/reservas`;
       const endpoint = (hasFechaDesde || hasFechaHasta) ? `${endpointBase}/filtrar` : endpointBase;
 
@@ -135,13 +126,11 @@ const AdminReservas = () => {
 
       const data = resp.data;
 
-      // Expect paginated response
       if (data && (data.content || typeof data.totalElements !== 'undefined')) {
         setReservas(data.content || []);
         setTotalPages(data.totalPages ?? 0);
         setTotalElements(data.totalElements ?? (data.content ? data.content.length : 0));
       } else if (Array.isArray(data)) {
-        // defensive: backend returned array (non-paginated)
         setReservas(data);
         setTotalPages(1);
         setTotalElements(data.length);
@@ -150,7 +139,7 @@ const AdminReservas = () => {
         setTotalPages(0);
         setTotalElements(0);
       }
-      // defensive: if currentPage is out of range after delete etc, adjust
+
       const lastPossiblePage = Math.max(0, Math.ceil((data.totalElements ?? (data.length || 0)) / pageSize) - 1);
       if (currentPage > lastPossiblePage) setCurrentPage(lastPossiblePage);
     } catch (err) {
@@ -169,7 +158,6 @@ const AdminReservas = () => {
     }
   };
 
-  // -------- Actions (keep behavior, then refresh list) --------
   const handleAdd = () => {
     setSelectedReserva(null);
     setUsuarioId('');
@@ -190,8 +178,6 @@ const AdminReservas = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/reservas/${id}`, tokenConfig);
-      // after delete, refresh current page (fetchPaginatedReservas effect will run if we adjust totalElements)
-      // but to be safe, call fetch after a deletion:
       fetchPaginatedReservas();
     } catch (err) {
       console.error('Error deleting reserva:', err);
@@ -242,7 +228,7 @@ const AdminReservas = () => {
         } else {
           await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas`, reservaData, tokenConfig);
         }
-        // refresh list and close
+
         fetchPaginatedReservas();
         setOpen(false);
       } catch (err) {
@@ -253,7 +239,6 @@ const AdminReservas = () => {
     }
   };
 
-  // -------- Helpers for pagination UI --------
   const onChangePage = (event, value) => {
     setCurrentPage(value - 1);
   };
@@ -272,23 +257,20 @@ const AdminReservas = () => {
     setCurrentPage(0);
   };
 
-  // start / end indices
   const startIndex = totalElements === 0 ? 0 : currentPage * pageSize + 1;
   const endIndex = Math.min((currentPage + 1) * pageSize, totalElements);
 
-  // Map for sortBy menu (label -> param)
   const sortOptions = [
-    { label: 'Fecha de Reserva', value: 'fecha' },           // reserva.fecha
-    { label: 'Fecha de Turno', value: 'turno.fecha' },       // turno.fecha (backend must understand)
-    { label: 'Cancha', value: 'turno.cancha.nombre' },       // cancha.nombre
-    { label: 'Estado', value: 'estado' },                    // reserva.estado
+    { label: 'Fecha de Reserva', value: 'fecha' },           
+    { label: 'Fecha de Turno', value: 'turno.fecha' },       
+    { label: 'Cancha', value: 'turno.cancha.nombre' },       
+    { label: 'Estado', value: 'estado' },                   
   ];
 
   return (
     <>
       <NavbarAdmin />
 
-      {/* Controls: Search by dates + Sort + Size + Clear */}
       <Box sx={{ textAlign: 'center', p: 4 }}>
         <Paper sx={{ display: 'inline-block', p: 2, width: '95%', maxWidth: 1200, boxShadow: 3 }}>
           <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
