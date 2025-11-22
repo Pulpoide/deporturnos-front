@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, MenuItem, Select, Box, InputLabel, FormControl, Typography, TextField,
-  useTheme, useMediaQuery, Stack
+  useTheme, useMediaQuery, Stack, Pagination, CircularProgress, Alert
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -49,89 +49,117 @@ const AdminReservas = () => {
   const [fechaHastaInput, setFechaHastaInput] = useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [reservaToDelete, setReservaToDelete] = useState(null);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useEffect(() => {
-    fetchReservas();
-    fetchUsuarios();
-    fetchTurnos();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(0); 
+  const [pageSize, setPageSize] = useState(10);
+  const [sortBy, setSortBy] = useState('fecha'); 
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const tokenConfig = {
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   };
 
-  const fetchReservas = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas`, tokenConfig);
-      setReservas(response.data);
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        navigate('/login');
-      } else if (error.response && error.response.status === 404) {
-        setReservas([]);
-      } else {
-        console.error('Error fetchReservas:', error);
-      }
-    }
-  };
+  useEffect(() => {
+    fetchUsuarios();
+    fetchTurnosList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    fetchPaginatedReservas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, pageSize, sortBy, fechaDesdeInput, fechaHastaInput]);
 
   const fetchUsuarios = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
-      setUsuarios(response.data);
-    } catch (error) {
-      console.error('Error fetchUsuarios:', error);
+      const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/usuarios`, tokenConfig);
+      setUsuarios(resp.data.content ?? resp.data ?? []); 
+    } catch (err) {
+      console.error('Error fetchUsuarios:', err);
+      if (err.response?.status === 403) navigate('/login');
     }
   };
 
-  const fetchTurnos = async () => {
+  const fetchTurnosList = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos`, tokenConfig);
-      if (response.data && response.data.length > 0) {
-        const sortedReservas = response.data
-          .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-          .filter(reserva => new Date(reserva.fecha) >= new Date());
-        setTurnos(sortedReservas);
+      const resp = await axios.get(`${import.meta.env.VITE_API_URL}/api/turnos`, tokenConfig);
+      const data = resp.data;
+      if (Array.isArray(data)) {
+        setTurnos(data);
+      } else if (data.content) {
+        setTurnos(data.content);
       } else {
         setTurnos([]);
       }
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setTurnos([]);
-      } else {
-        console.error('Error fetchTurnos:', error);
-      }
+    } catch (err) {
+      console.error('Error fetchTurnos:', err);
     }
   };
 
-  const fetchReservasByFecha = async (fechaDesde, fechaHasta) => {
+  const fetchPaginatedReservas = async () => {
+    setIsLoading(true);
+    setError('');
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservas/filtrar`, {
-        params: { fechaDesde, fechaHasta },
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      setReservas(response.data);
-    } catch (error) {
-      console.error('Error fetching reservas by fecha:', error.response?.data || error.message);
-    }
-  };
+      const params = {
+        page: currentPage,
+        size: pageSize,
+        sortBy,
+      };
 
-  const handleSearch = () => {
-    const fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
-    const fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
-    if (fechaDesde && fechaHasta) {
-      fetchReservasByFecha(fechaDesde, fechaHasta);
-    } else {
-      console.error('Por favor, asegúrate de que ambas fechas están seleccionadas.');
+      const hasFechaDesde = !!fechaDesdeInput;
+      const hasFechaHasta = !!fechaHastaInput;
+
+      if (hasFechaDesde) params.fechaDesde = dayjs(fechaDesdeInput).format('YYYY-MM-DD');
+      if (hasFechaHasta) params.fechaHasta = dayjs(fechaHastaInput).format('YYYY-MM-DD');
+
+      const endpointBase = `${import.meta.env.VITE_API_URL}/api/reservas`;
+      const endpoint = (hasFechaDesde || hasFechaHasta) ? `${endpointBase}/filtrar` : endpointBase;
+
+      const resp = await axios.get(endpoint, { params, headers: tokenConfig.headers });
+
+      const data = resp.data;
+
+      if (data && (data.content || typeof data.totalElements !== 'undefined')) {
+        setReservas(data.content || []);
+        setTotalPages(data.totalPages ?? 0);
+        setTotalElements(data.totalElements ?? (data.content ? data.content.length : 0));
+      } else if (Array.isArray(data)) {
+        setReservas(data);
+        setTotalPages(1);
+        setTotalElements(data.length);
+      } else {
+        setReservas([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      }
+
+      const lastPossiblePage = Math.max(0, Math.ceil((data.totalElements ?? (data.length || 0)) / pageSize) - 1);
+      if (currentPage > lastPossiblePage) setCurrentPage(lastPossiblePage);
+    } catch (err) {
+      console.error('fetchPaginatedReservas error:', err);
+      if (err.response?.status === 403) {
+        navigate('/login');
+      } else if (err.response?.status === 404) {
+        setReservas([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      } else {
+        setError('Error al cargar reservas: ' + (err.response?.data?.message || err.message));
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleAdd = () => {
-    setSelectedReserva('');
+    setSelectedReserva(null);
     setUsuarioId('');
     setTurnoId('');
     setEstado('CONFIRMADA');
@@ -140,16 +168,20 @@ const AdminReservas = () => {
 
   const handleEdit = (reserva) => {
     setSelectedReserva(reserva);
-    setUsuarioId(reserva.usuario.id);
-    setTurnoId(reserva.turno.id);
-    setEstado(reserva.estado);
+    setUsuarioId(reserva.usuario?.id ?? '');
+    setTurnoId(reserva.turno?.id ?? '');
+    setEstado(reserva.estado ?? '');
     setInitialValues(reserva);
     setOpen(true);
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/reservas/${id}`, tokenConfig);
-    fetchReservas();
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/reservas/${id}`, tokenConfig);
+      fetchPaginatedReservas();
+    } catch (err) {
+      console.error('Error deleting reserva:', err);
+    }
   };
 
   const handleDeleteClick = (id) => {
@@ -196,59 +228,117 @@ const AdminReservas = () => {
         } else {
           await axios.post(`${import.meta.env.VITE_API_URL}/api/reservas`, reservaData, tokenConfig);
         }
-      } catch (error) {
-        console.log(error.response.data.message);
-        console.error(error.response);
+
+        fetchPaginatedReservas();
+        setOpen(false);
+      } catch (err) {
+        console.error('Error saving reserva:', err);
       }
+    } else {
+      setOpen(false);
     }
-    fetchReservas();
-    setOpen(false);
   };
+
+  const onChangePage = (event, value) => {
+    setCurrentPage(value - 1);
+  };
+
+  const onChangeSize = (e) => {
+    const newSize = parseInt(e.target.value, 10);
+    setPageSize(newSize);
+    setCurrentPage(0);
+  };
+
+  const handleClearFilters = () => {
+    setFechaDesdeInput('');
+    setFechaHastaInput('');
+    setSortBy('fecha');
+    setPageSize(10);
+    setCurrentPage(0);
+  };
+
+  const startIndex = totalElements === 0 ? 0 : currentPage * pageSize + 1;
+  const endIndex = Math.min((currentPage + 1) * pageSize, totalElements);
+
+  const sortOptions = [
+    { label: 'Fecha de Reserva', value: 'fecha' },           
+    { label: 'Fecha de Turno', value: 'turno.fecha' },       
+    { label: 'Cancha', value: 'turno.cancha.nombre' },       
+    { label: 'Estado', value: 'estado' },                   
+  ];
 
   return (
     <>
       <NavbarAdmin />
-      <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Stack
-          direction={isMobile ? 'column' : 'row'}
-          spacing={2}
-          justifyContent="center"
-          alignItems={'center'}
-        >
-          <Button
-            variant="contained"
-            color="custom"
-            startIcon={<Add />}
-            onClick={handleAdd}
-            sx={buttonStyle}
-          >
-            Agregar Reserva
-          </Button>
 
-          <TextField
-            label="Fecha Desde"
-            type="date"
-            onChange={e => setFechaDesdeInput(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
+      <Box sx={{ textAlign: 'center', p: 4 }}>
+        <Paper sx={{ display: 'inline-block', p: 2, width: '95%', maxWidth: 1200, boxShadow: 3 }}>
+          <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center" alignItems="center">
+            <Button
+              variant="contained"
+              color="custom"
+              startIcon={<Add />}
+              onClick={handleAdd}
+              sx={buttonStyle}
+            >
+              Agregar Reserva
+            </Button>
 
-          <TextField
-            label="Fecha Hasta"
-            type="date"
-            onChange={e => setFechaHastaInput(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
+            <TextField
+              label="Fecha Desde"
+              type="date"
+              value={fechaDesdeInput}
+              onChange={e => { setFechaDesdeInput(e.target.value); setCurrentPage(0); }}
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
 
-          <Button
-            variant="contained"
-            color="custom"
-            onClick={handleSearch}
-            sx={buttonStyle}
-          >
-            Buscar
-          </Button>
-        </Stack>
+            <TextField
+              label="Fecha Hasta"
+              type="date"
+              value={fechaHastaInput}
+              onChange={e => { setFechaHastaInput(e.target.value); setCurrentPage(0); }}
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
+
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <InputLabel>Ordenar por</InputLabel>
+              <Select
+                value={sortBy}
+                label="Ordenar por"
+                onChange={(e) => { setSortBy(e.target.value); setCurrentPage(0); }}
+              >
+                {sortOptions.map(s => <MenuItem key={s.value} value={s.value}>{s.label}</MenuItem>)}
+              </Select>
+            </FormControl>
+
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <InputLabel>Mostrar</InputLabel>
+              <Select
+                value={pageSize}
+                label="Mostrar"
+                onChange={onChangeSize}
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={100}>100</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="contained"
+              color="black"
+              onClick={handleClearFilters}
+              sx={buttonStyle}
+            >
+              Limpiar Filtros
+            </Button>
+          </Stack>
+        </Paper>
       </Box>
+
       <Box
         sx={{
           backgroundImage: `url(${backgroundImage})`,
@@ -256,97 +346,173 @@ const AdminReservas = () => {
           backgroundPosition: 'center',
           minHeight: '100vh',
           py: 4
-        }}>
+        }}
+      >
+        {error && (
+          <Box sx={{ width: '95%', maxWidth: 1200, margin: '0 auto 16px' }}>
+            <Alert severity="error">{error}</Alert>
+          </Box>
+        )}
 
+        {/* Desktop table */}
         {!isMobile && (
-          <TableContainer component={Paper}>
-            {reservas.length === 0 ? (
+          <TableContainer component={Paper} sx={{ width: '95%', maxWidth: 1200, margin: '0 auto 24px' }}>
+            {isLoading ? (
+              <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress />
+              </Box>
+            ) : reservas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
                   No hay reservas aún
                 </Typography>
               </Box>
             ) : (
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell align="center">Fecha Reserva</StyledTableCell>
-                    <StyledTableCell align="center">Fecha Turno</StyledTableCell>
-                    <StyledTableCell align="center">Hora Inicio</StyledTableCell>
-                    <StyledTableCell align="center">Hora Fin</StyledTableCell>
-                    <StyledTableCell align="center">Usuario</StyledTableCell>
-                    <StyledTableCell align="center">Turno ID</StyledTableCell>
-                    <StyledTableCell align="center">Cancha</StyledTableCell>
-                    <StyledTableCell align="center">Estado</StyledTableCell>
-                    <StyledTableCell align="center">Acciones</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {reservas.map(r => (
-                    <TableRow key={r.id}>
-                      <TableCell align="center">{dayjs(r.fecha).format('DD/MM/YYYY')}</TableCell>
-                      <TableCell align="center">{dayjs(r.turno.fecha).format('DD/MM/YYYY')}</TableCell>
-                      <TableCell align="center">{r.turno.horaInicio}</TableCell>
-                      <TableCell align="center">{r.turno.horaFin}</TableCell>
-                      <TableCell align="center">{r.usuario.nombre}</TableCell>
-                      <TableCell align="center">{r.turno.id}</TableCell>
-                      <TableCell align="center">{r.turno.cancha.nombre}</TableCell>
-                      <TableCell align="center">
-                        <Typography style={{color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange' , fontFamily: 'Bungee, sans-serif' }}>{r.estado}</Typography></TableCell>
-                      <TableCell align="center">
-                        <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
-                        <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
-                      </TableCell>
+              <>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell align="center">Fecha Reserva</StyledTableCell>
+                      <StyledTableCell align="center">Fecha Turno</StyledTableCell>
+                      <StyledTableCell align="center">Hora Inicio</StyledTableCell>
+                      <StyledTableCell align="center">Hora Fin</StyledTableCell>
+                      <StyledTableCell align="center">Email Usuario</StyledTableCell>
+                      <StyledTableCell align="center">Cancha</StyledTableCell>
+                      <StyledTableCell align="center">Tipo</StyledTableCell>
+                      <StyledTableCell align="center">Estado</StyledTableCell>
+                      <StyledTableCell align="center">Acciones</StyledTableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {reservas.map(r => (
+                      <TableRow key={r.id}>
+                        <TableCell align="center">{dayjs(r.fecha).format('DD/MM/YYYY')}</TableCell>
+                        <TableCell align="center">{dayjs(r.turno?.fecha).format('DD/MM/YYYY')}</TableCell>
+                        <TableCell align="center">{r.turno?.horaInicio?.substring(0, 5)}</TableCell>
+                        <TableCell align="center">{r.turno?.horaFin?.substring(0, 5)}</TableCell>
+                        <TableCell align="center">{r.usuario?.email}</TableCell>
+                        <TableCell align="center">{r.turno?.cancha?.nombre}</TableCell>
+                        <TableCell align="center">{r.turno?.cancha?.tipo}</TableCell>
+                        <TableCell align="center">
+                          <Typography style={{
+                            color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange',
+                            fontFamily: 'Bungee, sans-serif'
+                          }}>
+                            {r.estado}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Stack direction="row" spacing={1} justifyContent="center">
+                            <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                            <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {/* Footer: range + pagination */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
+                  <Typography variant="body2" sx={{ fontFamily: 'Fjalla One, sans-serif' }}>
+                    {totalElements === 0 ? 'Mostrando 0' : `Mostrando ${startIndex} - ${endIndex} de ${totalElements}`}
+                  </Typography>
+
+                  <Pagination
+                    count={Math.max(1, totalPages)}
+                    page={currentPage + 1}
+                    onChange={onChangePage}
+                    showFirstButton
+                    showLastButton
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        fontFamily: "Fjalla One, sans-serif",
+                      }
+                    }}
+                  />
+                </Box>
+              </>
             )}
           </TableContainer>
         )}
 
+        {/* Mobile list */}
         {isMobile && (
           <Box sx={{ px: 2 }}>
-            {reservas.length === 0 ? (
+            {isLoading ? (
+              <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress />
+              </Box>
+            ) : reservas.length === 0 ? (
               <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif', color:'white' }}>
+                <Typography variant="h5" sx={{ fontFamily: 'Fjalla One, sans-serif', color: 'white' }}>
                   No hay reservas aún
                 </Typography>
               </Box>
             ) : (
-              reservas.map(r => (
-                <Paper key={r.id} sx={{ mb: 2, p: 2, textAlign: 'center' }}>
-                  <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif', color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange' }}>{r.estado}</Typography>
-                  <hr />
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Reserva:</strong> {dayjs(r.fecha).format('DD/MM/YYYY')}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Nombre de Usuario:</strong> {r.usuario.nombre}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Turno ID:</strong> {r.turno.id}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Turno:</strong> {dayjs(r.turno.fecha).format('DD/MM/YYYY')}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Hora: </strong>{r.turno.horaInicio} <strong>a</strong> {r.turno.horaFin}</Typography>
-                  <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Cancha:</strong> {r.turno.cancha.nombre}</Typography>
-                  <Box sx={{ mt: 1, textAlign: 'center' }}>
-                    <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
-                    <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
-                  </Box>
-                </Paper>
-              ))
+              <>
+                {reservas.map(r => (
+                  <Paper key={r.id} sx={{ mb: 2, p: 2, textAlign: 'center' }}>
+                    <Typography variant="body1" sx={{ fontFamily: 'Bungee, sans-serif', color: r.estado === "CONFIRMADA" ? 'green' : r.estado === "CANCELADA" ? 'red' : 'orange' }}>{r.estado}</Typography>
+                    <hr />
+                    <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Reserva:</strong> {dayjs(r.fecha).format('DD/MM/YYYY')}</Typography>
+                    <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Fecha de Turno:</strong> {dayjs(r.turno?.fecha).format('DD/MM/YYYY')}</Typography>
+                    <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Email:</strong> {r.usuario?.email}</Typography>
+                    <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Hora: </strong>{r.turno?.horaInicio?.substring(0, 5)} <strong>a</strong> {r.turno?.horaFin?.substring(0, 5)}</Typography>
+                    <Typography variant="body1" sx={{ fontFamily: 'Fjalla One, sans-serif' }}><strong>Cancha:</strong> {r.turno?.cancha?.nombre} ({r.turno?.cancha?.tipo})</Typography>
+                    <Box sx={{ mt: 1, textAlign: 'center' }}>
+                      <IconButton color="custom" onClick={() => handleEdit(r)}><Edit /></IconButton>
+                      <IconButton color="error" onClick={() => handleDeleteClick(r.id)}><Delete /></IconButton>
+                    </Box>
+                  </Paper>
+                ))}
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1 }}>
+                  <Typography variant="body2" sx={{ fontFamily: 'Fjalla One, sans-serif', color: 'white' }}>
+                    {totalElements === 0 ? 'Mostrando 0' : `Mostrando ${startIndex} - ${endIndex} de ${totalElements}`}
+                  </Typography>
+                  <Pagination
+                    count={Math.max(1, totalPages)}
+                    page={currentPage + 1}
+                    onChange={onChangePage}
+                    size="small"
+                    showFirstButton
+                    showLastButton
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        color: "white",
+                        borderColor: "white",
+                        fontFamily: "Fjalla One, sans-serif",
+                      },
+                      "& .Mui-selected": {
+                        backgroundColor: "rgba(255,255,255,0.3) !important",
+                        color: "white",
+                      },
+                      "& .MuiPaginationItem-icon": {
+                        color: "white",
+                      },
+                    }}
+                  />
+                </Box>
+              </>
             )}
           </Box>
         )}
 
+        {/* DIALOGS */}
         <Dialog open={open} onClose={() => setOpen(false)} disableScrollLock>
           <DialogTitle sx={{ fontFamily: 'Bungee, sans-serif', textAlign: 'center' }}>{selectedReserva ? 'Editar Reserva' : 'Agregar Reserva'}</DialogTitle>
           <DialogContent>
             <FormControl fullWidth margin="dense" color="custom">
               <InputLabel>Usuario</InputLabel>
               <Select value={usuarioId} onChange={e => setUsuarioId(e.target.value)}>
-                {usuarios.map(u => <MenuItem key={u.id} value={u.id}>{u.nombre}</MenuItem>)}
+                {usuarios.map(u => <MenuItem key={u.id} value={u.id}>{u.nombre} ({u.email})</MenuItem>)}
               </Select>
             </FormControl>
             <FormControl fullWidth margin="dense" color="custom">
               <InputLabel>Turno</InputLabel>
               <Select value={turnoId} onChange={e => setTurnoId(e.target.value)}>
-                {turnos.map(t => <MenuItem key={t.id} value={t.id}>{`${t.id} - ${dayjs(t.fecha).format('DD/MM/YYYY')} ${t.horaInicio}-${t.horaFin}`}</MenuItem>)}
+                {turnos.map(t => <MenuItem key={t.id} value={t.id}>{`${t.id} - ${dayjs(t.fecha).format('DD/MM/YYYY')} ${t.horaInicio?.substring(0, 5)}-${t.horaFin?.substring(0, 5)}`}</MenuItem>)}
               </Select>
             </FormControl>
             <FormControl fullWidth margin="dense" color="custom">
@@ -372,7 +538,6 @@ const AdminReservas = () => {
             <Button onClick={handleConfirmDelete} color="error" sx={{ fontFamily: 'Bungee, sans-serif' }}>Eliminar</Button>
           </DialogActions>
         </Dialog>
-
       </Box>
     </>
   );
