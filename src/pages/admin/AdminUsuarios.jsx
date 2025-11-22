@@ -3,7 +3,7 @@ import {
   Table, TableBody, TableContainer, TableHead, TableRow,
   Paper, Button, IconButton, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel,
-  Box, Typography, useTheme, useMediaQuery, Pagination, Stack
+  Box, Typography, useTheme, useMediaQuery, Pagination, Stack, Tooltip
 } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -68,7 +68,7 @@ const AdminUsuarios = () => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
-      setPage(0); 
+      setPage(0);
     }, 300);
     return () => {
       if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
@@ -338,21 +338,32 @@ const AdminUsuarios = () => {
                       <TableCell align="center">{u.activada ? 'Sí' : 'No'}</TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={1} justifyContent="center">
-                          <IconButton color='black' onClick={() => handleEdit(u)}><Edit /></IconButton>
+                          <Tooltip title="Editar usuario" arrow placement="top">
+                            <IconButton aria-label="Editar usuario" color="black" onClick={() => handleEdit(u)}><Edit /></IconButton>
+                          </Tooltip>
+
                           {u.id !== 1 && (
-                            <IconButton color="error" onClick={() => handleDeleteClick(u.id)}>
-                              <Delete />
-                            </IconButton>
+                            <Tooltip title="Eliminar usuario" arrow placement="top">
+                              <IconButton aria-label="Eliminar usuario" color="error" onClick={() => handleDeleteClick(u.id)}>
+                                <Delete />
+                              </IconButton>
+                            </Tooltip>
                           )}
+
                           {u.id !== 1 && (
-                            <IconButton color='black' onClick={() => handleRoleChangeClick(u)}>
-                              {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
-                            </IconButton>
+                            <Tooltip title={u.rol === 'ADMIN' ? "Quitar rol de administrador" : "Hacer administrador"} arrow placement="top">
+                              <IconButton aria-label="Cambiar rol" color="black" onClick={() => handleRoleChangeClick(u)}>
+                                {u.rol === 'ADMIN' ? <VerifiedIcon color='primary' /> : <PersonIcon />}
+                              </IconButton>
+                            </Tooltip>
                           )}
+
                           {u.id !== 1 && (
-                            <IconButton onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
-                              {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
-                            </IconButton>
+                            <Tooltip title={u.activada ? "Desactivar cuenta" : "Activar cuenta"} arrow placement="top">
+                              <IconButton aria-label={u.activada ? "Desactivar cuenta" : "Activar cuenta"} onClick={() => handleAccountStatusChangeClick(u, !u.activada)}>
+                                {u.activada ? <LockOpen color="action" /> : <Lock color="action" />}
+                              </IconButton>
+                            </Tooltip>
                           )}
                         </Stack>
                       </TableCell>
