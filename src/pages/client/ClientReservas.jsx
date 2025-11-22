@@ -108,8 +108,13 @@ const ClientReservas = () => {
     fetchReservas();
   };
 
-  const reservas = reservasPage?.content || [];
 
+  const totalPages = reservasPage?.totalPages ?? 0;
+  const reservas = reservasPage?.content || [];
+  const totalElements = reservasPage?.totalElements ?? 0;
+  const currentPage = reservasPage?.number ?? page;
+  const startIndex = totalElements === 0 ? 0 : currentPage * pageSize + 1;
+  const endIndex = Math.min(totalElements, (currentPage + 1) * pageSize);
 
   return (
     <Box sx={{ backgroundColor: 'white', minHeight: '100vh' }}>
@@ -211,13 +216,37 @@ const ClientReservas = () => {
               )}
             </TableBody>
           </Table>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                p: 2,
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontFamily: 'Fjalla One, sans-serif' }}
+              >
+                {totalElements === 0
+                  ? 'Mostrando 0'
+                  : `Mostrando ${startIndex} - ${endIndex} de ${totalElements}`}
+              </Typography>
 
-          {reservasPage && reservasPage.totalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
               <Pagination
-                count={reservasPage.totalPages}
+                count={Math.max(1, totalPages)}
                 page={page + 1}
-                onChange={(e, value) => setPage(value - 1)}
+                onChange={(_, value) => setPage(value - 1)}
+                size="small"
+                showFirstButton
+                showLastButton
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    fontFamily: "Fjalla One, sans-serif",
+                  }
+                }}
               />
             </Box>
           )}
