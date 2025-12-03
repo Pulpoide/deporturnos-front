@@ -100,4 +100,6 @@ This is the frontend client. For the API logic, database structure, and performa
 ---
 
 ## Author
-[**Joaquin D. Olivero**](https://github.com/Pulpoide) -> [LinkedIn](https://www.linkedin.com/in/JoaquinOlivero)
+**Joaquin D. Olivero** Full Stack Developer | Backend Specialist
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/JoaquinOlivero)
