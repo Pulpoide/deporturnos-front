@@ -1,38 +1,42 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
+import { useNavigate, Link as RouterLink } from 'react-router-dom'; // Corrección de import
 import {
-  Avatar, Button, Grid, Paper, TextField,
-  CircularProgress, FormHelperText, OutlinedInput,
-  InputLabel, InputAdornment, IconButton, FormControl,
-  Stack, Alert, Box
+  Button,
+  Paper,
+  TextField,
+  CircularProgress,
+  InputAdornment,
+  IconButton,
+  Stack,
+  Alert,
+  Box,
+  Typography,
+  Container
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import LoginIcon from '@mui/icons-material/Login';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import backgroundImage from '../assets/images/imagen_background_adv.png'
-import Footer from '../components/Footer';
-import { textAlign } from '@mui/system';
 
-const isEmail = (email) =>
-  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
-
-const isPassword = (pass) =>
-  /^(?=\w*\d)(?=\w*[a-z])\S{8,16}$/i.test(pass);
-
-const isTelefono = (telefono) =>
-  /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
+// Validaciones (Las mantenemos fuera del componente para limpieza)
+const isEmail = (email) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+const isPassword = (pass) => /^(?=\w*\d)(?=\w*[a-z])\S{8,16}$/i.test(pass);
+const isTelefono = (telefono) => /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Form State
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [password, setPassword] = useState('');
   const [secondPassword, setSecondPassword] = useState('');
 
+  // Error States
   const [nombreError, setNombreError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [telefonoError, setTelefonoError] = useState(false);
@@ -41,122 +45,56 @@ const Register = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
   const [loading, setLoading] = useState(false);
 
+  // Handlers
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const handleMouseDownPassword = (event) => event.preventDefault();
+  const handleKeyPress = (e) => { if (e.key === 'Enter') handleSubmit(); };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit();
-    }
-  };
-
-  const paperStyle = {
-    maxWidth: 433,
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: { xs: '17px 32px', sm: '32px 32px' },
-    mx: 'auto',
-    borderRadius: '7%',
-    textAlign: 'center',
-    overflowY: { xs: 'auto', sm: 'visible' },
-  };
-  const avatarStyle = { backgroundColor: "#121212" };
-
-  const handleNombre = () => {
-    if (!nombre) {
-      setNombreError(true);
-      return;
-    }
-    setNombreError(false);
-  };
-
-  const handleEmail = () => {
-    if (!isEmail(email)) {
-      setEmailError(true);
-      return;
-    }
-    setEmailError(false);
-  };
-
-  const handleTelefono = () => {
-    if (telefono && !isTelefono(telefono)) {
-      setTelefonoError(true);
-      return;
-    }
-    setTelefonoError(false);
-  };
-
-  const handlePassword = () => {
-    if (!isPassword(password)) {
-      setPasswordError(true);
-      return;
-    }
-    setPasswordError(false);
-  };
-
-  const handleSecondPassword = () => {
-    if (password !== secondPassword) {
-      setSecondPasswordError(true);
-      return;
-    }
-    setSecondPasswordError(false);
-  };
+  // Validation Handlers (OnBlur)
+  const handleNombreBlur = () => setNombreError(!nombre);
+  const handleEmailBlur = () => setEmailError(!isEmail(email));
+  const handleTelefonoBlur = () => setTelefonoError(telefono && !isTelefono(telefono));
+  const handlePasswordBlur = () => setPasswordError(!isPassword(password));
+  const handleSecondPasswordBlur = () => setSecondPasswordError(password !== secondPassword);
 
   const handleSubmit = async () => {
     setSuccess(null);
-
-    if (nombreError) {
-      setError("Ingrese un nombre porfavor.");
-      return;
-    }
-
-    if (emailError || !email) {
-      setError("Email no válido.");
-      return;
-    }
-
-    if (telefonoError) {
-      setError("Teléfono no válido.");
-      return;
-    }
-
-    if (passwordError || !password) {
-      setError("La contraseña no cumple con los requisitos de seguridad: Minimo ocho caracteres, al menos un número y una letra.");
-      return;
-    }
-
-    if (secondPasswordError || !secondPassword) {
-      setError("Las contraseñas no coinciden.");
-      return;
-    }
-
     setError(null);
-    setLoading(true);
 
+    // Validación Final antes de enviar
+    if (!nombre) { setError("Ingrese su nombre."); setNombreError(true); return; }
+    if (!email || !isEmail(email)) { setError("Email inválido."); setEmailError(true); return; }
+    if (telefono && !isTelefono(telefono)) { setError("Teléfono inválido."); setTelefonoError(true); return; }
+    if (!password || !isPassword(password)) {
+      setError("La contraseña debe tener 8-16 caracteres, letras y números.");
+      setPasswordError(true);
+      return;
+    }
+    if (password !== secondPassword) { setError("Las contraseñas no coinciden."); setSecondPasswordError(true); return; }
+
+    setLoading(true);
     const user = { nombre, email, password, telefono };
+
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup`, user);
-      const result = response.data;
 
-      localStorage.setItem('currentUser', JSON.stringify(result));
+      // Auto-Login logic (opcional) o redirección
+      localStorage.setItem('currentUser', JSON.stringify(response.data));
       localStorage.setItem('token', response.data.token);
 
-      setSuccess("Registro Exitoso!");
+      setSuccess("¡Registro Exitoso! Redirigiendo...");
       setTimeout(() => {
-        window.location.href = '/verify';
+        navigate('/verify'); // O la ruta que prefieras
       }, 1500);
+
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setError(error.response.data.message + ".");
+        setError(error.response.data.message || "El usuario ya existe.");
       } else {
-        setError('Error al registrar el usuario. Inténtalo de nuevo.');
+        setError('Ocurrió un error. Inténtalo de nuevo.');
       }
-      setSuccess('');
     } finally {
       setLoading(false);
     }
@@ -168,145 +106,163 @@ const Register = () => {
       <Box
         component="main"
         sx={{
-          minHeight: { xs: 'calc(100vh - 110px)', sm: 'calc(100vh - 66px)' },
+          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          position: 'relative',
+          // Fix para móviles: evita que el teclado rompa el fondo
+          backgroundAttachment: 'fixed'
         }}
       >
-        <Box
+        {/* Overlay Oscuro */}
+        <Box sx={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1 }} />
+
+        <Container
+          maxWidth="sm" // Un poco más ancho que Login (xs) porque hay más campos
           sx={{
+            position: 'relative',
+            zIndex: 2,
             flex: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pt: { xs: 2, sm: 0 },
-            px: { xs: 2, sm: 0 },
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            overflowY: 'auto',
+            py: 4
           }}
         >
-          <Paper elevation={24} sx={paperStyle} >
-            <Grid align="center">
-              <Avatar style={avatarStyle}>
-                <AppRegistrationIcon />
-              </Avatar>
-              <h2 style={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal' }}>Registro</h2>
-            </Grid>
-            <TextField
-              onChange={(e) => setNombre(e.target.value)}
-              error={nombreError}
-              onBlur={handleNombre}
-              helperText="Por favor ingrese su nombre completo"
-              margin='normal'
-              label="Nombre"
-              placeholder='Juan Morales'
-              color='custom'
-              onKeyDown={handleKeyPress}
-              fullWidth required
-            />
-            <TextField
-              onChange={(e) => setEmail(e.target.value)}
-              error={emailError}
-              onBlur={handleEmail}
-              helperText="Por favor ingrese su correo electrónico"
-              margin='normal'
-              label="Email"
-              placeholder='example@gmail.com'
-              color='custom'
-              onKeyDown={handleKeyPress}
-              fullWidth required
-            />
-            <TextField
-              onChange={(e) => setTelefono(e.target.value)}
-              error={telefonoError}
-              onBlur={handleTelefono}
-              helperText="Por favor ingrese su teléfono"
-              margin='normal'
-              label="Teléfono"
-              placeholder='3512767955'
-              color='custom'
-              onKeyDown={handleKeyPress}
-              fullWidth
-            />
-            <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
-              <InputLabel error={passwordError} htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-              <OutlinedInput
-                error={passwordError}
+          <Paper
+            elevation={10}
+            sx={{
+              width: '100%',
+              padding: { xs: 3, sm: 5 },
+              borderRadius: '24px',
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              textAlign: 'center',
+            }}
+          >
+            {/* Header */}
+            <Typography variant="h4" sx={{ fontFamily: "Bungee, sans-serif", mb: 1, color: '#1a1a1a' }}>
+              CREAR CUENTA
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: 'Roboto, sans-serif', color: '#666', mb: 4 }}>
+              Únete a la comunidad de Deporturnos
+            </Typography>
+
+            {/* Inputs Stack */}
+            <Stack spacing={2}>
+              <TextField
+                label="Nombre Completo"
+                placeholder='Ej: Juan Pérez'
+                fullWidth
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                onBlur={handleNombreBlur}
+                error={nombreError}
+                InputLabelProps={{ style: { fontFamily: 'Roboto, sans-serif' } }}
+              />
+
+              <TextField
+                label="Email"
+                placeholder='ejemplo@correo.com'
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={handleEmailBlur}
+                error={emailError}
+                InputLabelProps={{ style: { fontFamily: 'Roboto, sans-serif' } }}
+              />
+
+              <TextField
+                label="Teléfono"
+                placeholder='351...'
+                fullWidth
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                onBlur={handleTelefonoBlur}
+                error={telefonoError}
+                InputLabelProps={{ style: { fontFamily: 'Roboto, sans-serif' } }}
+              />
+
+              {/* Password Field 1 */}
+              <TextField
+                label="Contraseña"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onBlur={handlePassword}
-                required
-                placeholder='**************'
-                type={showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                onKeyDown={handleKeyPress}
+                onBlur={handlePasswordBlur}
+                error={passwordError}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
-              <FormHelperText id="standard-weight-helper-text">Por favor ingrese su contraseña</FormHelperText>
-            </FormControl>
-            <FormControl margin='normal' variant="outlined" color='custom' fullWidth required>
-              <InputLabel error={secondPasswordError} htmlFor="outlined-adornment-password">Confirmar</InputLabel>
-              <OutlinedInput
-                error={secondPasswordError}
+
+              {/* Password Field 2 */}
+              <TextField
+                label="Confirmar Contraseña"
+                type={showPassword ? 'text' : 'password'}
+                fullWidth
+                value={secondPassword}
                 onChange={(e) => setSecondPassword(e.target.value)}
-                onBlur={handleSecondPassword}
-                required
-                placeholder='**************'
-                type={showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                onKeyDown={handleKeyPress}
+                onBlur={handleSecondPasswordBlur}
+                error={secondPasswordError}
               />
-              <FormHelperText id="standard-weight-helper-text">Repita su contraseña</FormHelperText>
-            </FormControl>
+            </Stack>
+
+            {/* Mensaje de requisitos de contraseña sutil */}
+            <Typography variant="caption" sx={{ display: 'block', mt: 1, color: '#888', fontSize: '0.75rem', textAlign: 'left' }}>
+              * La contraseña debe tener entre 8 y 16 caracteres, al menos un número y una letra.
+            </Typography>
+
+            {/* Botón de Acción */}
             <Button
-              type='submit'
-              color='custom'
-              sx={{ fontFamily: "Bungee, sans-serif", fontWeight: 400, fontStyle: 'normal', marginTop: '12px' }}
               variant='contained'
               fullWidth
+              size='large'
               onClick={handleSubmit}
-              startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
               disabled={loading}
+              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <PersonAddIcon />}
+              sx={{
+                mt: 3,
+                fontFamily: "Bungee, sans-serif",
+                backgroundColor: '#00b04b',
+                py: 1.5,
+                borderRadius: '50px',
+                fontSize: '1rem',
+                boxShadow: '0 4px 14px rgba(0, 176, 75, 0.4)',
+                '&:hover': { backgroundColor: '#009640' }
+              }}
             >
-              Registrarme
+              {loading ? 'REGISTRANDO...' : 'REGISTRARME'}
             </Button>
-            {error && (
-              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                <Alert severity="error">{error}</Alert>
-              </Stack>
-            )}
-            {success && (
-              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
-                <Alert severity="success">{success}</Alert>
-              </Stack>
-            )}
+
+            {/* Feedback Messages */}
+            <Box sx={{ mt: 2 }}>
+              {error && <Alert severity="error" sx={{ borderRadius: '12px' }}>{error}</Alert>}
+              {success && <Alert severity="success" sx={{ borderRadius: '12px' }}>{success}</Alert>}
+            </Box>
+
+            {/* Footer Link */}
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="body2" sx={{ fontFamily: 'Roboto, sans-serif', color: '#666' }}>
+                ¿Ya tienes una cuenta? {' '}
+                <RouterLink to='/login' style={{ textDecoration: 'none', color: '#00b04b', fontWeight: 'bold' }}>
+                  Inicia sesión aquí
+                </RouterLink>
+              </Typography>
+            </Box>
+
           </Paper>
-        </Box>
+        </Container>
       </Box>
     </>
   );
