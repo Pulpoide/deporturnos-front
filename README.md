@@ -1,6 +1,6 @@
 # DeporTurnos Frontend
 
-![React](https://img.shields.io/badge/React-18-blue) ![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF) ![MUI](https://img.shields.io/badge/Material_UI-Component_Lib-007FFF)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?logo=vite&logoColor=white) ![Material UI](https://img.shields.io/badge/MUI-UI_Library-007FFF?logo=mui&logoColor=white)
 
 Welcome to the frontend repository for **DeporTurnos**, a modern web platform for the integral management of sports centers.
 Built with **React** and **Vite**, this application offers a responsive and intuitive user interface for managing reservations, users, and administrative tasks, seamlessly communicating with the DeporTurnos Backend.
