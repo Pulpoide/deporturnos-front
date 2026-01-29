@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import { Box, Button, styled, Typography } from '@mui/material';
+import { Box, Button, styled, Typography, CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Footer from '../components/Footer';
 import Faqs from '../components/Faqs';
@@ -57,7 +57,7 @@ const Carousel = () => {
   }, []);
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: "100dvh", overflow: 'hidden', p: '0', m: '0' }}>
+    <Box sx={{ position: 'relative', width: '100%', height: "100%", overflow: 'hidden', p: '0', m: '0' }}>
       <Box
         component="img"
         src={images[currentIndex]}
@@ -71,6 +71,18 @@ const Carousel = () => {
           opacity: 1,
           maxWidth: '100%',
           overflow: 'hidden',
+          filter: 'brightness(0.7)',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%)',
+          zIndex: 1,
         }}
       />
     </Box>
@@ -80,76 +92,86 @@ const Carousel = () => {
 const Home = () => {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <Box sx={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+
+        {/* HERO SECTION */}
+        <Box sx={{ position: 'relative', height: '100svh', overflow: 'hidden' }}>
+
+          {/* 1. CAPA DE FONDO: CARRUSEL */}
           <Carousel />
+
+          {/* 2. CAPA INTERMEDIA: OVERLAY OBSCURO (La Magia) 
+             Esto oscurece toda la imagen para que el texto resalte.
+          */}
           <Box
             sx={{
               position: 'absolute',
-              top: { xs: '20%', sm: '23%', md: '30%' },
-              left: {
-                xs: '50%',  
-                sm: '10%',   
-                md: '5%',     
-              },
-              transform: {
-                xs: 'translateX(-50%)',
-                sm: 'none',
-                md: 'none',
-              },
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.55)', // Ajusta el 0.55 si quieres más/menos oscuridad
+              zIndex: 1,
+            }}
+          />
+
+          {/* 3. CAPA SUPERIOR: CONTENIDO (Texto y Botón) */}
+          <Box
+            sx={{
+              position: 'absolute',
+              // Centrado y posicionado responsive
+              top: { xs: '45%', sm: '50%' }, // Bajé un poco el mobile para que respire mejor
+              left: { xs: '50%', sm: '10%', md: '5%' },
+              transform: { xs: 'translate(-50%, -50%)', sm: 'translateY(-50%)' },
               zIndex: 2,
               color: 'white',
-              textAlign: {
-                xs: 'center', 
-                sm: 'left',  
-                md: 'left',   
-              },
-              width: {
-                xs: '80%',    
-                sm: '70%',    
-                md: 'auto',   
-              },
+              textAlign: { xs: 'center', sm: 'left' },
+              width: { xs: '90%', sm: '70%', md: 'auto' }, // 90% en mobile para evitar bordes pegados
             }}
           >
+            {/* Título: Mantenemos Bungee (Tu gusto) */}
             <Typography
               variant="h4"
-              component="h4"
+              component="h1" // Semánticamente es un H1
               sx={{
-                fontSize: { xs: '2.7rem', sm: '2.5rem', md: '3rem' },
-                lineHeight: { xs: '2.2rem', sm: '2.7rem', md: '3rem' },
-                fontFamily: "Bungee inline, sans-serif",
+                fontSize: { xs: '2.7rem', sm: '3rem', md: '3.5rem' },
+                lineHeight: { xs: 1.1, md: 1.2 },
+                fontFamily: "Bungee Inline, sans-serif",
+                mb: 1
               }}
             >
               Reserva tu<br />cancha al instante
             </Typography>
 
+            {/* Subtítulo: CAMBIO A ROBOTO (Limpio y legible) */}
             <Typography
               variant="h5"
-              component="h5"
+              component="h2"
               sx={{
-                fontSize: { xs: '1.5rem', sm: '1.35rem', md: '1.5rem' },
+                fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' },
                 mt: 1,
-                fontFamily: "Bungee hairline, sans-serif",
-                fontWeight: 'bold',
+                mb: 3, // Separación con el botón
+                fontFamily: "'Roboto', sans-serif", // Fuente limpia
+                fontWeight: 400, // Regular (no bold) para mejor contraste con el título
+                letterSpacing: '0.5px',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
               }}
             >
               Explorá las canchas disponibles en tiempo real
             </Typography>
 
+            {/* Botón: Mantenemos Bungee (Tu gusto) */}
             <StyledButton
               variant="contained"
               component="a"
               href="/register"
               sx={{
-                mt: 2,
-                fontSize: { xs: '0.9rem', sm: '1rem', md: '1rem' },
-                padding: {
-                  xs: '0.6rem 1.2rem',
-                  sm: '0.7rem 1.3rem',
-                  md: '0.8rem 1.5rem',
-                },
+                fontSize: { xs: '0.9rem', sm: '1rem' },
+                padding: { xs: '10px 24px', md: '12px 30px' },
                 fontFamily: "Bungee, sans-serif",
+                boxShadow: '0 4px 14px rgba(0, 176, 75, 0.4)', // Glow sutil verde
               }}
             >
               Registrate de forma gratuita

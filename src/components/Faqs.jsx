@@ -1,79 +1,134 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography, Box } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Box, Container, alpha } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+// 1. DATA DRIVEN: Definimos el contenido fuera del render para mantener el código limpio.
+// Usamos JSX en la respuesta para poder mantener tus negritas (<b>).
+const faqData = [
+    {
+        id: 'panel1',
+        question: "¿Cómo me registro para sacar mi turno?",
+        answer: (
+            <>
+                <Box component="span" fontWeight="bold">Para poder reservar un turno, debes registrarte e iniciar sesión en tu cuenta.</Box> Ingresa tu dirección de correo electrónico, a la cual se te enviará un email con un código. Abre tu correo electrónico e ingresa el código proporcionado para activar tu cuenta. Una vez dentro podrás proceder con la reserva.
+            </>
+        )
+    },
+    {
+        id: 'panel2',
+        question: "No recibí el correo con el código. ¿Qué debo hacer?",
+        answer: (
+            <>
+                Si no encuentras el email en tu bandeja de entrada, te recomendamos que revises la <Box component="span" fontWeight="bold">bandeja de spam o correo no deseado</Box>. Por cualquier otro inconveniente puedes comunicarte con el área de soporte.
+            </>
+        )
+    },
+    {
+        id: 'panel3',
+        question: "¿Cómo reservar un turno?",
+        answer: (
+            <>
+                Luego de iniciar sesión, deberás seleccionar el deporte y cancha que desees reservar. Deporturnos te mostrará una lista con los turnos disponibles según los filtros que hayas aplicado. Verifica que los datos sean correctos, selecciona el botón de <Box component="span" fontWeight="bold">"Confirmar reserva"</Box> y ¡Listo!. A continuación te llegará un <Box component="span" fontWeight="bold">email de confirmación con los datos de la reserva y un código QR</Box> que debes mostrar para ingresar.
+            </>
+        )
+    },
+    {
+        id: 'panel4',
+        question: "¿Cómo sé si mi reserva está confirmada?",
+        answer: (
+            <>
+                Deberías haber recibido un correo electrónico de confirmación. Te sugerimos revisar tu carpeta de spam. Si no encuentras el correo, también puedes acceder a la sección <Box component="span" fontWeight="bold">"Mis reservas"</Box> de tu cuenta. Si el turno está confirmado, lo verás reflejado en tus reservas activas.
+            </>
+        )
+    }
+];
 
 const Faqs = () => {
     return (
-        <Box sx={{ width: '100%', backgroundColor: 'white', color: '#089342', overflowX: 'hidden', p: 0 }}>
-            <Typography variant='h4' component='h2' sx={{ mb: 4, textAlign: 'center', color: 'black', fontFamily: "Bungee inline, sans-serif", paddingTop:'2rem' }}>
-                Preguntas frecuentes
-            </Typography>
-            <div>
-                <Accordion sx={{ mb: 2 }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                    >
-                        <Typography variant="h6" sx={{ color: '#45A048', fontFamily: "Fjalla One, sans-serif"}}>
-                            ¿Cómo me registro para sacar mi turno?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            <b>{`Para poder reservar un turno, debes registrarte e iniciar sesion en tu cuenta.`}</b> Ingresa tu dirección de correo electrónico, a la cual se te enviará un email con un código. Abre tu correo electronico e ingresa el código proporcionado para activar tu cuenta. Una vez dentro podrás proceder con la reserva.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion sx={{ mb: 2 }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        aria-controls="panel2-content"
-                        id="panel2-header"
-                    >
-                        <Typography variant="h6" sx={{ color: '#45A048', fontFamily: "Fjalla One, sans-serif"}}>
-                            No he recibido el correo electrónico con el código para registarme y activar mi cuenta. ¿Qué debo hacer?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            Si no encuentras el email en tu bandeja de entrada, te recomendamos que revises la <b>{`bandeja de spam o correo no deseado`}</b>. Por cualquier otro inconveniente puedes comunicarte con el área de soporte.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion sx={{ mb: 2 }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        aria-controls="panel3-content"
-                        id="panel3-header"
-                    >
-                        <Typography variant="h6" sx={{ fontFamily: "Fjalla One, sans-serif", color: '#45A048' }}>
-                            ¿Cómo reservar un turno?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            Luego de iniciar sesión, deberas seleccionar el deporte y cancha que desees reservar. Deporturnos te mostrará una lista con los turnos disponibles según los filtros que hayas aplicado. Verifica que los datos que seleccionaste sean correctos, selecciona el botón de <b>{`"Confirmar reserva"`}</b> y ¡Listo!. A continuación te llegará un <b>{`email de confirmación con los datos de la reserva y un código QR`}</b> que debes mostrar para ingresar a la cancha.
+        <Box
+            component="section"
+            sx={{
+                width: '100%',
+                backgroundColor: '#fff', // Fondo blanco limpio
+                py: 8 // Padding vertical generoso
+            }}
+        >
+            <Container maxWidth="md"> {/* Contenedor centrado para mejor lectura */}
 
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion sx={{ mb: 2 }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        aria-controls="panel4-content"
-                        id="panel4-header"
-                    >
-                        <Typography variant="h6" sx={{ fontFamily: "Fjalla One, sans-serif", color: '#45A048' }}>
-                            ¿Cómo sé si mi reserva esta confirmada?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography sx={{ color: '#636368', fontFamily: "Fjalla One, sans-serif", }}>
-                            Deberías haber recibido un correo electrónico de confirmación de reserva. Te sugerimos que revises tu carpeta de spam o correo no deseado por si acaso. Si no encuentras el correo electrónico de confirmación, tambien puedes acceder a la sección <b>{`"Mis reservas"`}</b> de tu cuenta. En el caso de que el turno este confirmado lo verás reflejado en tus reservas activas.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-            </div>
+                {/* TÍTULO */}
+                <Typography
+                    variant='h3'
+                    component='h2'
+                    sx={{
+                        mb: 6,
+                        textAlign: 'center',
+                        color: '#1a1a1a',
+                        fontFamily: "Bungee Inline, sans-serif",
+                        fontSize: { xs: '2rem', md: '3rem' } // Responsive font size
+                    }}
+                >
+                    PREGUNTAS FRECUENTES
+                </Typography>
+
+                {/* LISTA DE ACORDEONES */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {faqData.map((faq) => (
+                        <Accordion
+                            key={faq.id}
+                            disableGutters
+                            elevation={0} // Quitamos la sombra fea por defecto
+                            sx={{
+                                border: '1px solid #e0e0e0',
+                                borderRadius: '8px !important', // Bordes redondeados forzados
+                                '&:before': { display: 'none' }, // Quitamos la línea divisoria default de MUI
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    borderColor: '#00b04b', // Hover sutil verde en el borde
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                                },
+                                '&.Mui-expanded': {
+                                    borderColor: '#00b04b', // Borde verde cuando está abierto
+                                    backgroundColor: alpha('#00b04b', 0.02) // Fondo verde muuuuy suave al abrir
+                                }
+                            }}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon sx={{ color: '#00b04b' }} />} // Flecha verde
+                                aria-controls={`${faq.id}-content`}
+                                id={`${faq.id}-header`}
+                                sx={{
+                                    px: 3,
+                                    py: 1
+                                }}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        color: '#1a1a1a',
+                                        fontFamily: "'Roboto', sans-serif",
+                                        fontWeight: 600,
+                                        fontSize: { xs: '1rem', md: '1.1rem' }
+                                    }}
+                                >
+                                    {faq.question}
+                                </Typography>
+                            </AccordionSummary>
+
+                            <AccordionDetails sx={{ px: 3, pb: 3, pt: 0 }}>
+                                <Typography
+                                    sx={{
+                                        color: '#555',
+                                        fontFamily: "'Roboto', sans-serif",
+                                        lineHeight: 1.7, // Importante para leer párrafos largos
+                                        fontSize: '0.95rem'
+                                    }}
+                                >
+                                    {faq.answer}
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </Box>
+            </Container>
         </Box>
     );
 };
