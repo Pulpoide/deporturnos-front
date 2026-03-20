@@ -1,4 +1,4 @@
-# DeporTurnos Frontend
+# Deporturnos Frontend
 
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?logo=vite&logoColor=white) ![Material UI](https://img.shields.io/badge/MUI-UI_Library-007FFF?logo=mui&logoColor=white)
 
@@ -95,13 +95,13 @@ deporturnos-front
 ## Related Repository
 
 This is the frontend client. For the API logic, database structure, and performance tests, please visit the backend repository:
-* [**DeporTurnos Backend Repository**](https://github.com/Pulpoide/deporturnos-back)
+* [**Deporturnos Backend Repository**](https://github.com/Pulpoide/deporturnos-back)
 
 ---
 
 ## Author
 
-**Joaquín Olivero** ~ Software & AI Engineer
+**Joaquín Olivero** ~ Software Engineer
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/JoaquinOlivero)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Pulpoide)
