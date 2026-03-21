@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
 import { Box, Button, styled, Typography, CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -7,9 +7,9 @@ import Faqs from '../components/Faqs';
 import Advertising from '../components/Advertising';
 import './../styles/App.css'
 
-import futbol from '../assets/images/futbol.jpg';
-import futbol2 from '../assets/images/futbol2.jpg';
-import padel1 from '../assets/images/padel1.jpg';
+import futbol from '../assets/images/futbol.avif';
+import futbol2 from '../assets/images/futbol2.avif';
+import padel1 from '../assets/images/padel1.avif';
 
 
 const images = [padel1, futbol, futbol2];
@@ -46,34 +46,51 @@ const StyledButton = styled(Button)(() => ({
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const next = () => {
+  const next = useCallback(() => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(next, 4000);
-
-    return () => clearInterval(intervalId);
   }, []);
 
+  // Precarga todas las imágenes al montar el componente
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Auto-advance del carousel
+  useEffect(() => {
+    const intervalId = setInterval(next, 4000);
+    return () => clearInterval(intervalId);
+  }, [next]);
+
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: "100%", overflow: 'hidden', p: '0', m: '0' }}>
-      <Box
-        component="img"
-        src={images[currentIndex]}
-        alt={`Slide ${currentIndex}`}
-        sx={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          transition: 'opacity 0.5s ease',
-          opacity: 1,
-          maxWidth: '100%',
-          overflow: 'hidden',
-          filter: 'brightness(0.7)',
-        }}
-      />
+    <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', p: 0, m: 0 }}>
+      {/* Renderiza las 3 imágenes siempre — crossfade via opacity */}
+      {images.map((src, index) => (
+        <Box
+          key={index}
+          component="img"
+          src={src}
+          alt={`Slide ${index + 1}`}
+          loading={index === 0 ? 'eager' : 'lazy'}
+          fetchpriority={index === 0 ? 'high' : 'auto'}
+          decoding={index === 0 ? 'sync' : 'async'}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            opacity: index === currentIndex ? 1 : 0,
+            transition: 'opacity 0.8s ease-in-out',
+            willChange: 'opacity',
+            filter: 'brightness(0.7)',
+          }}
+        />
+      ))}
       <Box
         sx={{
           position: 'absolute',
