@@ -14,7 +14,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavbarAdmin from '../../components/NavbarAdmin';
 import StyledSelect from '../../components/StyledSelect';
-import backgroundImage from '../../assets/images/imagen_background_club.png';
+import backgroundImage from '../../assets/images/bg_club.png';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

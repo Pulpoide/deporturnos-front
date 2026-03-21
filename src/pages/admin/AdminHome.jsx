@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Typography, Box } from '@mui/material';
 import NavbarAdmin from '../../components/NavbarAdmin';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const theme = createTheme({
   palette: {

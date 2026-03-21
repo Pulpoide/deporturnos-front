@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import NavbarClient from '../../components/NavbarClient';
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const titleStyle = {
     fontFamily: "Bungee, sans-serif",

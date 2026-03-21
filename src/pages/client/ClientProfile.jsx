@@ -3,7 +3,7 @@ import { Button, Grid, Paper, TextField, Box, Typography, Stack, IconButton, Ale
 import { Edit } from '@mui/icons-material';
 import axios from "axios";
 import NavbarClient from "../../components/NavbarClient"
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const isTelefono = (telefono) =>
     /^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$/i.test(telefono);

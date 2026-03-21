@@ -18,7 +18,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import backgroundImage from '../assets/images/imagen_background_adv.png'
+import backgroundImage from '../assets/images/bg_ad.png'
 
 // Validaciones (Las mantenemos fuera del componente para limpieza)
 const isEmail = (email) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);

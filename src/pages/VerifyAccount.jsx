@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import axios from 'axios';
 
 import Navbar from "../components/Navbar";
-import backgroundImage from '../assets/images/imagen_background_adv.png'
+import backgroundImage from '../assets/images/bg_ad.png'
 
 
 const VerifyAccout = () => {

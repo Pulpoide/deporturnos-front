@@ -12,7 +12,7 @@ import axios from 'axios';
 import NavbarAdmin from '../../components/NavbarAdmin';
 import StyledSelect from '../../components/StyledSelect';
 import StyledDateField from '../../components/StyledDateField';
-import backgroundImage from '../../assets/images/imagen_background_club.png';
+import backgroundImage from '../../assets/images/bg_club.png';
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 

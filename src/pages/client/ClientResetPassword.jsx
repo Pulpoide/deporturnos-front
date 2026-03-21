@@ -7,7 +7,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
-import backgroundImage from '../../assets/images/imagen_background_adv.png'
+import backgroundImage from '../../assets/images/bg_ad.png'
 import { jwtDecode } from 'jwt-decode';
 
 

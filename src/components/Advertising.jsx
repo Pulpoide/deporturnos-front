@@ -1,6 +1,6 @@
 import { Box, Grid, Typography, Container, Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router';
-import backgroundImage from '../assets/images/imagen_background_adv.png' // Tu imagen de fondo
+import backgroundImage from '../assets/images/bg_ad.png' // Tu imagen de fondo
 
 const Advertising = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import NavbarAdmin from "../../components/NavbarAdmin";
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const paperStyle = {
   marginTop: 2,

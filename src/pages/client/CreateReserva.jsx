@@ -4,7 +4,7 @@ import NavbarClient from '../../components/NavbarClient';
 import { Button, Typography, Grid, Card, CardContent, Snackbar, Alert, Box, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const titleStyle = {
     fontFamily: "Bungee, sans-serif",

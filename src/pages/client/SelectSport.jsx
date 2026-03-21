@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, Grid, Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
 import NavbarClient from '../../components/NavbarClient';
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const titleStyle = {
     fontFamily: "Bungee, sans-serif",

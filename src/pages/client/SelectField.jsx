@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Typography, Grid, Card, CardContent, MenuItem, Button, TextField } from '@mui/material';
 import NavbarClient from '../../components/NavbarClient';
-import backgroundImage from '../../assets/images/imagen_background_adv.png';
+import backgroundImage from '../../assets/images/bg_ad.png';
 
 const buttonStyle = {
   fontFamily: 'Bungee, sans-serif',

@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 
 
 import Navbar from "../../components/Navbar";
-import backgroundImage from '../../assets/images/imagen_background_adv.png'
+import backgroundImage from '../../assets/images/bg_ad.png'
 // Email Validation
 const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);

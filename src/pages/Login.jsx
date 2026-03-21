@@ -22,7 +22,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
 import { alpha, styled } from '@mui/material/styles';
-import backgroundImage from '../assets/images/imagen_background_adv.png'
+import backgroundImage from '../assets/images/bg_ad.png'
 
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase.Mui-checked': {

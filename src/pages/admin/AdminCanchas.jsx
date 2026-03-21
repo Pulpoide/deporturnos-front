@@ -11,7 +11,7 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from "react-router";
 import NavbarAdmin from '../../components/NavbarAdmin';
-import backgroundImage from '../../assets/images/imagen_background_club.png';
+import backgroundImage from '../../assets/images/bg_club.png';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

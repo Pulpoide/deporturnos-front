@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import NavbarAdmin from '../../components/NavbarAdmin';
 import StyledSelect from '../../components/StyledSelect';
 import StyledDateField from '../../components/StyledDateField';
-import backgroundImage from '../../assets/images/imagen_background_club.png';
+import backgroundImage from '../../assets/images/bg_club.png';
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
